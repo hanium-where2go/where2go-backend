@@ -2,13 +2,19 @@ package hanium.where2go.domain.customer.entity;
 
 import hanium.where2go.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "customer")
 public class Customer extends User {
 
