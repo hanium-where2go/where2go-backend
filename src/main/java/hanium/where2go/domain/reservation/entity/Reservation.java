@@ -43,4 +43,6 @@ public class Reservation extends BaseEntity {
     //예약 상태 -> Enum
     private String status;
     private String rejection;
+
+    private Long confirmNum; // 이 부분 추가 했음. 예약 확인 번호임
 }
