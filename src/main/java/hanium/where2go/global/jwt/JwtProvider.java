@@ -1,6 +1,7 @@
 package hanium.where2go.global.jwt;
 
 import hanium.where2go.global.response.BaseException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -70,6 +71,7 @@ public class JwtProvider {
         }
     }
 
+
     //Access Token 추출
     public String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -88,7 +90,11 @@ public class JwtProvider {
         return null;
     }
 
-
+    //토큰으로 부터 이메일 추출
+    public String extractEmail(String accessToken) {
+        Claims body = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(accessToken).getBody();
+        return body.get("email", String.class);
+    }
 
 
 }
