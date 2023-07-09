@@ -26,7 +26,7 @@ public class Reservation extends BaseEntity {
     @Column(name = "reservation_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 

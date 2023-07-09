@@ -15,5 +15,4 @@ public class ReservationResponseDto {
     private Long confirmNum; // 확인 번호
     private Long reservationId;
 
-
 }
