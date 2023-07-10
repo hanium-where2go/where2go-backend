@@ -6,6 +6,7 @@ import hanium.where2go.domain.reservation.dto.ReservationStatus;
 import hanium.where2go.domain.reservation.entity.Reservation;
 import hanium.where2go.domain.reservation.repository.ReservationRepository;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
+import hanium.where2go.global.response.BaseException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class ReservationService {
 
     public ResponseEntity<ReservationResponseDto> create(ReservationRequestDto requestDto) {
         // ReservationRequestDto에서 필요한 데이터 추출
+
 
         // 예약 생성을 위한 Reservation 엔티티 생성
         Reservation reservation =  Reservation.builder()
