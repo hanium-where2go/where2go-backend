@@ -5,6 +5,7 @@ import hanium.where2go.domain.reservation.dto.ReservationResponseDto;
 import hanium.where2go.domain.reservation.dto.ReservationStatus;
 import hanium.where2go.domain.reservation.entity.Reservation;
 import hanium.where2go.domain.reservation.repository.ReservationRepository;
+import hanium.where2go.domain.restaurant.entity.Owner;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
@@ -51,7 +52,7 @@ public class ReservationService {
                 .numberOfPeople(requestDto.getNumberOfPeople())
                 .reservationTime(requestDto.getReservationTime())
                 .content(requestDto.getContent())
-                .status(ReservationStatus.CANCELLED.name())
+                .status(ReservationStatus.CONFIRMED.name()) // 이 부분을 나중에 사장님의 상태로 바꾸어 주어야함. jwt 이용해야함
                 .build();
 
 
@@ -65,33 +66,11 @@ public class ReservationService {
             responseDto.setConfirmNum(reservation.getConfirmNum());
             return ResponseEntity.ok(responseDto);
         } else {
-            String rejectionReason = "사장님의 거절 사유 입니다";
+            String rejectionReason = reservation.getOwner().rejectionReason;
             throw new BaseException(404,rejectionReason);
         }
     }
 
 }
-/*
- else {
-         Owner owner = getCurrentOwner(); // 현재 로그인한 사장님 정보 가져오기
-         owner.setRejectionReason("사장님의 거절 사유를 여기에 입력하세요");
-         reservation.setOwner(owner); // Reservation 엔티티에 Owner 설정
-
-         reservationRepository.save(reservation);
-
-         ReservationResponseDto responseDto = new ReservationResponseDto();
-         responseDto.setStatus(ReservationStatus.REJECTED);
-         responseDto.setRejectionReason(owner.getRejectionReason());
-         return ResponseEntity.ok(responseDto);
-         }
-         }
-
-private Owner getCurrentOwner() {
-        // 현재 로그인한 사장님 정보를 가져와서 반환하는 코드 작성
-        // 예: 인증된 사용자 정보를 가져오는 SecurityContextHolder 이용
-        // 이를 통해 Owner 엔티티를 조회하거나 OwnerService를 통해 현재 사용자의 정보를 가져올 수 있음
-        // 해당 코드는 프로젝트의 인증 및 사용자 관리 시스템에 따라 구현 방식이 달라질 수 있음
-        }
-*/
 
 

@@ -24,6 +24,4 @@ public class Owner extends User {
 
     public String rejectionReason; // 거절 사유 입력
 
-
-
 }
