@@ -1,5 +1,7 @@
 package hanium.where2go.domain.customer.service;
 
+import hanium.where2go.domain.customer.dto.CustomerDuplicateEmailRequestDto;
+import hanium.where2go.domain.customer.dto.CustomerDuplicateEmailResponseDto;
 import hanium.where2go.domain.customer.dto.CustomerSignupRequestDto;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
@@ -40,6 +42,13 @@ public class CustomerService {
         customer.hashPassword(passwordEncoder);
 
         customerRepository.save(customer);
+    }
+
+    public boolean duplicateEmail(CustomerDuplicateEmailRequestDto customerDuplicateEmailRequestDto) {
+        if (customerRepository.findByEmail(customerDuplicateEmailRequestDto.getEmail()).isPresent()) {
+            return true;
+        }
+        return false;
     }
 
 }
