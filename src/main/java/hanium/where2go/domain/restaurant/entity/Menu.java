@@ -29,3 +29,4 @@ public class Menu extends BaseEntity {
     private String content;
     private String imgUrl;
 }
+

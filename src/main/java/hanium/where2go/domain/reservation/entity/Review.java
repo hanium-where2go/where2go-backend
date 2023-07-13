@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -26,5 +28,7 @@ public class Review extends BaseEntity {
 
     private Double rate;
     private String content;
+
+
 
 }
