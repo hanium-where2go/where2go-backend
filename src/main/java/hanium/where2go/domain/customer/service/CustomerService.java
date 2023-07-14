@@ -1,13 +1,16 @@
 package hanium.where2go.domain.customer.service;
 
-import hanium.where2go.domain.customer.dto.CustomerDuplicateEmailRequestDto;
-import hanium.where2go.domain.customer.dto.CustomerDuplicateEmailResponseDto;
-import hanium.where2go.domain.customer.dto.CustomerSignupRequestDto;
+import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
+import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,8 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
 
     @Transactional
@@ -49,6 +54,21 @@ public class CustomerService {
             return true;
         }
         return false;
+    }
+
+    //로그인 후 access token, refresh token 반환
+    public CustomerLoginResponseDto login(CustomerLoginRequestDto customerLoginRequestDto) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    customerLoginRequestDto.getEmail(),
+                    customerLoginRequestDto.getPassword()
+                )
+            );
+            return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken());
+        } catch (AuthenticationException authenticationException) {
+            throw new BaseException(401, authenticationException.getMessage());
+        }
     }
 
 }

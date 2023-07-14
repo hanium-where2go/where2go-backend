@@ -9,23 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse<String>> handleException(Exception e) {
-        BaseResponse<String> response = new BaseResponse<>(
+    public ResponseEntity<BaseErrorResponse> handleException(Exception e) {
+        BaseException exception = new BaseException(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-            null
+            e.getMessage()
         );
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(exception.getStatus()).body(new BaseErrorResponse(exception));
     }
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<BaseResponse<String>> handleException(BaseException e) {
-        BaseResponse<String> response = new BaseResponse<>(
-            e.getStatus(),
-            e.getMessage(),
-            null
-        );
-        return ResponseEntity.status(e.getStatus()).body(response);
+    public ResponseEntity<BaseErrorResponse> handleException(BaseException e) {
+        return ResponseEntity.status(e.getStatus()).body(new BaseErrorResponse(e));
     }
-
 }
