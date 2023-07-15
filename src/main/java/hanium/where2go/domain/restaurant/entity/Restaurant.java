@@ -48,4 +48,6 @@ public class Restaurant extends BaseEntity {
     public int seat;
     public BigDecimal longitude;
     public BigDecimal latitude;
+    public String location;
+    public Boolean parkingLot;
 }

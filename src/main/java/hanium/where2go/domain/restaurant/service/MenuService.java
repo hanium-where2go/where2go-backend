@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,16 +17,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuService {
 
-    private final RestaurantRepository restaurantRepository;
+   private final RestaurantRepository restaurantRepository;
 
-    public List<MenuResponseDto> getMenus(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(404, "Cannot find restaurant id"));
+   public List<MenuResponseDto> getMenus(Long restaurantId){
 
-        List<MenuResponseDto> result = restaurant.getMenuList().stream()
-                .map(menu -> new MenuResponseDto(menu))
-                .collect(Collectors.toList());
-        return result;
-    }
+       Restaurant restaurant = restaurantRepository.findById(restaurantId)
+               .orElseThrow(() -> new BaseException(404,"Cannot find restaurant id"));
 
+       List<MenuResponseDto> result = restaurant.getMenuList().stream()
+               .map(menu -> new MenuResponseDto(menu))
+               .collect(Collectors.toList());
+
+       return result;
+   }
 }
