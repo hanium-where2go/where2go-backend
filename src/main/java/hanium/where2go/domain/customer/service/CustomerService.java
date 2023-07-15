@@ -71,4 +71,10 @@ public class CustomerService {
         }
     }
 
+    public CustomerFindEmailResponseDto findEmail(CustomerFindEmailRequestDto customerFindEmailRequestDto) {
+        Customer customer = customerRepository.findByNameAndPhoneNumber(customerFindEmailRequestDto.getName(), customerFindEmailRequestDto.getPhoneNumber())
+            .orElseThrow(() -> new BaseException(404, "user not found"));
+        return new CustomerFindEmailResponseDto(customer.getEmail());
+    }
+
 }
