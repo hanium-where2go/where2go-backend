@@ -34,4 +34,8 @@ public class CustomerController {
         return new BaseResponse<>(200, "로그인이 완료되었습니다.", customerService.login(customerLoginRequestDto));
     }
 
+    @GetMapping("/find-email")
+    public BaseResponse<CustomerFindEmailResponseDto> findEmail(@RequestBody CustomerFindEmailRequestDto customerFindEmailRequestDto) {
+        return new BaseResponse<>(200, "사용자 아이디를 가져왔습니다.", customerService.findEmail(customerFindEmailRequestDto));
+    }
 }
