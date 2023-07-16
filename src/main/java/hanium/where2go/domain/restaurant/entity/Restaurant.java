@@ -52,11 +52,12 @@ public class Restaurant extends BaseEntity {
     public String location;
     public Boolean parkingLot;
 
-    //내가 추가한거
+    //테스트 위해 추가
     public void setMenuList(List<Menu> menuList) {
         this.menuList = menuList;
     }
 
+    //테스트 위해 추가
     public void setInformation(InformationResponseDto information){
         this.location = information.getLocation();
         this.tel = information.getTel();
