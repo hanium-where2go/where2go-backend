@@ -32,5 +32,6 @@ public class Menu extends BaseEntity {
     // 내가 추가한거
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        restaurant.getMenuList().add(this);
     }
 }
