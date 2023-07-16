@@ -28,4 +28,9 @@ public class Menu extends BaseEntity {
     private int price;
     private String content;
     private String imgUrl;
+
+    // 내가 추가한거
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
 }
