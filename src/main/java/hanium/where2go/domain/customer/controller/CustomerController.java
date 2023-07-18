@@ -3,6 +3,7 @@ package hanium.where2go.domain.customer.controller;
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.service.CustomerService;
 import hanium.where2go.global.response.BaseResponse;
+import hanium.where2go.global.smtp.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
     private final CustomerService customerService;
+//    private final EmailService emailService;
 
     @PostMapping("/signup")
     public BaseResponse<String> signup(@RequestBody CustomerSignupRequestDto customerSignupRequestDto) {
         customerService.signup(customerSignupRequestDto);
+//        emailService.sendSimpleMessage(customerSignupRequestDto.getEmail());
         return new BaseResponse(200, "회원가입이 완료되었습니다.", null);
     }
 
