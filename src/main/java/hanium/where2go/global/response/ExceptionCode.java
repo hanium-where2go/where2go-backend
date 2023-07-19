@@ -12,7 +12,8 @@ public enum ExceptionCode {
     INVALID_EMAIL(404, "Email address is invalid."),
     INVALID_TOKEN(401, "Token is invalid."),
     UNAUTHENTICATED_USER(403, "User does not authenticated."),
-    UNAUTHORIZED_USER(401,"User does not authorized.");
+    UNAUTHORIZED_USER(401,"User does not authorized."),
+    CATEGORY_NOT_FOUND(404, "Category does not found.");
 
     private int status;
     private String message;

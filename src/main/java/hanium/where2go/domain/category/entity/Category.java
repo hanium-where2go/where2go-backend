@@ -20,4 +20,8 @@ public class Category extends BaseEntity {
     @Column(name = "category_id")
     private Long id;
     private String categoryName;
+
+    public void changeCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }
