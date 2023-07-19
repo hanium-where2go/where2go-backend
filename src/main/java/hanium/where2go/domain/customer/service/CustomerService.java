@@ -5,6 +5,7 @@ import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +33,7 @@ public class CustomerService {
     public void signup(CustomerSignupRequestDto customerSignupRequestDto) {
 
         if (customerRepository.findByEmail(customerSignupRequestDto.getEmail()).isPresent()) {
-            throw new BaseException(400, "이미 존재하는 사용자입니다.");
+            throw new BaseException(ExceptionCode.DUPLICATED_USER);
         }
 
         Customer customer = Customer.builder()
@@ -67,13 +68,13 @@ public class CustomerService {
             );
             return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken());
         } catch (AuthenticationException authenticationException) {
-            throw new BaseException(401, authenticationException.getMessage());
+            throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
     }
 
     public CustomerFindEmailResponseDto findEmail(CustomerFindEmailRequestDto customerFindEmailRequestDto) {
         Customer customer = customerRepository.findByNameAndPhoneNumber(customerFindEmailRequestDto.getName(), customerFindEmailRequestDto.getPhoneNumber())
-            .orElseThrow(() -> new BaseException(404, "user not found"));
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
         return new CustomerFindEmailResponseDto(customer.getEmail());
     }
 

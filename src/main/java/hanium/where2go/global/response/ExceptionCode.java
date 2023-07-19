@@ -9,8 +9,10 @@ public enum ExceptionCode {
     DUPLICATED_USER(400,"User already exists."),
     RESTAURANT_NOT_FOUND(404, "Restaurant not found."),
     EMAIL_SERVER_ERROR(500, "Email server error has occurred."),
-    EMAIL_NOT_FOUND(404, "Email address is invalid."),
-    TOKEN_INVALID(401, "Token is invalid.");
+    INVALID_EMAIL(404, "Email address is invalid."),
+    INVALID_TOKEN(401, "Token is invalid."),
+    UNAUTHENTICATED_USER(403, "User does not authenticated."),
+    UNAUTHORIZED_USER(401,"User does not authorized.");
 
     private int status;
     private String message;
