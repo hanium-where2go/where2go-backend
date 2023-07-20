@@ -16,11 +16,10 @@ public class MenuResponseDto {
     private String content;
     private String imgUrl;
 
-    public MenuResponseDto(Menu menu) {
+    public MenuResponseDto(Menu menu){
         this.name = menu.getName();
         this.price = menu.getPrice();
         this.content = menu.getContent();
         this.imgUrl = menu.getImgUrl();
     }
-
 }
