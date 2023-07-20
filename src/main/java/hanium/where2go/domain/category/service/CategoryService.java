@@ -5,7 +5,7 @@ import hanium.where2go.domain.category.entity.Category;
 import hanium.where2go.domain.category.repository.CategoryRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryService {
 
@@ -33,6 +34,7 @@ public class CategoryService {
         findCategory.changeCategoryName(categoryDto.getCategoryName());
     }
 
+    @Transactional
     public void deleteCategory(Long categoryId) {
         categoryRepository.delete(findCategoryById(categoryId));
     }
