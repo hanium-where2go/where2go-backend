@@ -4,6 +4,7 @@ import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class RestaurantService {
 
     public InformationResponseDto getInformation(Long restaurantId){
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(404,"cannot find restaurantId"));
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
         // Restaurant 객체에서 필요한 정보를 가져와서 InformationResponseDto 객체를 생성하고 반환합니다.
         InformationResponseDto informationResponseDto = new InformationResponseDto(

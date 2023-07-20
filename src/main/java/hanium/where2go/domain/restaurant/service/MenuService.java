@@ -4,12 +4,12 @@ import hanium.where2go.domain.restaurant.dto.MenuResponseDto;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,10 +19,9 @@ public class MenuService {
 
    private final RestaurantRepository restaurantRepository;
 
-   public List<MenuResponseDto> getMenus(Long restaurantId){
-
-       Restaurant restaurant = restaurantRepository.findById(restaurantId)
-               .orElseThrow(() -> new BaseException(404,"Cannot find restaurant id"));
+    public List<MenuResponseDto> getMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
        List<MenuResponseDto> result = restaurant.getMenuList().stream()
                .map(menu -> new MenuResponseDto(menu))

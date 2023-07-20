@@ -2,6 +2,7 @@ package hanium.where2go.global.jwt;
 
 import hanium.where2go.domain.customer.service.CustomerDetailServiceImpl;
 import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -71,7 +72,7 @@ public class JwtProvider {
             return true;
         } catch (JwtException e) {
             // MalformedJwtException | ExpiredJwtException | IllegalArgumentException | UnsupportedJwtException
-            throw new BaseException(401, "잘못된 토큰입니다.");
+            throw new BaseException(ExceptionCode.INVALID_TOKEN);
         }
     }
 

@@ -1,6 +1,7 @@
 package hanium.where2go.global.smtp;
 
 import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -37,7 +38,7 @@ public class EmailService {
 
             message.setText(msg, "utf-8", "html");
         } catch (MessagingException e) {
-            throw new BaseException(500, "이메일 서버 에러");
+            throw new BaseException(ExceptionCode.EMAIL_SERVER_ERROR);
         }
 
         return message;
@@ -49,7 +50,7 @@ public class EmailService {
         try {
             javaMailSender.send(message);
         } catch (MailException es) {
-            throw new BaseException(404, "이메일 주소가 없습니다.");
+            throw new BaseException(ExceptionCode.INVALID_EMAIL);
         }
     }
 
