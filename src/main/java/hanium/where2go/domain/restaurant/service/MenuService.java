@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuService {
 
-    private final RestaurantRepository restaurantRepository;
+   private final RestaurantRepository restaurantRepository;
 
     public List<MenuResponseDto> getMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        List<MenuResponseDto> result = restaurant.getMenuList().stream()
-                .map(menu -> new MenuResponseDto(menu))
-                .collect(Collectors.toList());
-        return result;
-    }
+       List<MenuResponseDto> result = restaurant.getMenuList().stream()
+               .map(menu -> new MenuResponseDto(menu))
+               .collect(Collectors.toList());
 
+       return result;
+   }
 }

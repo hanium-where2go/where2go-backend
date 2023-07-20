@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
+import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,4 +49,12 @@ public class Restaurant extends BaseEntity {
     public int seat;
     public BigDecimal longitude;
     public BigDecimal latitude;
+    public String location;
+    public Boolean parkingLot;
+
+    //테스트 위해 추가
+    public void setMenuList(List<Menu> menuList) {
+        this.menuList = menuList;
+    }
+
 }
