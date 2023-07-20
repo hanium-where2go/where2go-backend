@@ -31,7 +31,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{category-id}")
-    public ResponseEntity<BaseResponse> patchCategory(@RequestBody CategoryDto categoryDto,
+    public ResponseEntity<BaseResponse> patchCategory(@Valid @RequestBody CategoryDto categoryDto,
                                                       @PathVariable("category-id") @Min(1) Long categoryId) {
         categoryService.updateCategory(categoryDto, categoryId);
 
