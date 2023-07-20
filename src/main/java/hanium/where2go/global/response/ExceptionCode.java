@@ -13,7 +13,8 @@ public enum ExceptionCode {
     INVALID_TOKEN(401, "Token is invalid."),
     UNAUTHENTICATED_USER(403, "User does not authenticated."),
     UNAUTHORIZED_USER(401,"User does not authorized."),
-    CATEGORY_NOT_FOUND(404, "Category does not found.");
+    CATEGORY_NOT_FOUND(404, "Category does not found."),
+    LIQUOR_NOT_FOUND(404, "Liquor does not found.");
 
     private int status;
     private String message;
