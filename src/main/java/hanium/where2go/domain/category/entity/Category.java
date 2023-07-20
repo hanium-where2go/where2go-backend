@@ -16,8 +16,12 @@ import lombok.NoArgsConstructor;
 public class Category extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;
     private String categoryName;
+
+    public void changeCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }
