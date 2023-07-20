@@ -16,8 +16,12 @@ import lombok.NoArgsConstructor;
 public class Liquor extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "liquor")
     private Long id;
     private String liquorName;
+
+    public void changeLiquorName(String liquorName) {
+        this.liquorName = liquorName;
+    }
 }
