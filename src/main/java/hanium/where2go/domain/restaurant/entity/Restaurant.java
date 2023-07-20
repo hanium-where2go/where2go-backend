@@ -57,13 +57,4 @@ public class Restaurant extends BaseEntity {
         this.menuList = menuList;
     }
 
-    //테스트 위해 추가
-    public void setInformation(InformationResponseDto information){
-        this.location = information.getLocation();
-        this.tel = information.getTel();
-        this.description = information.getDescription();
-        this.parkingLot = information.getParkingLot();
-    }
-
-
 }

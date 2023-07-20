@@ -3,7 +3,7 @@ package hanium.where2go.domain.restaurant.controller;
 import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
 import hanium.where2go.domain.restaurant.entity.Menu;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
-import hanium.where2go.domain.restaurant.service.InformationService;
+import hanium.where2go.domain.restaurant.service.RestaurantService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
@@ -23,7 +23,7 @@ class RestaurantControllerTest {
     private EntityManager em;
 
     @Autowired
-    private InformationService informationService;
+    private RestaurantService restaurantService;
 
     @BeforeEach
     void beforeEach() {
@@ -97,7 +97,7 @@ class RestaurantControllerTest {
         em.persist(restaurant);
 
         // when
-        InformationResponseDto informationResponse = informationService.getInformation(restaurantId);
+        InformationResponseDto informationResponse = restaurantService.getInformation(restaurantId);
 
         // then
         Assertions.assertThat(informationResponse.getLocation()).isEqualTo(location);

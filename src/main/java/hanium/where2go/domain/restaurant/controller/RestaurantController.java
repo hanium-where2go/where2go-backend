@@ -2,11 +2,10 @@ package hanium.where2go.domain.restaurant.controller;
 
 import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
 import hanium.where2go.domain.restaurant.dto.MenuResponseDto;
-import hanium.where2go.domain.restaurant.service.InformationService;
 import hanium.where2go.domain.restaurant.service.MenuService;
+import hanium.where2go.domain.restaurant.service.RestaurantService;
 import hanium.where2go.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import java.util.List;
 public class RestaurantController {
 
    private final MenuService menuService;
-   private final InformationService informationService;
+   private final RestaurantService restaurantService;
 
 
    @GetMapping("/{restaurantId}/menu")
@@ -31,8 +30,9 @@ public class RestaurantController {
 
    @GetMapping("/{restaurantId}/information")
    public BaseResponse<InformationResponseDto> information(@PathVariable("restaurantId") Long restaurantId){
-      InformationResponseDto information = informationService.getInformation(restaurantId);
+      InformationResponseDto information = restaurantService.getInformation(restaurantId);
 
       return new BaseResponse<>(200,"가게 정보를 불러왔습니다",information);
    }
+
 }
