@@ -10,11 +10,9 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseErrorResponse> handleException(Exception e) {
-        BaseException exception = new BaseException(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            e.getMessage()
-        );
-        return ResponseEntity.status(exception.getStatus()).body(new BaseErrorResponse(exception));
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body(new BaseErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
     }
 
     @ExceptionHandler(BaseException.class)
