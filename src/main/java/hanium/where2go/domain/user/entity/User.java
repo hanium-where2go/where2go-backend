@@ -46,4 +46,10 @@ public abstract class User {
     public void hashPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
+
+    public void update(UserInfoRequestDto userInfoRequestDto, PasswordEncoder passwordEncoder) {
+        this.nickname = userInfoRequestDto.getNickname();
+        this.password = userInfoRequestDto.getPassword();
+        hashPassword(passwordEncoder);
+    }
 }

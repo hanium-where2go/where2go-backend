@@ -2,10 +2,9 @@ package hanium.where2go.domain.customer.controller;
 
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.service.CustomerService;
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.global.response.BaseResponse;
-import hanium.where2go.global.smtp.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -53,5 +52,13 @@ public class CustomerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 가져왔습니다.", info));
+    }
+
+    @PatchMapping("/{customerId}/info")
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long customerId, @RequestBody UserInfoRequestDto userInfoRequestDto) {
+        CustomerInfoResponseDto info = customerService.updateInfo(userDetails, customerId, userInfoRequestDto);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", info));
     }
 }

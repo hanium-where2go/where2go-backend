@@ -3,6 +3,7 @@ package hanium.where2go.domain.customer.service;
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
@@ -87,6 +88,25 @@ public class CustomerService {
         if (customerId != customer.getId()) {
             throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
+
+        return CustomerInfoResponseDto.builder()
+            .name(customer.getName())
+            .nickname(customer.getNickname())
+            .email(customer.getEmail())
+            .phoneNumber(customer.getPhoneNumber())
+            .build();
+    }
+
+    public CustomerInfoResponseDto updateInfo(UserDetails userDetails, Long customerId, UserInfoRequestDto userInfoRequestDto) {
+
+        Customer customer = customerRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+
+        if (customerId != customer.getId()) {
+            throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
+        }
+        customer.update(userInfoRequestDto, passwordEncoder);
+        customerRepository.save(customer);
 
         return CustomerInfoResponseDto.builder()
             .name(customer.getName())
