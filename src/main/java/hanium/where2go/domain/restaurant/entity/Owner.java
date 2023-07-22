@@ -1,7 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 
-import hanium.where2go.domain.User;
+import hanium.where2go.domain.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;

@@ -1,11 +1,16 @@
 package hanium.where2go.domain.customer.controller;
 
 import hanium.where2go.domain.customer.dto.*;
+import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.service.CustomerService;
+import hanium.where2go.domain.user.AuthUser;
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.global.response.BaseResponse;
-import hanium.where2go.global.smtp.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,5 +46,21 @@ public class CustomerController {
     @GetMapping("/find-email")
     public BaseResponse<CustomerFindEmailResponseDto> findEmail(@RequestBody CustomerFindEmailRequestDto customerFindEmailRequestDto) {
         return new BaseResponse<>(200, "사용자 아이디를 가져왔습니다.", customerService.findEmail(customerFindEmailRequestDto));
+    }
+
+    @GetMapping("/{customerId}/info")
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> getCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId) {
+        CustomerInfoResponseDto info = customerService.getInfo(customer, customerId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 가져왔습니다.", info));
+    }
+
+    @PatchMapping("/{customerId}/info")
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId, @RequestBody UserInfoRequestDto userInfoRequestDto) {
+        CustomerInfoResponseDto info = customerService.updateInfo(customer, customerId, userInfoRequestDto);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", info));
     }
 }

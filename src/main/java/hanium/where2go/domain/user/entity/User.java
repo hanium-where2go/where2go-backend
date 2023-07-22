@@ -1,5 +1,6 @@
-package hanium.where2go.domain;
+package hanium.where2go.domain.user.entity;
 
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,14 +27,14 @@ public abstract class User {
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    public Long id;
+    private Long id;
 
-    public String name;
-    public String email;
-    public String password;
-    public String phoneNumber;
-    public String nickname;
-    public boolean isVerified;
+    private String name;
+    private String email;
+    private String password;
+    private String phoneNumber;
+    private String nickname;
+    private boolean isVerified;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
@@ -44,5 +45,11 @@ public abstract class User {
 
     public void hashPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+
+    public void update(UserInfoRequestDto userInfoRequestDto, PasswordEncoder passwordEncoder) {
+        this.nickname = userInfoRequestDto.getNickname();
+        this.password = userInfoRequestDto.getPassword();
+        hashPassword(passwordEncoder);
     }
 }
