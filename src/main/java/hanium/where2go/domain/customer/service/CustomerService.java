@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,23 @@ public class CustomerService {
         Customer customer = customerRepository.findByNameAndPhoneNumber(customerFindEmailRequestDto.getName(), customerFindEmailRequestDto.getPhoneNumber())
             .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
         return new CustomerFindEmailResponseDto(customer.getEmail());
+    }
+
+    public CustomerInfoResponseDto getInfo(UserDetails userDetails, Long customerId) {
+
+        Customer customer = customerRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+
+        if (customerId != customer.getId()) {
+            throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
+        }
+
+        return CustomerInfoResponseDto.builder()
+            .name(customer.getName())
+            .nickname(customer.getNickname())
+            .email(customer.getEmail())
+            .phoneNumber(customer.getPhoneNumber())
+            .build();
     }
 
 }
