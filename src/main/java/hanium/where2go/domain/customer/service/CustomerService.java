@@ -80,11 +80,7 @@ public class CustomerService {
         return new CustomerFindEmailResponseDto(customer.getEmail());
     }
 
-    public CustomerInfoResponseDto getInfo(UserDetails userDetails, Long customerId) {
-
-        Customer customer = customerRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
-
+    public CustomerInfoResponseDto getInfo(Customer customer, Long customerId) {
         if (customerId != customer.getId()) {
             throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
@@ -98,14 +94,11 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerInfoResponseDto updateInfo(UserDetails userDetails, Long customerId, UserInfoRequestDto userInfoRequestDto) {
-
-        Customer customer = customerRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
-
+    public CustomerInfoResponseDto updateInfo(Customer customer, Long customerId, UserInfoRequestDto userInfoRequestDto) {
         if (customerId != customer.getId()) {
             throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
+
         customer.update(userInfoRequestDto, passwordEncoder);
         customerRepository.save(customer);
 

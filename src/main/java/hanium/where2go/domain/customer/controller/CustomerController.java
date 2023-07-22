@@ -1,7 +1,9 @@
 package hanium.where2go.domain.customer.controller;
 
 import hanium.where2go.domain.customer.dto.*;
+import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.service.CustomerService;
+import hanium.where2go.domain.user.AuthUser;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,16 +49,16 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}/info")
-    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> getCustomerInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long customerId) {
-        CustomerInfoResponseDto info = customerService.getInfo(userDetails, customerId);
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> getCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId) {
+        CustomerInfoResponseDto info = customerService.getInfo(customer, customerId);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 가져왔습니다.", info));
     }
 
     @PatchMapping("/{customerId}/info")
-    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long customerId, @RequestBody UserInfoRequestDto userInfoRequestDto) {
-        CustomerInfoResponseDto info = customerService.updateInfo(userDetails, customerId, userInfoRequestDto);
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId, @RequestBody UserInfoRequestDto userInfoRequestDto) {
+        CustomerInfoResponseDto info = customerService.updateInfo(customer, customerId, userInfoRequestDto);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", info));
