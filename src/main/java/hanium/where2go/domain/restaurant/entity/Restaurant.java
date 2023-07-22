@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
+import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,9 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Event> events = new ArrayList<>();
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Review> review = new ArrayList<>();
+
     public String restaurantName;
     public String address;
     public String description;
@@ -51,6 +55,9 @@ public class Restaurant extends BaseEntity {
     public BigDecimal latitude;
     public String location;
     public Boolean parkingLot;
+    public String restaurantImage;
+    private double responseAvg;
+    private double rateAvg;
 
     //테스트 위해 추가
     public void setMenuList(List<Menu> menuList) {
