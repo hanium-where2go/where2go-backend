@@ -1,6 +1,6 @@
 package hanium.where2go.domain.customer.entity;
 
-import hanium.where2go.domain.User;
+import hanium.where2go.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
