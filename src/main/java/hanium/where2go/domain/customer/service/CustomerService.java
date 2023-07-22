@@ -97,6 +97,7 @@ public class CustomerService {
             .build();
     }
 
+    @Transactional
     public CustomerInfoResponseDto updateInfo(UserDetails userDetails, Long customerId, UserInfoRequestDto userInfoRequestDto) {
 
         Customer customer = customerRepository.findByEmail(userDetails.getUsername())
