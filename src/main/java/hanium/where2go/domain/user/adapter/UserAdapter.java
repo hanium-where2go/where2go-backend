@@ -12,7 +12,7 @@ public class UserAdapter extends org.springframework.security.core.userdetails.U
     private User user;
 
     public UserAdapter(User user) {
-        super(user.getEmail(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        super(user.getEmail(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())));
         this.user = user;
     }
 

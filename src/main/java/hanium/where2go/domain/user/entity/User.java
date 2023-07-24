@@ -3,6 +3,7 @@ package hanium.where2go.domain.user.entity;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -21,7 +22,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "role")
 public abstract class User {
 
     @Id
@@ -35,6 +35,11 @@ public abstract class User {
     private String phoneNumber;
     private String nickname;
     private boolean isVerified;
+
+    //기본 유저 생성시 GUEST로 초기화
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.GUEST;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
