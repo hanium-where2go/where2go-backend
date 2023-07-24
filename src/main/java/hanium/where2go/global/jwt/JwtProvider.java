@@ -1,6 +1,6 @@
 package hanium.where2go.global.jwt;
 
-import hanium.where2go.domain.customer.service.CustomerDetailServiceImpl;
+import hanium.where2go.domain.user.service.UserDetailServiceImpl;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import io.jsonwebtoken.Claims;
@@ -8,9 +8,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -30,16 +27,16 @@ public class JwtProvider {
     private final Key secretKey;
     private final Long accessTokenExpireTime;
     private final Long refreshTokenExpireTime;
-    private final CustomerDetailServiceImpl customerDetailService;
+    private final UserDetailServiceImpl userDetailService;
 
     public JwtProvider(@Value("${jwt.secretKey}") String secretKey,
                        @Value("${jwt.access.expire-time}") Long accessTokenExpireTime,
                        @Value("${jwt.refresh.expire-time}") Long refreshTokenExpireTime,
-                        CustomerDetailServiceImpl customerDetailService) {
+                       UserDetailServiceImpl userDetailService) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessTokenExpireTime = accessTokenExpireTime;
         this.refreshTokenExpireTime = refreshTokenExpireTime;
-        this.customerDetailService = customerDetailService;
+        this.userDetailService = userDetailService;
     }
 
     //이메일을 바탕으로 AccessToken 생성
@@ -104,7 +101,7 @@ public class JwtProvider {
     //Access token으로 부터 Authentication 객체 생성
     public Authentication getAuthenticationByAccessToken(String accessToken) {
         String email = extractEmail(accessToken);
-        UserDetails userDetails = customerDetailService.loadUserByUsername(email);
+        UserDetails userDetails = userDetailService.loadUserByUsername(email);
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
