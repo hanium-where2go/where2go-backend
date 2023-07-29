@@ -23,8 +23,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        BaseException exception = new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
-        setResponse(response, exception);
+
+        BaseException tokenError = (BaseException) request.getAttribute("error");
+        if (tokenError != null) {
+            setResponse(response, tokenError);
+        } else {
+            BaseException exception = new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
+            setResponse(response, exception);
+        }
 
     }
 
@@ -32,7 +38,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(e.getStatus());
 
         response.getWriter().write(objectMapper.writeValueAsString(new BaseErrorResponse(e)));
