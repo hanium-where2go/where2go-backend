@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         } catch (BaseException e) {
             SecurityContextHolder.clearContext();
-            throw e;
+            request.setAttribute("error", e);
         }
         filterChain.doFilter(request, response);
     }
