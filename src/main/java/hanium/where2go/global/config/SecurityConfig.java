@@ -1,5 +1,7 @@
 package hanium.where2go.global.config;
 
+import hanium.where2go.domain.user.entity.Role;
+import hanium.where2go.global.handler.AccessDeniedHandlerImpl;
 import hanium.where2go.global.jwt.JwtAuthenticationEntryPoint;
 import hanium.where2go.global.jwt.JwtFilter;
 import hanium.where2go.global.jwt.JwtProvider;
@@ -23,6 +25,7 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final AccessDeniedHandlerImpl accessDeniedHandler;
 
     private final String[] WHITE_LIST = {
         "/customer/signup",
@@ -45,8 +48,11 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(WHITE_LIST).permitAll())
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().authenticated())
-            //Unauthorized exception처리
-            .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+//            Unauthenticated | Unauthorized user exception
+            .exceptionHandling(exceptionHandling ->
+                exceptionHandling
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler));
 
         //JwtFilter 적용
         http.
