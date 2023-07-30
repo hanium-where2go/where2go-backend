@@ -28,21 +28,23 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
 
-    public List<ReviewResponseDto> searchReview(Long restaurantId) {
+    public List<ReviewResponseDto> searchReview(Long restaurantId){
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
         List<ReviewResponseDto> reviews = restaurant.getReview().stream()
                 .map(review -> new ReviewResponseDto(
-                        review.getReservation().getCustomer().getName(),
                         review.getContent(),
+                        review.getReservation().getCustomer().getNickname(),
                         review.getReviewHashtags().stream()
-                                .map(reviewHashtag -> reviewHashtag.getHashtag().getReview_hashtagName().getHashtagName()) // List<PredefinedHashtags>를 List<String>으로 변환
+                                .map(reviewHashtag -> reviewHashtag.getHashtag().getReview_hashtagName().getHashtagName())
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
+
         return reviews;
     }
+
 }
 
 
