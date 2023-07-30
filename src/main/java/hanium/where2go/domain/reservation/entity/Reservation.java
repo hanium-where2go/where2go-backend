@@ -34,8 +34,9 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name="review_id")
+    private Review review;
 
     private Integer numberOfPeople;
     private LocalDateTime reservationTime;
