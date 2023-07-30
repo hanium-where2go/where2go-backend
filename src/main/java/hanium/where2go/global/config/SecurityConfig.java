@@ -30,7 +30,8 @@ public class SecurityConfig {
     private final String[] WHITE_LIST = {
         "/customer/signup",
         "/customer/login",
-        "/customer/find-email"
+        "/customer/find-email",
+        "/customer/email-verification/*"
     };
 
     @Bean
