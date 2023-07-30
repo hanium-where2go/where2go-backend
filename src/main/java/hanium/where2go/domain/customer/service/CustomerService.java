@@ -4,6 +4,7 @@ import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
+import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
@@ -110,4 +111,12 @@ public class CustomerService {
             .build();
     }
 
+    @Transactional
+    public void authorizeCustomer(String token) {
+        String email = jwtProvider.extractEmail(token);
+        Customer customer = customerRepository.findByEmail(email)
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+
+        customer.authorize(Role.CUSTOMER);
+    }
 }
