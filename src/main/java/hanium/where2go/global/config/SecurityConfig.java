@@ -3,8 +3,6 @@ package hanium.where2go.global.config;
 import hanium.where2go.global.jwt.JwtAuthenticationEntryPoint;
 import hanium.where2go.global.jwt.JwtFilter;
 import hanium.where2go.global.jwt.JwtProvider;
-import hanium.where2go.global.response.BaseException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +27,8 @@ public class SecurityConfig {
     private final String[] WHITE_LIST = {
         "/customer/signup",
         "/customer/login",
-        "/customer/find-email"
+        "/customer/find-email",
+        "/customer/email-verification/*"
     };
 
     @Bean

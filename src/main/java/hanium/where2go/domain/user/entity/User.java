@@ -57,4 +57,8 @@ public abstract class User {
         this.password = userInfoRequestDto.getPassword();
         hashPassword(passwordEncoder);
     }
+
+    public void authorize(Role role) {
+        this.role = role;
+    }
 }
