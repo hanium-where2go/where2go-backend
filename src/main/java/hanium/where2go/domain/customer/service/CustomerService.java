@@ -4,6 +4,7 @@ import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
+import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
@@ -13,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,4 +110,12 @@ public class CustomerService {
             .build();
     }
 
+    @Transactional
+    public void authorizeCustomer(String token) {
+        String email = jwtProvider.extractEmail(token);
+        Customer customer = customerRepository.findByEmail(email)
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+
+        customer.authorize(Role.CUSTOMER);
+    }
 }

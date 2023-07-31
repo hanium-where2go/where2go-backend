@@ -2,7 +2,6 @@ package hanium.where2go.global.response;
 
 import lombok.Getter;
 
-// r
 @Getter
 public class BaseResponse<T> {
 
