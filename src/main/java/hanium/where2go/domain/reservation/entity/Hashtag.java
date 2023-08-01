@@ -20,7 +20,5 @@ public class Hashtag extends BaseEntity {
     @Column(name = "hashtag_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private PredefinedHashtags review_hashtagName;
-
+    private String hashtagName;
 }

@@ -2,10 +2,6 @@ package hanium.where2go.domain.restaurant.service;
 
 
 import hanium.where2go.domain.reservation.dto.ReviewResponseDto;
-import hanium.where2go.domain.reservation.entity.Hashtag;
-import hanium.where2go.domain.reservation.entity.PredefinedHashtags;
-import hanium.where2go.domain.reservation.entity.Review;
-import hanium.where2go.domain.reservation.entity.ReviewHashtag;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.domain.restaurant.repository.ReviewRepository;
@@ -15,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +31,7 @@ public class ReviewService {
                         review.getContent(),
                         review.getReservation().getCustomer().getNickname(),
                         review.getReviewHashtags().stream()
-                                .map(reviewHashtag -> reviewHashtag.getHashtag().getReview_hashtagName().getHashtagName())
+                                .map(reviewHashtag -> reviewHashtag.getHashtag().getHashtagName())
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());

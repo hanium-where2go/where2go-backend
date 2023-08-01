@@ -3,10 +3,7 @@ package hanium.where2go.domain.reservation.entity;
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +33,6 @@ public class Review extends BaseEntity {
 
     @OneToMany(mappedBy = "review")
     private List<ReviewHashtag> reviewHashtags = new ArrayList<>();
-
-
 
     private Double rate;
     private String content;
