@@ -9,3 +9,4 @@ spring:
       - db
       - jwt
       - smtp
+      - map
