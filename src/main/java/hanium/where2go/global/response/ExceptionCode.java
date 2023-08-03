@@ -15,7 +15,9 @@ public enum ExceptionCode {
     UNAUTHORIZED_USER(401,"User does not authorized."),
     CATEGORY_NOT_FOUND(404, "Category does not found."),
     LIQUOR_NOT_FOUND(404, "Liquor does not found."),
-    EVENT_NOT_FOUND(404,"Event does not found");
+    EVENT_NOT_FOUND(404,"Event does not found"),
+
+    RESERVATION_NOT_FOUND(404,"Reservation does not found");
 
     private int status;
     private String message;

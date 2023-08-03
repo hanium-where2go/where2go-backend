@@ -6,11 +6,10 @@ import hanium.where2go.domain.customer.service.CustomerService;
 import hanium.where2go.domain.user.AuthUser;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.global.response.BaseResponse;
+import hanium.where2go.global.smtp.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
     private final CustomerService customerService;
-    //private final EmailService emailService;
+    private final EmailService emailService;
 
     @PostMapping("/signup")
     public BaseResponse<String> signup(@RequestBody CustomerSignupRequestDto customerSignupRequestDto) {
         customerService.signup(customerSignupRequestDto);
-       // emailService.sendSimpleMessage(customerSignupRequestDto.getEmail());
+        emailService.sendAuthorizationEmail(customerSignupRequestDto.getEmail());
         return new BaseResponse(200, "회원가입이 완료되었습니다.", null);
     }
 
@@ -62,5 +61,13 @@ public class CustomerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", info));
+    }
+
+    @PatchMapping("/email-verification/{token}")
+    public ResponseEntity<BaseResponse<String>> authorizeCustomer(@PathVariable String token) {
+        customerService.authorizeCustomer(token);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", null));
     }
 }

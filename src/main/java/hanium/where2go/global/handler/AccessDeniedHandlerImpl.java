@@ -1,4 +1,4 @@
-package hanium.where2go.global.jwt;
+package hanium.where2go.global.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hanium.where2go.global.response.BaseErrorResponse;
@@ -8,30 +8,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Slf4j
 @Component
-//Authentication Error 처리
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
+public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-
-        BaseException tokenError = (BaseException) request.getAttribute("error");
-        if (tokenError != null) {
-            setResponse(response, tokenError);
-        } else {
-            BaseException exception = new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
-            setResponse(response, exception);
-        }
-
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        setResponse(response, new BaseException(ExceptionCode.UNAUTHORIZED_USER));
     }
 
     private void setResponse(HttpServletResponse response, BaseException e) throws IOException {
@@ -42,6 +30,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(e.getStatus());
 
         response.getWriter().write(objectMapper.writeValueAsString(new BaseErrorResponse(e)));
-
     }
 }
