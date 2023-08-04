@@ -55,14 +55,14 @@ public class ReviewService {
         int count = 0;
         for (Object[] data : top3Hashtag) { // top 3 를 뽑아야 하는데 빈도수가 같은 해시태그가 여러 개 나올 수 있기 때문에 3개로 제한
             String hashtagName = (String) data[0];
-            if (!top3HashtagNames.contains(hashtagName)) {
                 top3HashtagNames.add(hashtagName);
                 count++;
-            }
-            if (count == 3) { // 3개로 제한
+
+            if (count == 3) { // 빈도수가 같으면 배열의 앞쪽에 있는 내용 3개가 나옴
                 break;
             }
         }
+
         return new HashtagResponseDto(top3HashtagNames);
     }
 
