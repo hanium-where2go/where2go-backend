@@ -1,6 +1,8 @@
 package hanium.where2go.domain.customer.entity;
 
 import hanium.where2go.domain.BaseEntity;
+import hanium.where2go.global.response.BaseException;
+import hanium.where2go.global.response.ExceptionCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,4 +27,23 @@ public class Point extends BaseEntity {
     private Customer customer;
 
     private int amount;
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void earn(int amount) {
+        this.amount += amount;
+    }
+
+    public void use(int amount) {
+        if (this.amount - amount < 0) {
+            throw new BaseException(ExceptionCode.POINT_NOT_ENOUGH);
+        }
+        this.amount -= amount;
+    }
+
+    public void load(int amount) {
+        this.amount += amount;
+    }
 }

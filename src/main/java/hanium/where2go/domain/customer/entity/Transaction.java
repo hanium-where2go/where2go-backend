@@ -24,11 +24,9 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = "customer")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-    //거래 타입 -> Enum
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
     private int amount;
     private String description;
 }

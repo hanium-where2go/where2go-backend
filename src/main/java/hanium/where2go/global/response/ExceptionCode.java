@@ -16,8 +16,8 @@ public enum ExceptionCode {
     CATEGORY_NOT_FOUND(404, "Category does not found."),
     LIQUOR_NOT_FOUND(404, "Liquor does not found."),
     EVENT_NOT_FOUND(404,"Event does not found"),
-
-    RESERVATION_NOT_FOUND(404,"Reservation does not found");
+    RESERVATION_NOT_FOUND(404,"Reservation does not found"),
+    POINT_NOT_ENOUGH(409, "Not enough point");
 
     private int status;
     private String message;
