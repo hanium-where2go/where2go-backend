@@ -70,4 +70,11 @@ public class CustomerController {
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", null));
     }
+
+    @GetMapping("/point")
+    public ResponseEntity<BaseResponse<CustomerPointResponseDto>> getPoint(@AuthUser Customer customer) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 포인트를 가져왔습니다.", customerService.getPoint(customer)));
+    }
 }

@@ -2,6 +2,7 @@ package hanium.where2go.domain.customer.service;
 
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
+import hanium.where2go.domain.customer.entity.Point;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.domain.user.entity.Role;
@@ -117,5 +118,24 @@ public class CustomerService {
             .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
 
         customer.authorize(Role.CUSTOMER);
+
+        //포인트 생성
+        Point point = Point.builder()
+            .amount(0)
+            .build();
+
+        customer.setPoint(point);
+
+        //기본 포인트 10000원 적립
+        customer.earn(10000, "회원가입");
+    }
+
+    public CustomerPointResponseDto getPoint(Customer customer) {
+        Customer findCustomer = customerRepository.findByEmail(customer.getEmail())
+            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+
+        return CustomerPointResponseDto.builder()
+            .point(findCustomer.getPoint().getAmount())
+            .build();
     }
 }

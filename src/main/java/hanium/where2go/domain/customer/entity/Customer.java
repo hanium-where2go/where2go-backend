@@ -32,4 +32,48 @@ public class Customer extends User {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
+
+    public void setPoint(Point point) {
+        this.point = point;
+        point.setCustomer(this);
+    }
+
+    public void earn(int amount, String description) {
+        point.earn(amount);
+
+        Transaction transaction = Transaction.builder()
+            .amount(amount)
+            .customer(this)
+            .description(description)
+            .type(TransactionType.EARN)
+            .build();
+
+        this.transactions.add(transaction);
+    }
+
+    public void use(int amount, String description) {
+        point.use(amount);
+
+        Transaction transaction = Transaction.builder()
+            .amount(amount)
+            .customer(this)
+            .description(description)
+            .type(TransactionType.USE)
+            .build();
+
+        this.transactions.add(transaction);
+    }
+
+    public void load(int amount, String description) {
+        point.load(amount);
+
+        Transaction transaction = Transaction.builder()
+            .amount(amount)
+            .customer(this)
+            .description(description)
+            .type(TransactionType.LOAD)
+            .build();
+
+        this.transactions.add(transaction);
+    }
 }
