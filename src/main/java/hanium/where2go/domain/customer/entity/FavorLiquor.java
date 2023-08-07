@@ -29,4 +29,8 @@ public class FavorLiquor extends BaseEntity {
     @JoinColumn(name = "liquor_id")
     private Liquor liquor;
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
 }
