@@ -19,7 +19,7 @@ public class Category extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;
-    private String categoryName;
+  private String categoryName;
 
     public void changeCategoryName(String categoryName) {
         this.categoryName = categoryName;

@@ -15,6 +15,8 @@ import hanium.where2go.domain.restaurant.entity.Event;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.entity.RestaurantCategory;
 import hanium.where2go.domain.restaurant.entity.RestaurantLiquor;
+import hanium.where2go.domain.restaurant.repository.RestaurantCategoryRepository;
+import hanium.where2go.domain.restaurant.repository.RestaurantLiquorRepository;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
@@ -37,6 +39,8 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final CategoryRepository categoryRepository;
     private final LiquorRepository liquorRepository;
+    private final RestaurantCategoryRepository restaurantCategoryRepository;
+    private final RestaurantLiquorRepository restaurantLiquorRepository;
 
      // 레스토랑 정보 얻기
     public InformationResponseDto getInformation(Long restaurantId) {
@@ -140,8 +144,18 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
+        for(RestaurantCategory restaurantCategory : savedRestaurant.getRestaurantCategories()){
+            restaurantCategory.setRestaurant(savedRestaurant);
+            restaurantCategoryRepository.save(restaurantCategory);
+        }
 
+
+        for(RestaurantLiquor restaurantLiquor : savedRestaurant.getRestaurantLiquors()){
+            restaurantLiquor.setRestaurant(savedRestaurant);
+            restaurantLiquorRepository.save(restaurantLiquor);
+        }
+
+        return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
     }
 }

@@ -29,7 +29,12 @@ public class RestaurantLiquor extends BaseEntity {
     @JoinColumn(name = "liquor_id")
     private Liquor liquor;
 
-    public RestaurantLiquor(Restaurant savedRestaurant, Liquor liquor) {
-        super();
+    public RestaurantLiquor(Restaurant restaurant, Liquor liquor) {
+        this.restaurant = restaurant;
+        this.liquor = liquor;
+    }
+
+    public void setRestaurant(Restaurant savedRestaurant) {
+        this.restaurant = savedRestaurant;
     }
 }

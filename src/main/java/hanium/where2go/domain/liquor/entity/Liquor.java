@@ -21,6 +21,7 @@ public class Liquor extends BaseEntity {
     private Long id;
     private String liquorName;
 
+
     public void changeLiquorName(String liquorName) {
         this.liquorName = liquorName;
     }
