@@ -72,4 +72,7 @@ public class Restaurant extends BaseEntity {
     public void setRestaurantLiquors(List<RestaurantLiquor> restaurantLiquors) {
         this.restaurantLiquors = restaurantLiquors;
     }
+
+
+
 }

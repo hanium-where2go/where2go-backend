@@ -7,10 +7,7 @@ import hanium.where2go.domain.liquor.dto.LiquorDto;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.reservation.entity.Review;
-import hanium.where2go.domain.restaurant.dto.CommonInformationResponseDto;
-import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
-import hanium.where2go.domain.restaurant.dto.RestaurantEnrollResponseDto;
-import hanium.where2go.domain.restaurant.dto.RestaurantEnrollRequestDto;
+import hanium.where2go.domain.restaurant.dto.*;
 import hanium.where2go.domain.restaurant.entity.Event;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.entity.RestaurantCategory;
@@ -22,6 +19,7 @@ import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -157,6 +155,24 @@ public class RestaurantService {
 
         return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
+    }
+
+    //레스토랑 정보 변경
+    public RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        // source 객체인 restaurantUpdateRequestDto의 값을 target 객체인 restaurant로 복사.. setter 의 개수를 줄일 수 있다고 함
+        BeanUtils.copyProperties(restaurant, restaurantUpdateRequestDto);
+
+        // restaurant 객체를 저장하여 업데이트
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        // 업데이트 된 정보를 responseDto로 반환
+        return RestaurantUpdateResponseDto.builder()
+                .restaurantId(savedRestaurant.getRestaurantId())
+                .name(savedRestaurant.getRestaurantName())
+                .build();
     }
 }
 

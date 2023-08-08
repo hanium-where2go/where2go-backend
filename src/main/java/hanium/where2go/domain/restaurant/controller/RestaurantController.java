@@ -60,4 +60,14 @@ public class RestaurantController {
                   .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 공통 정보를 불러왔습니다", restaurantEnrollResponseDto ));
    }
 
+   // 레스토랑 정보 수정
+    @PatchMapping("/{restaurantId}")
+    public ResponseEntity<BaseResponse<RestaurantUpdateResponseDto>> updateRestaurantInfo(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantUpdateRequestDto restaurantUpdateRequestDto){
+
+       RestaurantUpdateResponseDto restaurantUpdateResponseDto = restaurantService.updateRestaurantInfo(restaurantId,restaurantUpdateRequestDto);
+
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 정보를 수정하였습니다", restaurantUpdateResponseDto));
+    }
 }
