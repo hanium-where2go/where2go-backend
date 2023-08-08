@@ -28,4 +28,8 @@ public class RestaurantLiquor extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_id")
     private Liquor liquor;
+
+    public RestaurantLiquor(Restaurant savedRestaurant, Liquor liquor) {
+        super();
+    }
 }

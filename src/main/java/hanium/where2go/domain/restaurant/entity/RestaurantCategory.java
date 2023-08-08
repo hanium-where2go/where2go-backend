@@ -30,4 +30,7 @@ public class RestaurantCategory extends BaseEntity {
     private Category category;
 
 
+    public RestaurantCategory(Restaurant savedRestaurant, Category category) {
+        super();
+    }
 }
