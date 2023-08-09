@@ -38,6 +38,7 @@ public class Customer extends User {
         point.setCustomer(this);
     }
 
+    // 포인트 적립, 사용, 충전
     public void earn(int amount, String description) {
         point.earn(amount);
 
@@ -75,5 +76,25 @@ public class Customer extends User {
             .build();
 
         this.transactions.add(transaction);
+    }
+
+    //선호 주종
+    public void addFavorLiquor(FavorLiquor favorLiquor) {
+        favorLiquor.setCustomer(this);
+        favorLiquors.add(favorLiquor);
+    }
+
+    public void removeFavorLiquor(FavorLiquor favorLiquor) {
+        favorLiquor.setCustomer(null);
+    }
+
+    //선호 업종
+    public void addFavorCategory(FavorCategory favorCategory) {
+        favorCategory.setCustomer(this);
+        favorCategories.add(favorCategory);
+    }
+
+    public void removeFavorCategory(FavorCategory favorCategory) {
+        favorCategory.setCustomer(null);
     }
 }
