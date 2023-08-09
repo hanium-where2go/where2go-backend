@@ -3,11 +3,14 @@ package hanium.where2go.domain.restaurant.entity;
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantUpdateRequestDto;
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -73,6 +76,17 @@ public class Restaurant extends BaseEntity {
         this.restaurantLiquors = restaurantLiquors;
     }
 
+    public void update(RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+        this.restaurantName = restaurantUpdateRequestDto.getRestaurantName();
+        this.location = restaurantUpdateRequestDto.getLocation();
+        this.start_time = restaurantUpdateRequestDto.getStartTime();
+        this.end_time = restaurantUpdateRequestDto.getEndTime();
+        this.closed_day = restaurantUpdateRequestDto.getClosedDay();
+        this.tel = restaurantUpdateRequestDto.getTel();
+        this.total_seat = restaurantUpdateRequestDto.getTotalSeat();
+        this.onetime_Seat = restaurantUpdateRequestDto.getOnetimeSeat();
+        this.parkingLot = restaurantUpdateRequestDto.getParkingLot();
+    }
 
 
 }

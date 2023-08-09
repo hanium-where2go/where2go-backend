@@ -23,10 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,8 +109,8 @@ public class RestaurantService {
         return sumOfRatings / reviews.size();
     }
 
-     // 레스토랑 정보 등록
 
+    // 레스토랑 정보 등록
     @Transactional
     public RestaurantEnrollResponseDto enrollRestaurant(RestaurantEnrollRequestDto restaurantEnrollDto){
 
@@ -130,24 +127,28 @@ public class RestaurantService {
                 .build();
 
 
+        // 요청된 레스토랑의 카테고리를 추출한다
         List<Category> categories = categoryRepository.findByCategoryNameIn(restaurantEnrollDto.getCategoryNames());
         restaurant.setRestaurantCategories(categories.stream()
                 .map(category -> new RestaurantCategory(restaurant, category))
                 .collect(Collectors.toList()));
 
+        // 요청 된 레스토랑의 주종을 추출한다
         List<Liquor> liquors = liquorRepository.findByLiquorNameIn(restaurantEnrollDto.getLiquorNames());
         restaurant.setRestaurantLiquors(liquors.stream()
                 .map(liquor -> new RestaurantLiquor(restaurant, liquor))
                 .collect(Collectors.toList()));
 
+        // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
+        // RestaurantCategory 에 restaurant 저장해주기
         for(RestaurantCategory restaurantCategory : savedRestaurant.getRestaurantCategories()){
             restaurantCategory.setRestaurant(savedRestaurant);
             restaurantCategoryRepository.save(restaurantCategory);
         }
 
-
+        // RestaurantLiquor 에 restaurant 저장해주기
         for(RestaurantLiquor restaurantLiquor : savedRestaurant.getRestaurantLiquors()){
             restaurantLiquor.setRestaurant(savedRestaurant);
             restaurantLiquorRepository.save(restaurantLiquor);
@@ -157,22 +158,58 @@ public class RestaurantService {
 
     }
 
-    //레스토랑 정보 변경
+
+    // 레스토랑 정보 업데이트
     public RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        // source 객체인 restaurantUpdateRequestDto의 값을 target 객체인 restaurant로 복사.. setter 의 개수를 줄일 수 있다고 함
-        BeanUtils.copyProperties(restaurant, restaurantUpdateRequestDto);
+        restaurant.update(restaurantUpdateRequestDto);
 
-        // restaurant 객체를 저장하여 업데이트
+        List<Category> updatedCategories = categoryRepository.findByCategoryNameIn(restaurantUpdateRequestDto.getCategoryNames());
+        updateCategories(restaurant, updatedCategories);
+
+        List<Liquor> updatedLiquors = liquorRepository.findByLiquorNameIn(restaurantUpdateRequestDto.getLiquorNames());
+        updateLiquors(restaurant, updatedLiquors);
+
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        // 업데이트 된 정보를 responseDto로 반환
         return RestaurantUpdateResponseDto.builder()
                 .restaurantId(savedRestaurant.getRestaurantId())
                 .name(savedRestaurant.getRestaurantName())
                 .build();
+    }
+
+    private void updateCategories(Restaurant restaurant, List<Category> updatedCategories) {
+        List<RestaurantCategory> existingCategories = new ArrayList<>(restaurant.getRestaurantCategories());
+        Iterator<RestaurantCategory> categoryIterator = existingCategories.iterator();
+        while (categoryIterator.hasNext()) {
+            RestaurantCategory existingCategory = categoryIterator.next();
+            if (!updatedCategories.contains(existingCategory.getCategory())) {
+                restaurant.getRestaurantCategories().remove(existingCategory);
+            }
+        }
+        for (Category category : updatedCategories) {
+            if (restaurant.getRestaurantCategories().stream().noneMatch(rc -> rc.getCategory().equals(category))) {
+                restaurant.getRestaurantCategories().add(new RestaurantCategory(restaurant, category));
+            }
+        }
+    }
+
+    private void updateLiquors(Restaurant restaurant, List<Liquor> updatedLiquors) {
+        List<RestaurantLiquor> existingLiquors = new ArrayList<>(restaurant.getRestaurantLiquors());
+        Iterator<RestaurantLiquor> liquorIterator = existingLiquors.iterator();
+        while (liquorIterator.hasNext()) {
+            RestaurantLiquor existingLiquor = liquorIterator.next();
+            if (!updatedLiquors.contains(existingLiquor.getLiquor())) {
+                restaurant.getRestaurantLiquors().remove(existingLiquor);
+            }
+        }
+        for (Liquor liquor : updatedLiquors) {
+            if (restaurant.getRestaurantLiquors().stream().noneMatch(rl -> rl.getLiquor().equals(liquor))) {
+                restaurant.getRestaurantLiquors().add(new RestaurantLiquor(restaurant, liquor));
+            }
+        }
     }
 }
 

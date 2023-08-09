@@ -37,4 +37,8 @@ public class RestaurantLiquor extends BaseEntity {
     public void setRestaurant(Restaurant savedRestaurant) {
         this.restaurant = savedRestaurant;
     }
+
+    public void setLiquor(Liquor liquor) {
+        this.liquor = liquor;
+    }
 }

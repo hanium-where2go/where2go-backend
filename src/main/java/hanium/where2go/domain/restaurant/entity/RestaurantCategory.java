@@ -38,4 +38,8 @@ public class RestaurantCategory extends BaseEntity {
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
