@@ -185,13 +185,13 @@ public class RestaurantService {
         Iterator<RestaurantCategory> categoryIterator = existingCategories.iterator();
         while (categoryIterator.hasNext()) {
             RestaurantCategory existingCategory = categoryIterator.next();
-            if (!updatedCategories.contains(existingCategory.getCategory())) {
+            if (!updatedCategories.contains(existingCategory.getCategory())) { // 업데이트 카테고리에 원래 있던 카테고리가 없다면 원래 있던 카테고리 삭제
                 restaurant.getRestaurantCategories().remove(existingCategory);
             }
         }
         for (Category category : updatedCategories) {
-            if (restaurant.getRestaurantCategories().stream().noneMatch(rc -> rc.getCategory().equals(category))) {
-                restaurant.getRestaurantCategories().add(new RestaurantCategory(restaurant, category));
+            if (restaurant.getRestaurantCategories().stream().noneMatch(rc -> rc.getCategory().equals(category))) { // updateCategory 에 원래의 내용이 없다면
+                restaurant.getRestaurantCategories().add(new RestaurantCategory(restaurant, category)); // 새로 추가
             }
         }
     }
