@@ -1,9 +1,15 @@
 package hanium.where2go.domain.customer.service;
 
+import hanium.where2go.domain.category.entity.Category;
+import hanium.where2go.domain.category.repository.CategoryRepository;
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
+import hanium.where2go.domain.customer.entity.FavorCategory;
+import hanium.where2go.domain.customer.entity.FavorLiquor;
 import hanium.where2go.domain.customer.entity.Point;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
+import hanium.where2go.domain.liquor.entity.Liquor;
+import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
@@ -19,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -27,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final LiquorRepository liquorRepository;
+    private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -81,11 +91,7 @@ public class CustomerService {
         return new CustomerFindEmailResponseDto(customer.getEmail());
     }
 
-    public CustomerInfoResponseDto getInfo(Customer customer, Long customerId) {
-        if (customerId != customer.getId()) {
-            throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
-        }
-
+    public CustomerInfoResponseDto getInfo(Customer customer) {
         return CustomerInfoResponseDto.builder()
             .name(customer.getName())
             .nickname(customer.getNickname())
@@ -95,11 +101,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerInfoResponseDto updateInfo(Customer customer, Long customerId, UserInfoRequestDto userInfoRequestDto) {
-        if (customerId != customer.getId()) {
-            throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
-        }
-
+    public CustomerInfoResponseDto updateInfo(Customer customer, UserInfoRequestDto userInfoRequestDto) {
         customer.update(userInfoRequestDto, passwordEncoder);
         customerRepository.save(customer);
 
@@ -131,11 +133,79 @@ public class CustomerService {
     }
 
     public CustomerPointResponseDto getPoint(Customer customer) {
-        Customer findCustomer = customerRepository.findByEmail(customer.getEmail())
-            .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
-
         return CustomerPointResponseDto.builder()
-            .point(findCustomer.getPoint().getAmount())
+            .point(customer.getPoint().getAmount())
             .build();
+    }
+
+    @Transactional
+    public void createFavorLiquor(Customer customer, Long liquorId) {
+        customer.getFavorLiquors().stream()
+            .filter(fl -> fl.getLiquor().getId() == liquorId)
+            .findAny()
+            .ifPresent((f) -> {
+                throw new BaseException(ExceptionCode.DUPLICATED_FAVOR_LIQUOR);
+            });
+
+
+        Liquor liquor = liquorRepository.findById(liquorId)
+            .orElseThrow(() -> new BaseException(ExceptionCode.LIQUOR_NOT_FOUND));
+
+        FavorLiquor favorLiquor = FavorLiquor.builder()
+            .liquor(liquor)
+            .build();
+
+        customer.addFavorLiquor(favorLiquor);
+    }
+
+    public CustomerFavorLiquorResponseDto getFavorLiquors(Customer customer) {
+        return new CustomerFavorLiquorResponseDto(customer.getFavorLiquors().stream()
+            .map(favorLiquor -> favorLiquor.getLiquor().getId())
+            .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public void deleteFavorLiquor(Customer customer, Long liquorId) {
+        FavorLiquor favorLiquor = customer.getFavorLiquors().stream().
+            filter(fl -> fl.getLiquor().getId() == liquorId)
+            .findFirst()
+            .orElseThrow(() -> new BaseException(ExceptionCode.LIQUOR_NOT_FOUND));
+
+        customer.removeFavorLiquor(favorLiquor);
+    }
+
+    @Transactional
+    public void createFavorCategory(Customer customer, Long categoryId) {
+        customer.getFavorCategories().stream()
+            .filter(fc -> fc.getCategory().getId() == categoryId)
+            .findAny()
+            .ifPresent((f) -> {
+                throw new BaseException(ExceptionCode.DUPLICATED_FAVOR_CATEGORY);
+            });
+
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new BaseException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        FavorCategory favorCategory = FavorCategory.builder()
+            .category(category)
+            .build();
+
+        customer.addFavorCategory(favorCategory);
+    }
+
+    public CustomerFavorLiquorResponseDto getFavorCategories(Customer customer) {
+        return new CustomerFavorLiquorResponseDto(customer.getFavorCategories().stream()
+            .map(favorCategory -> favorCategory.getCategory().getId())
+            .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public void deleteFavorCategory(Customer customer, Long categoryId) {
+        FavorCategory favorCategory = customer.getFavorCategories().stream().
+            filter(fc -> fc.getCategory().getId() == categoryId)
+            .findFirst()
+            .orElseThrow(() -> new BaseException(ExceptionCode.LIQUOR_NOT_FOUND));
+
+        customer.removeFavorCategory(favorCategory);
     }
 }
