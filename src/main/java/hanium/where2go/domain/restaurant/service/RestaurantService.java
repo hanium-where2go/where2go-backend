@@ -1,20 +1,29 @@
 package hanium.where2go.domain.restaurant.service;
 
+import hanium.where2go.domain.category.dto.CategoryDto;
+import hanium.where2go.domain.category.entity.Category;
+import hanium.where2go.domain.category.repository.CategoryRepository;
+import hanium.where2go.domain.liquor.dto.LiquorDto;
+import hanium.where2go.domain.liquor.entity.Liquor;
+import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.reservation.entity.Review;
-import hanium.where2go.domain.restaurant.dto.CommonInformationResponseDto;
-import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
+import hanium.where2go.domain.restaurant.dto.*;
 import hanium.where2go.domain.restaurant.entity.Event;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
+import hanium.where2go.domain.restaurant.entity.RestaurantCategory;
+import hanium.where2go.domain.restaurant.entity.RestaurantLiquor;
+import hanium.where2go.domain.restaurant.repository.RestaurantCategoryRepository;
+import hanium.where2go.domain.restaurant.repository.RestaurantLiquorRepository;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +32,12 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final CategoryRepository categoryRepository;
+    private final LiquorRepository liquorRepository;
+    private final RestaurantCategoryRepository restaurantCategoryRepository;
+    private final RestaurantLiquorRepository restaurantLiquorRepository;
 
+     // 레스토랑 정보 얻기
     public InformationResponseDto getInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -39,6 +53,7 @@ public class RestaurantService {
         return informationResponseDto;
     }
 
+     // 레스토랑 공통 정보 얻기
     public CommonInformationResponseDto getCommonInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -80,6 +95,7 @@ public class RestaurantService {
         return commonInformationResponseDto;
     }
 
+     // 해시태그의 평균 계산
     private double calculateRate(Restaurant restaurant) {
         List<Review> reviews = restaurant.getReview();
         if (reviews.isEmpty()) {
@@ -93,5 +109,95 @@ public class RestaurantService {
         return sumOfRatings / reviews.size();
     }
 
+
+    // 레스토랑 정보 등록
+    @Transactional
+    public RestaurantEnrollResponseDto enrollRestaurant(RestaurantEnrollRequestDto restaurantEnrollDto){
+
+        Restaurant restaurant = Restaurant.builder()
+                .restaurantName(restaurantEnrollDto.getRestaurantName())
+                .location(restaurantEnrollDto.getLocation())
+                .start_time(restaurantEnrollDto.getStartTime())
+                .end_time(restaurantEnrollDto.getEndTime())
+                .closed_day(restaurantEnrollDto.getClosedDay())
+                .tel(restaurantEnrollDto.getTel())
+                .total_seat(restaurantEnrollDto.getTotalSeat())
+                .onetime_Seat(restaurantEnrollDto.getOnetimeSeat())
+                .parkingLot(restaurantEnrollDto.getParkingLot())
+                .build();
+
+
+        // 요청된 레스토랑의 카테고리를 추출한다
+        List<Category> categories = categoryRepository.findByCategoryNameIn(restaurantEnrollDto.getCategoryNames());
+        restaurant.setRestaurantCategories(categories.stream()
+                .map(category -> new RestaurantCategory(restaurant, category))
+                .collect(Collectors.toList()));
+
+        // 요청 된 레스토랑의 주종을 추출한다
+        List<Liquor> liquors = liquorRepository.findByLiquorNameIn(restaurantEnrollDto.getLiquorNames());
+        restaurant.setRestaurantLiquors(liquors.stream()
+                .map(liquor -> new RestaurantLiquor(restaurant, liquor))
+                .collect(Collectors.toList()));
+
+        // 레스토랑 저장해주기
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
+
+    }
+
+
+    // 레스토랑 정보 업데이트
+    public RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        restaurant.update(restaurantUpdateRequestDto);
+
+        List<Category> updatedCategories = categoryRepository.findByCategoryNameIn(restaurantUpdateRequestDto.getCategoryNames());
+        updateCategories(restaurant, updatedCategories);
+
+        List<Liquor> updatedLiquors = liquorRepository.findByLiquorNameIn(restaurantUpdateRequestDto.getLiquorNames());
+        updateLiquors(restaurant, updatedLiquors);
+
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        return RestaurantUpdateResponseDto.builder()
+                .restaurantId(savedRestaurant.getRestaurantId())
+                .name(savedRestaurant.getRestaurantName())
+                .build();
+    }
+
+    private void updateCategories(Restaurant restaurant, List<Category> updatedCategories) {
+        List<RestaurantCategory> existingCategories = new ArrayList<>(restaurant.getRestaurantCategories());
+        Iterator<RestaurantCategory> categoryIterator = existingCategories.iterator();
+        while (categoryIterator.hasNext()) {
+            RestaurantCategory existingCategory = categoryIterator.next();
+            if (!updatedCategories.contains(existingCategory.getCategory())) { // 업데이트 카테고리에 원래 있던 카테고리가 없다면 원래 있던 카테고리 삭제
+                restaurant.getRestaurantCategories().remove(existingCategory);
+            }
+        }
+        for (Category category : updatedCategories) {
+            if (restaurant.getRestaurantCategories().stream().noneMatch(rc -> rc.getCategory().equals(category))) { // updateCategory 에 원래의 내용이 없다면
+                restaurant.getRestaurantCategories().add(new RestaurantCategory(restaurant, category)); // 새로 추가
+            }
+        }
+    }
+
+    private void updateLiquors(Restaurant restaurant, List<Liquor> updatedLiquors) {
+        List<RestaurantLiquor> existingLiquors = new ArrayList<>(restaurant.getRestaurantLiquors());
+        Iterator<RestaurantLiquor> liquorIterator = existingLiquors.iterator();
+        while (liquorIterator.hasNext()) {
+            RestaurantLiquor existingLiquor = liquorIterator.next();
+            if (!updatedLiquors.contains(existingLiquor.getLiquor())) {
+                restaurant.getRestaurantLiquors().remove(existingLiquor);
+            }
+        }
+        for (Liquor liquor : updatedLiquors) {
+            if (restaurant.getRestaurantLiquors().stream().noneMatch(rl -> rl.getLiquor().equals(liquor))) {
+                restaurant.getRestaurantLiquors().add(new RestaurantLiquor(restaurant, liquor));
+            }
+        }
+    }
 }
 

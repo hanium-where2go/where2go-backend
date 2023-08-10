@@ -28,4 +28,17 @@ public class RestaurantLiquor extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_id")
     private Liquor liquor;
+
+    public RestaurantLiquor(Restaurant restaurant, Liquor liquor) {
+        this.restaurant = restaurant;
+        this.liquor = liquor;
+    }
+
+    public void setRestaurant(Restaurant savedRestaurant) {
+        this.restaurant = savedRestaurant;
+    }
+
+    public void setLiquor(Liquor liquor) {
+        this.liquor = liquor;
+    }
 }

@@ -3,13 +3,17 @@ package hanium.where2go.domain.restaurant.entity;
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantUpdateRequestDto;
+import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +54,7 @@ public class Restaurant extends BaseEntity {
     public String description;
     public String tel;
     public String businessRegistration;
-    public int seat;
+    public int seat; // 남은 자리수
     public BigDecimal longitude;
     public BigDecimal latitude;
     public String location;
@@ -58,10 +62,31 @@ public class Restaurant extends BaseEntity {
     public String restaurantImage;
     private double responseAvg;
     private double rateAvg;
+    public LocalTime start_time;
+    public LocalTime end_time;
+    public String closed_day;
+    public Integer total_seat; // 가게의 총 좌석수
+    public Integer onetime_Seat; // 단일로 예약 가능한 최대 좌석수
 
-    //테스트 위해 추가
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
+    public void setRestaurantCategories(List<RestaurantCategory> restaurantCategories) {
+        this.restaurantCategories = restaurantCategories;
     }
+
+    public void setRestaurantLiquors(List<RestaurantLiquor> restaurantLiquors) {
+        this.restaurantLiquors = restaurantLiquors;
+    }
+
+    public void update(RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+        this.restaurantName = restaurantUpdateRequestDto.getRestaurantName();
+        this.location = restaurantUpdateRequestDto.getLocation();
+        this.start_time = restaurantUpdateRequestDto.getStartTime();
+        this.end_time = restaurantUpdateRequestDto.getEndTime();
+        this.closed_day = restaurantUpdateRequestDto.getClosedDay();
+        this.tel = restaurantUpdateRequestDto.getTel();
+        this.total_seat = restaurantUpdateRequestDto.getTotalSeat();
+        this.onetime_Seat = restaurantUpdateRequestDto.getOnetimeSeat();
+        this.parkingLot = restaurantUpdateRequestDto.getParkingLot();
+    }
+
 
 }
