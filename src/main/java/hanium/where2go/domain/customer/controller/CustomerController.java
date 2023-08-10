@@ -47,17 +47,17 @@ public class CustomerController {
         return new BaseResponse<>(200, "사용자 아이디를 가져왔습니다.", customerService.findEmail(customerFindEmailRequestDto));
     }
 
-    @GetMapping("/{customerId}/info")
-    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> getCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId) {
-        CustomerInfoResponseDto info = customerService.getInfo(customer, customerId);
+    @GetMapping("/info")
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> getCustomerInfo(@AuthUser Customer customer) {
+        CustomerInfoResponseDto info = customerService.getInfo(customer);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 가져왔습니다.", info));
     }
 
-    @PatchMapping("/{customerId}/info")
-    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthUser Customer customer, @PathVariable Long customerId, @RequestBody UserInfoRequestDto userInfoRequestDto) {
-        CustomerInfoResponseDto info = customerService.updateInfo(customer, customerId, userInfoRequestDto);
+    @PatchMapping("/info")
+    public ResponseEntity<BaseResponse<CustomerInfoResponseDto>> updateCustomerInfo(@AuthUser Customer customer, @RequestBody UserInfoRequestDto userInfoRequestDto) {
+        CustomerInfoResponseDto info = customerService.updateInfo(customer, userInfoRequestDto);
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", info));
@@ -70,4 +70,58 @@ public class CustomerController {
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 정보를 업데이트 했습니다.", null));
     }
+
+    @GetMapping("/point")
+    public ResponseEntity<BaseResponse<CustomerPointResponseDto>> getPoint(@AuthUser Customer customer) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 포인트를 가져왔습니다.", customerService.getPoint(customer)));
+    }
+
+    @PostMapping("/favor-liquors")
+    public ResponseEntity<BaseResponse<String>> postFavorLiquor(@AuthUser Customer customer, @RequestBody CustomerFavorLiquorRequestDto customerFavorLiquorRequestDto) {
+        customerService.createFavorLiquor(customer, customerFavorLiquorRequestDto.getLiquorId());
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 주종을 추가했습니다.", null));
+    }
+
+    @GetMapping("/favor-liquors")
+    public ResponseEntity<BaseResponse<CustomerFavorLiquorResponseDto>> getFavorLiquors(@AuthUser Customer customer) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 주종을 가져왔습니다.", customerService.getFavorLiquors(customer)));
+    }
+
+    @DeleteMapping("/favor-liquors/{liquorId}")
+    public ResponseEntity<BaseResponse<String>> deleteFavorLiquor(@AuthUser Customer customer, @PathVariable Long liquorId) {
+        customerService.deleteFavorLiquor(customer, liquorId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 주종을 삭제했습니다.", null));
+    }
+
+    @PostMapping("/favor-categories")
+    public ResponseEntity<BaseResponse<String>> postFavorCategory(@AuthUser Customer customer, @RequestBody CustomerFavorCategoryRequestDto customerFavorCategoryRequestDto) {
+        customerService.createFavorCategory(customer, customerFavorCategoryRequestDto.getCategoryId());
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 업종을 추가했습니다.", null));
+    }
+
+    @GetMapping("/favor-categories")
+    public ResponseEntity<BaseResponse<CustomerFavorLiquorResponseDto>> getFavorCategories(@AuthUser Customer customer) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 업종을 가져왔습니다.", customerService.getFavorCategories(customer)));
+    }
+
+    @DeleteMapping("/favor-categories/{categoryId}")
+    public ResponseEntity<BaseResponse<String>> deleteFavorCategory(@AuthUser Customer customer, @PathVariable Long categoryId) {
+        customerService.deleteFavorCategory(customer, categoryId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 업종을 삭제했습니다.", null));
+    }
+
 }
