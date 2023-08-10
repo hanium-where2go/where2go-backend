@@ -44,10 +44,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail' /* 이메일 전송 */
 
 }
-//Respository 에서 쿼리문 사용하기 위한 것
-compileJava {
-	options.compilerArgs += ['-parameters']
-}
+
 
 tasks.named('test') {
 	useJUnitPlatform()

@@ -142,18 +142,6 @@ public class RestaurantService {
         // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        // RestaurantCategory 에 restaurant 저장해주기
-        for(RestaurantCategory restaurantCategory : savedRestaurant.getRestaurantCategories()){
-            restaurantCategory.setRestaurant(savedRestaurant);
-            restaurantCategoryRepository.save(restaurantCategory);
-        }
-
-        // RestaurantLiquor 에 restaurant 저장해주기
-        for(RestaurantLiquor restaurantLiquor : savedRestaurant.getRestaurantLiquors()){
-            restaurantLiquor.setRestaurant(savedRestaurant);
-            restaurantLiquorRepository.save(restaurantLiquor);
-        }
-
         return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
     }
