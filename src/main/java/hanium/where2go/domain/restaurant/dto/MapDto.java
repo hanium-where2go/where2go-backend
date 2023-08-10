@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 public class MapDto {
 
     @Builder
@@ -23,5 +25,15 @@ public class MapDto {
         private String jibunAddr;
         private String longitude;
         private String latitude;
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    public static class KeywordMapResponses {
+        private int totalCount;
+        private int page;
+        private int count;
+        List<KeywordMapResponse> keywordMapResponses;
     }
 }

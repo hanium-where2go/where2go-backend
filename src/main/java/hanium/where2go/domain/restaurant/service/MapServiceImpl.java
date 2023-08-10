@@ -12,7 +12,7 @@ public class MapServiceImpl implements MapService {
     private final MapUtils mapUtils;
 
     @Override
-    public MapDto.KeywordMapResponse getAddrByKeywords(String keyword) {
+    public MapDto.KeywordMapResponses getAddrByKeywords(String keyword) {
         // keyword를 통한 geocode 호출 및 도로명주소 반환
         return mapUtils.getKeywordMapResponse(keyword);
     }

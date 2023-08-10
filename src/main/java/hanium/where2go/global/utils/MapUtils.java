@@ -45,6 +45,13 @@ public class MapUtils { // Geocode, ReverseGeocode API를 호출하는 유틸리
         return mapResponseMapper.parseJsonToUserLocationResponseDto(sendAndReadJson(reverseUri), longtitude, latitude);
     }
 
+    public MapDto.KeywordMapResponses getKeywordMapResponse(String keyword) {
+        // 1. 키워드 질의 API uri를 생성한다.
+        String geocodeUri = "/map-geocode/v2/geocode?query=" + keyword;
+
+        // 4. jsonNode 객체를 키워드 기반 주소 응답 DTO로 전환한다.
+        return mapResponseMapper.parseJsonToKeywordMapResponsesDto(sendAndReadJson(geocodeUri));
+    }
 
     private JsonNode sendAndReadJson(String uri) {
 
