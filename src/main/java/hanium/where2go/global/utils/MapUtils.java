@@ -5,13 +5,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hanium.where2go.domain.restaurant.dto.MapDto;
 import hanium.where2go.domain.restaurant.entity.Address;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
+@RequiredArgsConstructor
 public class MapUtils { // Geocode, ReverseGeocode API를 호출하는 유틸리티
 
     @Value("${map.client-id}")
@@ -22,6 +25,7 @@ public class MapUtils { // Geocode, ReverseGeocode API를 호출하는 유틸리
     private static final String uri = "https://naveropenapi.apigw.ntruss.com";
 
     private WebClient webClient;
+    private final MapResponseMapper mapResponseMapper;
 
     @PostConstruct
     public void init() {
@@ -32,48 +36,29 @@ public class MapUtils { // Geocode, ReverseGeocode API를 호출하는 유틸리
                 .build();
     }
 
-    /**
-     * @param coords 주소로 변환할 좌표. 경도,위도 좌표계를 공백 없이 10,20 형태의 String 타입으로 받습니다.
-     * @return 위도, 경도에 해당하는 주소를 String으로 리턴합니다.
-     */
-    public MapResponse getReverseGeocode(String coords) {
-
+    public MapDto.UserLocationMapResponse getUserLocationMapResponse(String longtitude, String latitude) {
+        // 1. 좌표 질의 API uri를 생성한다.
+        String coords = longtitude + "," + latitude;
         String reverseUri = "/map-reversegeocode/v2/gc?coords=" + coords + "&sourcecrs=epsg:4326&orders=roadaddr&output=json";
 
-        String response = webClient.get()
-                .uri(reverseUri)
+        // 4. jsonNode 객체를 사용자 위치 응답 DTO로 전환한다.
+        return mapResponseMapper.parseJsonToUserLocationResponseDto(sendAndReadJson(reverseUri), longtitude, latitude);
+    }
+
+
+    private JsonNode sendAndReadJson(String uri) {
+
+        String response = webClient.get() // 2. map API 요청을 보내 json 응답을 받는다.
+                .uri(uri)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
-        return getRoadAddress(response);
-    }
-
-    /**
-     * @param address 검색할 주소.
-     * @param coords  검색 중심 좌표. 경도,위도 좌표계를 공백 없이 10,20 형태의 String 타입으로 받습니다.
-     * @return 검색 결과로 주소 목록과 세부 정보를 JSON 형태로 반환합니다.
-     */
-    public MapResponse getGeocode(String address) {
-
-        String geocodeUri = "/map-geocode/v2/geocode?query=" + address;
-
-        String response = webClient.get()
-                .uri(geocodeUri)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        return getRoadAddress(response);
-    }
-
-    private MapResponse getRoadAddress(String jsonAddr) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        try { // json string을 MapResponse 객체로 파싱
-            JsonNode jsonNode = objectMapper.readTree(jsonAddr);
-            return new MapResponse(jsonNode);
+        try { // 3. json string을 ObjectMapper를 통해 jsonNode 객체로 파싱한다.
+            return objectMapper.readTree(response);
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
