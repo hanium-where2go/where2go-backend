@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,7 +147,9 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        restaurant.update(restaurantUpdateRequestDto);
+       restaurant.update(restaurantUpdateRequestDto);
+
+
 
         List<Category> updatedCategories = categoryRepository.findByCategoryNameIn(restaurantUpdateRequestDto.getCategoryNames());
         updateCategories(restaurant, updatedCategories);
@@ -161,6 +164,7 @@ public class RestaurantService {
                 .name(savedRestaurant.getRestaurantName())
                 .build();
     }
+
 
     private void updateCategories(Restaurant restaurant, List<Category> updatedCategories) {
         List<RestaurantCategory> existingCategories = new ArrayList<>(restaurant.getRestaurantCategories());
@@ -230,5 +234,7 @@ public class RestaurantService {
 
         menuBoardRepository.saveAll(menuBoards);
     }
+
+
 }
 

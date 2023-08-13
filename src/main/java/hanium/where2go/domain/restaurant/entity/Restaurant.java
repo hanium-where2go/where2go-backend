@@ -80,15 +80,19 @@ public class Restaurant extends BaseEntity {
     }
 
     public void update(RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
-        this.restaurantName = restaurantUpdateRequestDto.getRestaurantName();
-        this.location = restaurantUpdateRequestDto.getLocation();
-        this.start_time = restaurantUpdateRequestDto.getStartTime();
-        this.end_time = restaurantUpdateRequestDto.getEndTime();
-        this.closed_day = restaurantUpdateRequestDto.getClosedDay();
-        this.tel = restaurantUpdateRequestDto.getTel();
-        this.total_seat = restaurantUpdateRequestDto.getTotalSeat();
-        this.onetime_Seat = restaurantUpdateRequestDto.getOnetimeSeat();
-        this.parkingLot = restaurantUpdateRequestDto.getParkingLot();
+        this.restaurantName = updateField(this.restaurantName, restaurantUpdateRequestDto.getRestaurantName());
+        this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation());
+        this.start_time = updateField(this.start_time, restaurantUpdateRequestDto.getStartTime());
+        this.end_time = updateField(this.end_time, restaurantUpdateRequestDto.getEndTime());
+        this.closed_day = updateField(this.closed_day, restaurantUpdateRequestDto.getClosedDay());
+        this.tel = updateField(this.tel, restaurantUpdateRequestDto.getTel());
+        this.total_seat = updateField(this.total_seat, restaurantUpdateRequestDto.getTotalSeat());
+        this.onetime_Seat = updateField(this.onetime_Seat, restaurantUpdateRequestDto.getOnetimeSeat());
+        this.parkingLot = updateField(this.parkingLot, restaurantUpdateRequestDto.getParkingLot());
+    }
+
+    private <T> T updateField(T currentValue, T newValue) {
+        return newValue != null ? newValue : currentValue;
     }
 
 
