@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDetailResponseDto {
+public class MenuDetailRequestDto {
 
     private String name;
     private Integer price;

@@ -14,6 +14,6 @@ import java.util.List;
 @Builder
 public class RestaurantMenuEnrollRequestDto {
 
-    private List<MenuDetailResponseDto> menus; // 대표 메뉴 등록
+    private List<MenuDetailRequestDto> menus; // 대표 메뉴 등록
     private List<String> menu_boards; // 가게의 메뉴판 등록
 }

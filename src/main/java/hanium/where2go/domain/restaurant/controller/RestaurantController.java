@@ -82,4 +82,6 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(),"메뉴 정보를 등록하였습니다", null));
     }
+
+
 }

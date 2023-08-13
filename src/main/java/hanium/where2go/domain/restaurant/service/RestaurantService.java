@@ -1,9 +1,7 @@
 package hanium.where2go.domain.restaurant.service;
 
-import hanium.where2go.domain.category.dto.CategoryDto;
 import hanium.where2go.domain.category.entity.Category;
 import hanium.where2go.domain.category.repository.CategoryRepository;
-import hanium.where2go.domain.liquor.dto.LiquorDto;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.reservation.entity.Review;
@@ -14,7 +12,6 @@ import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -198,19 +195,18 @@ public class RestaurantService {
     }
 
     // 레스토랑 메뉴 등록
-
     public void enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
 
-        List<MenuDetailResponseDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
+        List<MenuDetailRequestDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
         List<String> imageUrls = restaurantMenuEnrollRequestDto.getMenu_boards();
         List<Menu> menus = new ArrayList<>();
         List<MenuBoard> menuBoards = new ArrayList<>();
 
-        for(MenuDetailResponseDto menuDetail : menuDetailList){
+        for(MenuDetailRequestDto menuDetail : menuDetailList){
             Menu menu = Menu.builder()
                     .restaurant(restaurant)
                     .name(menuDetail.getName())
