@@ -70,4 +70,18 @@ public class RestaurantController {
                .status(HttpStatus.OK)
                .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 정보를 수정하였습니다", restaurantUpdateResponseDto));
     }
+
+    // 레스토랑 메뉴 등록
+
+    @PostMapping("/{restaurantId}/menu")
+    public ResponseEntity<BaseResponse> enrollMenus(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+
+      restaurantService.enrollMenus(restaurantId, restaurantMenuEnrollRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(),"메뉴 정보를 등록하였습니다", null));
+    }
+
+
 }

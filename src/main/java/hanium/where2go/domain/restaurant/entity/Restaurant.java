@@ -49,6 +49,9 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Review> review = new ArrayList<>();
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<MenuBoard> menuBoards = new ArrayList<>();
+
     public String restaurantName;
     public String address;
     public String description;
