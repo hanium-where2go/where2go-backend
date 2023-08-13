@@ -8,13 +8,8 @@ import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.restaurant.dto.*;
-import hanium.where2go.domain.restaurant.entity.Event;
-import hanium.where2go.domain.restaurant.entity.Restaurant;
-import hanium.where2go.domain.restaurant.entity.RestaurantCategory;
-import hanium.where2go.domain.restaurant.entity.RestaurantLiquor;
-import hanium.where2go.domain.restaurant.repository.RestaurantCategoryRepository;
-import hanium.where2go.domain.restaurant.repository.RestaurantLiquorRepository;
-import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
+import hanium.where2go.domain.restaurant.entity.*;
+import hanium.where2go.domain.restaurant.repository.*;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
@@ -36,6 +31,8 @@ public class RestaurantService {
     private final LiquorRepository liquorRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
     private final RestaurantLiquorRepository restaurantLiquorRepository;
+    private final MenuRepository menuRepository;
+    private final MenuBoardRepository menuBoardRepository;
 
      // 레스토랑 정보 얻기
     public InformationResponseDto getInformation(Long restaurantId) {
@@ -198,6 +195,44 @@ public class RestaurantService {
                 restaurant.getRestaurantLiquors().add(new RestaurantLiquor(restaurant, liquor));
             }
         }
+    }
+
+    // 레스토랑 메뉴 등록
+
+    public void enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+
+        List<MenuDetailResponseDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
+        List<String> imageUrls = restaurantMenuEnrollRequestDto.getMenu_boards();
+        List<Menu> menus = new ArrayList<>();
+        List<MenuBoard> menuBoards = new ArrayList<>();
+
+        for(MenuDetailResponseDto menuDetail : menuDetailList){
+            Menu menu = Menu.builder()
+                    .restaurant(restaurant)
+                    .name(menuDetail.getName())
+                    .price(menuDetail.getPrice())
+                    .content(menuDetail.getContent())
+                    .imgUrl(menuDetail.getImg_url())
+                    .build();
+
+            menus.add(menu);
+        }
+         menuRepository.saveAll(menus);
+
+
+        for(String imgUrl : imageUrls)
+        {
+            MenuBoard menuBoard = new MenuBoard();
+            menuBoard.setImageUrl(imgUrl);
+            menuBoard.setRestaurant(restaurant);
+            menuBoards.add(menuBoard);
+        }
+
+        menuBoardRepository.saveAll(menuBoards);
     }
 }
 
