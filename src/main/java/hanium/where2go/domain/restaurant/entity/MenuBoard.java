@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 
+import hanium.where2go.domain.restaurant.dto.RestaurantUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,5 +34,13 @@ public class MenuBoard {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void update(String image_url) {
+      this.image_url = image_url;
+    }
+
+    private <T> T updateField(T currentValue, T newValue) {
+        return newValue != null ? newValue : currentValue;
     }
 }

@@ -199,7 +199,7 @@ public class RestaurantService {
     }
 
     // 레스토랑 메뉴 등록
-    public void enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+    public RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -221,7 +221,7 @@ public class RestaurantService {
 
             menus.add(menu);
         }
-         menuRepository.saveAll(menus);
+      List<Menu> savedMenus =  menuRepository.saveAll(menus);
 
 
         for(String imgUrl : imageUrls)
@@ -232,9 +232,34 @@ public class RestaurantService {
             menuBoards.add(menuBoard);
         }
 
-        menuBoardRepository.saveAll(menuBoards);
+        List<MenuBoard> savedMenuBoards = menuBoardRepository.saveAll(menuBoards);
+
+
+        List<Long> menuIds = savedMenus.stream()
+                .map(Menu::getId)
+                .collect(Collectors.toList());
+
+        List<Long> menuBoardIds = savedMenuBoards.stream()
+                .map(MenuBoard::getId)
+                .collect(Collectors.toList());
+
+       return  RestaurantMenuEnrollResponseDto.builder()
+                .menu_Ids(menuIds)
+                .menu_board_Ids(menuBoardIds)
+                .build();
+
     }
 
-
+//
+//    public void updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+//
+//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+//                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+//
+//        Menu menu = menuRepository.findById(menuId)
+//                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
+//
+//
+//    }
 }
 

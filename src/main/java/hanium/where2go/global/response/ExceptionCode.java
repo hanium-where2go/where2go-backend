@@ -19,7 +19,9 @@ public enum ExceptionCode {
     RESERVATION_NOT_FOUND(404,"Reservation does not found"),
     POINT_NOT_ENOUGH(409, "Not enough point"),
     DUPLICATED_FAVOR_CATEGORY(400,"Favor Category already exists."),
-    DUPLICATED_FAVOR_LIQUOR(400,"Favor Category already exists.");
+    DUPLICATED_FAVOR_LIQUOR(400,"Favor Category already exists."),
+
+    MENU_NOT_FOUND (404,"Menu not found");
 
     private int status;
     private String message;
