@@ -2,6 +2,7 @@ package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.restaurant.dto.MenuDetailRequestDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantMenuUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,11 +37,11 @@ public class Menu extends BaseEntity {
         restaurant.getMenuList().add(this);
     }
 
-    public void update(MenuDetailRequestDto menuDetailRequestDto){
-        this.name = updateField(this.name, menuDetailRequestDto.getName());
-        this.price = updateField(this.price, menuDetailRequestDto.getPrice());
-        this.content = updateField(this.content, menuDetailRequestDto.getContent());
-        this.imgUrl = updateField(this.imgUrl, menuDetailRequestDto.getImg_url());
+    public void update(RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+        this.name = updateField(this.name, restaurantMenuUpdateRequestDto.getName());
+        this.price = updateField(this.price, restaurantMenuUpdateRequestDto.getPrice());
+        this.content = updateField(this.content, restaurantMenuUpdateRequestDto.getContent());
+        this.imgUrl = updateField(this.imgUrl, restaurantMenuUpdateRequestDto.getImg_url());
     }
 
     private <T> T updateField(T currentValue, T newValue){

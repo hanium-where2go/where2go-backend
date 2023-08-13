@@ -21,7 +21,9 @@ public enum ExceptionCode {
     DUPLICATED_FAVOR_CATEGORY(400,"Favor Category already exists."),
     DUPLICATED_FAVOR_LIQUOR(400,"Favor Category already exists."),
 
-    MENU_NOT_FOUND (404,"Menu not found");
+    MENU_NOT_FOUND (404,"Menu not found"),
+
+    MENU_BOARD_NOT_FOUND(404,"Menu Board not found");
 
     private int status;
     private String message;

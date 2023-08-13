@@ -250,16 +250,39 @@ public class RestaurantService {
 
     }
 
-//
-//    public void updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
-//
-//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-//                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-//
-//        Menu menu = menuRepository.findById(menuId)
-//                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
-//
-//
-//    }
+
+    public RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
+
+        menu.update(restaurantMenuUpdateRequestDto);
+        menuRepository.save(menu);
+
+
+        return RestaurantMenuUpdateResponseDto.builder()
+                .menu_id(menu.getId())
+                .build();
+    }
+
+    public RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        MenuBoard menuBoard = menuBoardRepository.findById(menuBoardId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_BOARD_NOT_FOUND));
+
+        menuBoard.update(restaurantMenuBoardUpdateRequestDto);
+        menuBoardRepository.save(menuBoard);
+
+        return RestaurantMenuBoardUpdateResponseDto.builder()
+                .menu_board_id(menuBoard.getId())
+                .build();
+
+    }
 }
 

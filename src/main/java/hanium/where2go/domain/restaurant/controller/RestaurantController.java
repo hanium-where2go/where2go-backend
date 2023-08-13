@@ -83,4 +83,26 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(),"메뉴 정보를 등록하였습니다", restaurantMenuEnrollResponseDto));
     }
 
+    //레스토랑 메뉴 수정
+    @PatchMapping("{restaurantId}/menu/{menuId}")
+    public ResponseEntity<BaseResponse<RestaurantMenuUpdateResponseDto>> updateMenus(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId, @RequestBody RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+
+       RestaurantMenuUpdateResponseDto restaurantMenuUpdateResponseDto = restaurantService.updateMenus(restaurantId,menuId, restaurantMenuUpdateRequestDto);
+
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 정보를 수정하였습니다", restaurantMenuUpdateResponseDto));
+    }
+
+    //레스토랑 메뉴판 수정
+    @PatchMapping("{restaurantId}/menuBoard/{menuBoardId}")
+    public ResponseEntity<BaseResponse<RestaurantMenuBoardUpdateResponseDto>> updateMenuBoards(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuBoardId") Long menuBoardId, @RequestBody RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto){
+
+       RestaurantMenuBoardUpdateResponseDto restaurantMenuBoardUpdateResponseDto = restaurantService.updateMenuBoards(restaurantId,menuBoardId,restaurantMenuBoardUpdateRequestDto);
+
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판 정보를 수정하였습니다", restaurantMenuBoardUpdateResponseDto));
+
+    }
 }
