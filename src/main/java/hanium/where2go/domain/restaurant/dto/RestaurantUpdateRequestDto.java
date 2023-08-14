@@ -1,14 +1,17 @@
 package hanium.where2go.domain.restaurant.dto;
 
 
+import hanium.where2go.domain.restaurant.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantUpdateRequestDto {
@@ -23,4 +26,5 @@ public class RestaurantUpdateRequestDto {
     private Integer totalSeat;
     private Integer onetimeSeat;
     private Boolean parkingLot;
+
 }

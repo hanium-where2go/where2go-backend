@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,7 +147,9 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        restaurant.update(restaurantUpdateRequestDto);
+       restaurant.update(restaurantUpdateRequestDto);
+
+
 
         List<Category> updatedCategories = categoryRepository.findByCategoryNameIn(restaurantUpdateRequestDto.getCategoryNames());
         updateCategories(restaurant, updatedCategories);
@@ -161,6 +164,7 @@ public class RestaurantService {
                 .name(savedRestaurant.getRestaurantName())
                 .build();
     }
+
 
     private void updateCategories(Restaurant restaurant, List<Category> updatedCategories) {
         List<RestaurantCategory> existingCategories = new ArrayList<>(restaurant.getRestaurantCategories());
@@ -195,7 +199,7 @@ public class RestaurantService {
     }
 
     // 레스토랑 메뉴 등록
-    public void enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+    public RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -217,7 +221,7 @@ public class RestaurantService {
 
             menus.add(menu);
         }
-         menuRepository.saveAll(menus);
+      List<Menu> savedMenus =  menuRepository.saveAll(menus);
 
 
         for(String imgUrl : imageUrls)
@@ -228,7 +232,57 @@ public class RestaurantService {
             menuBoards.add(menuBoard);
         }
 
-        menuBoardRepository.saveAll(menuBoards);
+        List<MenuBoard> savedMenuBoards = menuBoardRepository.saveAll(menuBoards);
+
+
+        List<Long> menuIds = savedMenus.stream()
+                .map(Menu::getId)
+                .collect(Collectors.toList());
+
+        List<Long> menuBoardIds = savedMenuBoards.stream()
+                .map(MenuBoard::getId)
+                .collect(Collectors.toList());
+
+       return  RestaurantMenuEnrollResponseDto.builder()
+                .menu_Ids(menuIds)
+                .menu_board_Ids(menuBoardIds)
+                .build();
+
+    }
+
+
+    public RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
+
+        menu.update(restaurantMenuUpdateRequestDto);
+        menuRepository.save(menu);
+
+
+        return RestaurantMenuUpdateResponseDto.builder()
+                .menu_id(menu.getId())
+                .build();
+    }
+
+    public RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        MenuBoard menuBoard = menuBoardRepository.findById(menuBoardId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_BOARD_NOT_FOUND));
+
+        menuBoard.update(restaurantMenuBoardUpdateRequestDto);
+        menuBoardRepository.save(menuBoard);
+
+        return RestaurantMenuBoardUpdateResponseDto.builder()
+                .menu_board_id(menuBoard.getId())
+                .build();
+
     }
 }
 
