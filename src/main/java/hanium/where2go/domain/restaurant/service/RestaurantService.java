@@ -33,12 +33,12 @@ public class RestaurantService {
     private final MenuBoardRepository menuBoardRepository;
 
      // 레스토랑 정보 얻기
-    public InformationResponseDto getInformation(Long restaurantId) {
+    public RestaurantDto.InformationResponseDto getInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
         // Restaurant 객체에서 필요한 정보를 가져와서 InformationResponseDto 객체를 생성하고 반환합니다.
-        InformationResponseDto informationResponseDto = new InformationResponseDto(
+        RestaurantDto.InformationResponseDto informationResponseDto = new RestaurantDto.InformationResponseDto(
                 restaurant.getLocation(),
                 restaurant.getDescription(),
                 restaurant.getTel(),
@@ -49,7 +49,7 @@ public class RestaurantService {
     }
 
      // 레스토랑 공통 정보 얻기
-    public CommonInformationResponseDto getCommonInformation(Long restaurantId) {
+    public RestaurantDto.CommonInformationResponseDto getCommonInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
@@ -78,7 +78,7 @@ public class RestaurantService {
             title = "해당 날짜에 이벤트가 없습니다."; // 기본 제목 설정
         }
 
-        CommonInformationResponseDto commonInformationResponseDto = new CommonInformationResponseDto(
+        RestaurantDto.CommonInformationResponseDto commonInformationResponseDto = new RestaurantDto.CommonInformationResponseDto(
                 restaurant.getRestaurantName(),
                 restaurant.getRestaurantImage(),
                 title,
@@ -107,11 +107,11 @@ public class RestaurantService {
 
     // 레스토랑 정보 등록
     @Transactional
-    public RestaurantEnrollResponseDto enrollRestaurant(RestaurantEnrollRequestDto restaurantEnrollDto){
+    public RestaurantDto.RestaurantEnrollResponseDto enrollRestaurant(RestaurantDto.RestaurantEnrollRequestDto restaurantEnrollDto){
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
-                .location(restaurantEnrollDto.getLocation())
+                .address(restaurantEnrollDto.getLocation()) // Todo address 변경
                 .start_time(restaurantEnrollDto.getStartTime())
                 .end_time(restaurantEnrollDto.getEndTime())
                 .closed_day(restaurantEnrollDto.getClosedDay())
@@ -137,13 +137,13 @@ public class RestaurantService {
         // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
+        return new RestaurantDto.RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
     }
 
 
     // 레스토랑 정보 업데이트
-    public RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+    public RestaurantDto.RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
@@ -159,7 +159,7 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantUpdateResponseDto.builder()
+        return RestaurantDto.RestaurantUpdateResponseDto.builder()
                 .restaurantId(savedRestaurant.getRestaurantId())
                 .name(savedRestaurant.getRestaurantName())
                 .build();
@@ -199,18 +199,18 @@ public class RestaurantService {
     }
 
     // 레스토랑 메뉴 등록
-    public RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+    public RestaurantMenuDto.RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuDto.RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
 
-        List<MenuDetailRequestDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
+        List<RestaurantMenuDto.MenuDetailRequestDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
         List<String> imageUrls = restaurantMenuEnrollRequestDto.getMenu_boards();
         List<Menu> menus = new ArrayList<>();
         List<MenuBoard> menuBoards = new ArrayList<>();
 
-        for(MenuDetailRequestDto menuDetail : menuDetailList){
+        for(RestaurantMenuDto.MenuDetailRequestDto menuDetail : menuDetailList){
             Menu menu = Menu.builder()
                     .restaurant(restaurant)
                     .name(menuDetail.getName())
@@ -243,7 +243,7 @@ public class RestaurantService {
                 .map(MenuBoard::getId)
                 .collect(Collectors.toList());
 
-       return  RestaurantMenuEnrollResponseDto.builder()
+       return  RestaurantMenuDto.RestaurantMenuEnrollResponseDto.builder()
                 .menu_Ids(menuIds)
                 .menu_board_Ids(menuBoardIds)
                 .build();
@@ -251,7 +251,7 @@ public class RestaurantService {
     }
 
 
-    public RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+    public RestaurantMenuDto.RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuDto.RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -263,12 +263,12 @@ public class RestaurantService {
         menuRepository.save(menu);
 
 
-        return RestaurantMenuUpdateResponseDto.builder()
+        return RestaurantMenuDto.RestaurantMenuUpdateResponseDto.builder()
                 .menu_id(menu.getId())
                 .build();
     }
 
-    public RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
+    public RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuDto.RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -279,7 +279,7 @@ public class RestaurantService {
         menuBoard.update(restaurantMenuBoardUpdateRequestDto);
         menuBoardRepository.save(menuBoard);
 
-        return RestaurantMenuBoardUpdateResponseDto.builder()
+        return RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto.builder()
                 .menu_board_id(menuBoard.getId())
                 .build();
 
