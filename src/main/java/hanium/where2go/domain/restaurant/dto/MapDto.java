@@ -36,4 +36,15 @@ public class MapDto {
         private int count;
         List<KeywordMapResponse> keywordMapResponses;
     }
+
+    @Builder
+    @Getter
+    @Setter
+    public static class Address {
+        private String roadAddr;
+        private String jibunAddr;
+        private String longitude;
+        private String latitude;
+        private String detailAddr;
+    }
 }
