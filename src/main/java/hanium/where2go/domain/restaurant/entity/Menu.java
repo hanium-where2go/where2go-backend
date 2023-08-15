@@ -1,8 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
-import hanium.where2go.domain.restaurant.dto.MenuDetailRequestDto;
-import hanium.where2go.domain.restaurant.dto.RestaurantMenuUpdateRequestDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantMenuDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +36,7 @@ public class Menu extends BaseEntity {
         restaurant.getMenuList().add(this);
     }
 
-    public void update(RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+    public void update(RestaurantMenuDto.RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
         this.name = updateField(this.name, restaurantMenuUpdateRequestDto.getName());
         this.price = updateField(this.price, restaurantMenuUpdateRequestDto.getPrice());
         this.content = updateField(this.content, restaurantMenuUpdateRequestDto.getContent());

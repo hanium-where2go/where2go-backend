@@ -1,6 +1,6 @@
 package hanium.where2go.domain.restaurant.service;
 
-import hanium.where2go.domain.restaurant.dto.MenuResponseDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantMenuDto;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
@@ -19,12 +19,12 @@ public class MenuService {
 
    private final RestaurantRepository restaurantRepository;
 
-    public List<MenuResponseDto> getMenus(Long restaurantId) {
+    public List<RestaurantMenuDto.MenuResponseDto> getMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-       List<MenuResponseDto> result = restaurant.getMenuList().stream()
-               .map(menu -> new MenuResponseDto(menu))
+       List<RestaurantMenuDto.MenuResponseDto> result = restaurant.getMenuList().stream()
+               .map(menu -> new RestaurantMenuDto.MenuResponseDto(menu))
                .collect(Collectors.toList());
 
        return result;
