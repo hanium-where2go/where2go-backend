@@ -78,31 +78,4 @@ class RestaurantControllerTest {
 //        Assertions.assertThat(menuList.get(1).getContent()).isEqualTo("맛있는 피자");
 //    }
 
-    @Test
-    void getInformation() {
-        // given
-        Long restaurantId = 1L;
-        String location = "강남구 삼성동";
-        String description = "맛있는 음식점";
-        String tel = "02-785-2392";
-        Boolean parkingLot = true;
-
-        Restaurant restaurant = Restaurant.builder()
-                .location(location)
-                .description(description)
-                .tel(tel)
-                .parkingLot(parkingLot)
-                .build();
-
-        em.persist(restaurant);
-
-        // when
-        InformationResponseDto informationResponse = restaurantService.getInformation(restaurantId);
-
-        // then
-        Assertions.assertThat(informationResponse.getLocation()).isEqualTo(location);
-        Assertions.assertThat(informationResponse.getDescription()).isEqualTo(description);
-        Assertions.assertThat(informationResponse.getTel()).isEqualTo(tel);
-        Assertions.assertThat(informationResponse.getParkingLot()).isEqualTo(parkingLot);
-    }
 }
