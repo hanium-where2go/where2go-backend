@@ -2,17 +2,13 @@ package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.reservation.entity.Review;
-import hanium.where2go.domain.restaurant.dto.InformationResponseDto;
-import hanium.where2go.domain.restaurant.dto.RestaurantUpdateRequestDto;
-import hanium.where2go.domain.user.dto.UserInfoRequestDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +48,15 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<MenuBoard> menuBoards = new ArrayList<>();
 
+//    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Address address;
+
     public String restaurantName;
-    public String address;
     public String description;
     public String tel;
     public String businessRegistration;
     public int seat; // 남은 자리수
-    public BigDecimal longitude;
-    public BigDecimal latitude;
+
     public String location;
     public Boolean parkingLot;
     public String restaurantImage;
@@ -79,9 +76,9 @@ public class Restaurant extends BaseEntity {
         this.restaurantLiquors = restaurantLiquors;
     }
 
-    public void update(RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+    public void update(RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         this.restaurantName = updateField(this.restaurantName, restaurantUpdateRequestDto.getRestaurantName());
-        this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation());
+      //  this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation());
         this.start_time = updateField(this.start_time, restaurantUpdateRequestDto.getStartTime());
         this.end_time = updateField(this.end_time, restaurantUpdateRequestDto.getEndTime());
         this.closed_day = updateField(this.closed_day, restaurantUpdateRequestDto.getClosedDay());

@@ -16,111 +16,116 @@ import java.util.List;
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
-   private final MenuService menuService;
-   private final RestaurantService restaurantService;
+    private final MenuService menuService;
+    private final RestaurantService restaurantService;
 
     // 레스토랑 메뉴 조회
-   @GetMapping("/{restaurantId}/menu")
-    public ResponseEntity<BaseResponse<List<MenuResponseDto>>> menu (@PathVariable("restaurantId") Long restaurantId){
-       List<MenuResponseDto> list = menuService.getMenus(restaurantId);
+    @GetMapping("/{restaurantId}/menu")
+    public ResponseEntity<BaseResponse<List<RestaurantMenuDto.MenuResponseDto>>> menu(@PathVariable("restaurantId") Long restaurantId) {
+        List<RestaurantMenuDto.MenuResponseDto> list = menuService.getMenus(restaurantId);
 
-      return ResponseEntity
-              .status(HttpStatus.OK)
-              .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 메뉴를 불러왔습니다",list));
-   }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 메뉴를 불러왔습니다", list));
+    }
 
     // 레스토랑 정보 조회
-   @GetMapping("/{restaurantId}/information")
-   public ResponseEntity<BaseResponse<InformationResponseDto>> information(@PathVariable("restaurantId") Long restaurantId){
-      InformationResponseDto information = restaurantService.getInformation(restaurantId);
+    @GetMapping("/{restaurantId}/information")
+    public ResponseEntity<BaseResponse<RestaurantDto.InformationResponseDto>> information(@PathVariable("restaurantId") Long restaurantId) {
+        RestaurantDto.InformationResponseDto information = restaurantService.getInformation(restaurantId);
 
-      return ResponseEntity
-              .status(HttpStatus.OK)
-              .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 정보를 불러왔습니다",information));
-   }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 정보를 불러왔습니다", information));
+    }
 
     // 레스토랑 공통 정보 조회
-   @GetMapping("/{restaurantId}")
-   public ResponseEntity<BaseResponse<CommonInformationResponseDto>> commonInformation(@PathVariable("restaurantId") Long restaurantId){
-      CommonInformationResponseDto commonInformation = restaurantService.getCommonInformation(restaurantId);
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<BaseResponse<RestaurantDto.CommonInformationResponseDto>> commonInformation(@PathVariable("restaurantId") Long restaurantId) {
+        RestaurantDto.CommonInformationResponseDto commonInformation = restaurantService.getCommonInformation(restaurantId);
 
-      return ResponseEntity
-              .status(HttpStatus.OK)
-              .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 공통 정보를 불러왔습니다",commonInformation));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 공통 정보를 불러왔습니다", commonInformation));
 
-   }
+    }
 
-   // 레스토랑 정보 등록
-   @PostMapping
-   public ResponseEntity<BaseResponse<RestaurantEnrollResponseDto>> restaurantEnroll(@RequestBody RestaurantEnrollRequestDto restaurantEnrollDto){
-          RestaurantEnrollResponseDto restaurantEnrollResponseDto = restaurantService.enrollRestaurant(restaurantEnrollDto);
+    // 레스토랑 정보 등록
+    @PostMapping
+    public ResponseEntity<BaseResponse<RestaurantDto.RestaurantEnrollResponseDto>> restaurantEnroll(@RequestBody RestaurantDto.RestaurantEnrollRequestDto restaurantEnrollDto) {
+        RestaurantDto.RestaurantEnrollResponseDto restaurantEnrollResponseDto = restaurantService.enrollRestaurant(restaurantEnrollDto);
 
-          return ResponseEntity
-                  .status(HttpStatus.OK)
-                  .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 공통 정보를 불러왔습니다", restaurantEnrollResponseDto ));
-   }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 공통 정보를 불러왔습니다", restaurantEnrollResponseDto));
+    }
 
-   // 레스토랑 정보 수정
+    // 레스토랑 정보 수정
     @PatchMapping("/{restaurantId}")
-    public ResponseEntity<BaseResponse<RestaurantUpdateResponseDto>> updateRestaurantInfo(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantUpdateRequestDto restaurantUpdateRequestDto){
+    public ResponseEntity<BaseResponse<RestaurantDto.RestaurantUpdateResponseDto>> updateRestaurantInfo(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
 
-       RestaurantUpdateResponseDto restaurantUpdateResponseDto = restaurantService.updateRestaurantInfo(restaurantId,restaurantUpdateRequestDto);
+        RestaurantDto.RestaurantUpdateResponseDto restaurantUpdateResponseDto = restaurantService.updateRestaurantInfo(restaurantId, restaurantUpdateRequestDto);
 
-       return ResponseEntity
-               .status(HttpStatus.OK)
-               .body(new BaseResponse<>(HttpStatus.OK.value(),"가게 정보를 수정하였습니다", restaurantUpdateResponseDto));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 정보를 수정하였습니다", restaurantUpdateResponseDto));
     }
 
     // 레스토랑 메뉴 등록
 
     @PostMapping("/{restaurantId}/menu")
-    public ResponseEntity<BaseResponse<RestaurantMenuEnrollResponseDto>> enrollMenus(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
+    public ResponseEntity<BaseResponse<RestaurantMenuDto.RestaurantMenuEnrollResponseDto>> enrollMenus(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantMenuDto.RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto) {
 
-    RestaurantMenuEnrollResponseDto restaurantMenuEnrollResponseDto =  restaurantService.enrollMenus(restaurantId, restaurantMenuEnrollRequestDto);
+        RestaurantMenuDto.RestaurantMenuEnrollResponseDto restaurantMenuEnrollResponseDto = menuService.enrollMenus(restaurantId, restaurantMenuEnrollRequestDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new BaseResponse<>(HttpStatus.OK.value(),"메뉴 정보를 등록하였습니다", restaurantMenuEnrollResponseDto));
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 정보를 등록하였습니다", restaurantMenuEnrollResponseDto));
     }
 
     //레스토랑 메뉴 수정
-    @PatchMapping("/{restaurantId}/menu/{menuId}")
-    public ResponseEntity<BaseResponse<RestaurantMenuUpdateResponseDto>> updateMenus(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId, @RequestBody RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
+    @PatchMapping("{restaurantId}/menu/{menuId}")
+    public ResponseEntity<BaseResponse<RestaurantMenuDto.RestaurantMenuUpdateResponseDto>> updateMenus(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId, @RequestBody RestaurantMenuDto.RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto) {
 
-       RestaurantMenuUpdateResponseDto restaurantMenuUpdateResponseDto = restaurantService.updateMenus(restaurantId,menuId, restaurantMenuUpdateRequestDto);
+        RestaurantMenuDto.RestaurantMenuUpdateResponseDto restaurantMenuUpdateResponseDto = menuService.updateMenus(restaurantId, menuId, restaurantMenuUpdateRequestDto);
 
-       return ResponseEntity
-               .status(HttpStatus.OK)
-               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 정보를 수정하였습니다", restaurantMenuUpdateResponseDto));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 정보를 수정하였습니다", restaurantMenuUpdateResponseDto));
     }
 
     //레스토랑 메뉴판 수정
-    @PatchMapping("/{restaurantId}/menuBoard/{menuBoardId}")
-    public ResponseEntity<BaseResponse<RestaurantMenuBoardUpdateResponseDto>> updateMenuBoards(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuBoardId") Long menuBoardId, @RequestBody RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto){
+    @PatchMapping("{restaurantId}/menuBoard/{menuBoardId}")
+    public ResponseEntity<BaseResponse<RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto>> updateMenuBoards(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuBoardId") Long menuBoardId, @RequestBody RestaurantMenuDto.RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
 
-       RestaurantMenuBoardUpdateResponseDto restaurantMenuBoardUpdateResponseDto = restaurantService.updateMenuBoards(restaurantId,menuBoardId,restaurantMenuBoardUpdateRequestDto);
+        RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto restaurantMenuBoardUpdateResponseDto = menuService.updateMenuBoards(restaurantId, menuBoardId, restaurantMenuBoardUpdateRequestDto);
 
-       return ResponseEntity
-               .status(HttpStatus.OK)
-               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판 정보를 수정하였습니다", restaurantMenuBoardUpdateResponseDto));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판 정보를 수정하였습니다", restaurantMenuBoardUpdateResponseDto));
 
     }
 
     // 하나의 메뉴 상세 정보 가져오기
     @GetMapping("/{restaurantId}/menu/{menuId}")
-    public ResponseEntity<BaseResponse<MenuDetailResponseDto>> getMenuDetail(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId){
+    public ResponseEntity<BaseResponse<RestaurantMenuDto.MenuDetailResponseDto>> getMenuDetail(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId) {
 
-       MenuDetailResponseDto menuDetailResponseDto = restaurantService.getMenuDetail(restaurantId,menuId);
+        RestaurantMenuDto.MenuDetailResponseDto menuDetailResponseDto = menuService.getMenuDetail(restaurantId, menuId);
 
-       return ResponseEntity
-               .status(HttpStatus.OK)
-               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 상세 정보를 가져왔습니다", menuDetailResponseDto));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 상세 정보를 가져왔습니다", menuDetailResponseDto));
     }
 
-    // 메뉴 삭제
-    @DeleteMapping("/restaurants/{restaurantId}/menu/{menuId}")
-    public ResponseEntity<BaseResponse> deleteMenu(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId){
+    // 메뉴 삭제하기
+    @DeleteMapping("/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<BaseResponse> deleteMenu(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId) {
 
-       restaurantService.
+        menuService.deleteMenu(restaurantId, menuId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse(HttpStatus.OK.value(), "메뉴를 삭제하였습니다", null));
     }
+
 }

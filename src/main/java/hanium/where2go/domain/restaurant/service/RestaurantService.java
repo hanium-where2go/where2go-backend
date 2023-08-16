@@ -33,12 +33,12 @@ public class RestaurantService {
     private final MenuBoardRepository menuBoardRepository;
 
      // 레스토랑 정보 얻기
-    public InformationResponseDto getInformation(Long restaurantId) {
+    public RestaurantDto.InformationResponseDto getInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
         // Restaurant 객체에서 필요한 정보를 가져와서 InformationResponseDto 객체를 생성하고 반환합니다.
-        InformationResponseDto informationResponseDto = new InformationResponseDto(
+        RestaurantDto.InformationResponseDto informationResponseDto = new RestaurantDto.InformationResponseDto(
                 restaurant.getLocation(),
                 restaurant.getDescription(),
                 restaurant.getTel(),
@@ -49,7 +49,7 @@ public class RestaurantService {
     }
 
      // 레스토랑 공통 정보 얻기
-    public CommonInformationResponseDto getCommonInformation(Long restaurantId) {
+    public RestaurantDto.CommonInformationResponseDto getCommonInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
@@ -78,7 +78,7 @@ public class RestaurantService {
             title = "해당 날짜에 이벤트가 없습니다."; // 기본 제목 설정
         }
 
-        CommonInformationResponseDto commonInformationResponseDto = new CommonInformationResponseDto(
+        RestaurantDto.CommonInformationResponseDto commonInformationResponseDto = new RestaurantDto.CommonInformationResponseDto(
                 restaurant.getRestaurantName(),
                 restaurant.getRestaurantImage(),
                 title,
@@ -107,11 +107,11 @@ public class RestaurantService {
 
     // 레스토랑 정보 등록
     @Transactional
-    public RestaurantEnrollResponseDto enrollRestaurant(RestaurantEnrollRequestDto restaurantEnrollDto){
+    public RestaurantDto.RestaurantEnrollResponseDto enrollRestaurant(RestaurantDto.RestaurantEnrollRequestDto restaurantEnrollDto){
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
-                .location(restaurantEnrollDto.getLocation())
+               // .address(restaurantEnrollDto.getLocation()) // Todo address 변경
                 .start_time(restaurantEnrollDto.getStartTime())
                 .end_time(restaurantEnrollDto.getEndTime())
                 .closed_day(restaurantEnrollDto.getClosedDay())
@@ -137,13 +137,13 @@ public class RestaurantService {
         // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return new RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
+        return new RestaurantDto.RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
     }
 
 
     // 레스토랑 정보 업데이트
-    public RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
+    public RestaurantDto.RestaurantUpdateResponseDto updateRestaurantInfo(Long restaurantId, RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
@@ -159,7 +159,7 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantUpdateResponseDto.builder()
+        return RestaurantDto.RestaurantUpdateResponseDto.builder()
                 .restaurantId(savedRestaurant.getRestaurantId())
                 .name(savedRestaurant.getRestaurantName())
                 .build();
@@ -198,117 +198,7 @@ public class RestaurantService {
         }
     }
 
-    // 레스토랑 메뉴 등록
-    public RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
 
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-
-        List<MenuDetailRequestDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
-        List<String> imageUrls = restaurantMenuEnrollRequestDto.getMenu_boards();
-        List<Menu> menus = new ArrayList<>();
-        List<MenuBoard> menuBoards = new ArrayList<>();
-
-        for(MenuDetailRequestDto menuDetail : menuDetailList){
-            Menu menu = Menu.builder()
-                    .restaurant(restaurant)
-                    .name(menuDetail.getName())
-                    .price(menuDetail.getPrice())
-                    .content(menuDetail.getContent())
-                    .imgUrl(menuDetail.getImg_url())
-                    .build();
-
-            menus.add(menu);
-        }
-      List<Menu> savedMenus =  menuRepository.saveAll(menus);
-
-
-        for(String imgUrl : imageUrls)
-        {
-            MenuBoard menuBoard = new MenuBoard();
-            menuBoard.setImageUrl(imgUrl);
-            menuBoard.setRestaurant(restaurant);
-            menuBoards.add(menuBoard);
-        }
-
-        List<MenuBoard> savedMenuBoards = menuBoardRepository.saveAll(menuBoards);
-
-
-        List<Long> menuIds = savedMenus.stream()
-                .map(Menu::getId)
-                .collect(Collectors.toList());
-
-        List<Long> menuBoardIds = savedMenuBoards.stream()
-                .map(MenuBoard::getId)
-                .collect(Collectors.toList());
-
-       return  RestaurantMenuEnrollResponseDto.builder()
-                .menu_Ids(menuIds)
-                .menu_board_Ids(menuBoardIds)
-                .build();
-
-    }
-
-
-    // 메뉴 업데이트
-    public RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
-
-        menu.update(restaurantMenuUpdateRequestDto);
-        menuRepository.save(menu);
-
-
-        return RestaurantMenuUpdateResponseDto.builder()
-                .menu_id(menu.getId())
-                .build();
-    }
-
-
-    // 메뉴판 업데이트
-    public RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-        MenuBoard menuBoard = menuBoardRepository.findById(menuBoardId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_BOARD_NOT_FOUND));
-
-        menuBoard.update(restaurantMenuBoardUpdateRequestDto);
-        menuBoardRepository.save(menuBoard);
-
-        return RestaurantMenuBoardUpdateResponseDto.builder()
-                .menu_board_id(menuBoard.getId())
-                .build();
-
-    }
-
-    // 하나의 메뉴 상세 조회
-
-    public MenuDetailResponseDto getMenuDetail(Long restaurantId, Long menuId){
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
-
-        MenuDetailResponseDto menuDetailResponseDto = MenuDetailResponseDto.builder()
-                .menu_id(menu.getId())
-                .name(menu.getName())
-                .price(menu.getPrice())
-                .content(menu.getContent())
-                .imgUrl(menu.getImgUrl())
-                .build();
-
-        return menuDetailResponseDto;
-    }
-
-    // 전체 메뉴 조회
 
 }
 
