@@ -128,4 +128,15 @@ public class RestaurantController {
                 .body(new BaseResponse(HttpStatus.OK.value(), "메뉴를 삭제하였습니다", null));
     }
 
+    // 레스토랑 메뉴판 조회
+    @GetMapping("/{restaurantId}/menuboards")
+    public ResponseEntity<BaseResponse<RestaurantMenuDto.MenuBoardResponseDto>> searchMenuBoard(@PathVariable("restaurantId") Long restaurantId){
+
+       RestaurantMenuDto.MenuBoardResponseDto menuBoards =  menuService.searchMenuBoards(restaurantId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판을 조회하였습니다", menuBoards));
+    }
+
 }

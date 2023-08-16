@@ -157,4 +157,19 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
+    // 레스토랑 메뉴판 조회
+
+    public RestaurantMenuDto.MenuBoardResponseDto searchMenuBoards(Long restaurantId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+         List<String> imgUrls = restaurant.getMenuBoards().stream()
+                 .map(MenuBoard::getImage_url)
+                 .collect(Collectors.toList());
+
+         return RestaurantMenuDto.MenuBoardResponseDto.builder()
+                 .menuBoards(imgUrls)
+                 .build();
+    }
+
 }

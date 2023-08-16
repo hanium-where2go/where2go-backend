@@ -113,15 +113,11 @@ public class RestaurantMenuDto {
 
     }
 
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Builder
-//    public static class RestaurantMenuResponseDto{
-//        private Long menu_id;
-//        private String name;
-//        private Integer price;
-//        private String content;
-//        private String imgUrl;
-//    }
+   @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class MenuBoardResponseDto{
+        List<String> menuBoards;
+   }
 }
