@@ -48,8 +48,8 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<MenuBoard> menuBoards = new ArrayList<>();
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Address address;
+//    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Address address;
 
     public String restaurantName;
     public String description;
@@ -57,7 +57,7 @@ public class Restaurant extends BaseEntity {
     public String businessRegistration;
     public int seat; // 남은 자리수
 
-    public String location;
+    public String location; // todo MapDto.Address 추가 이후 삭제 예정
     public Boolean parkingLot;
     public String restaurantImage;
     private double responseAvg;
@@ -78,7 +78,7 @@ public class Restaurant extends BaseEntity {
 
     public void update(RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         this.restaurantName = updateField(this.restaurantName, restaurantUpdateRequestDto.getRestaurantName());
-        this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation());
+        this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation()); // todo MapDto.Address로 변경
         this.start_time = updateField(this.start_time, restaurantUpdateRequestDto.getStartTime());
         this.end_time = updateField(this.end_time, restaurantUpdateRequestDto.getEndTime());
         this.closed_day = updateField(this.closed_day, restaurantUpdateRequestDto.getClosedDay());
