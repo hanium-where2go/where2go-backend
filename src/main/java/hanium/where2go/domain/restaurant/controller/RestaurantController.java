@@ -105,4 +105,6 @@ public class RestaurantController {
                .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판 정보를 수정하였습니다", restaurantMenuBoardUpdateResponseDto));
 
     }
+
+
 }
