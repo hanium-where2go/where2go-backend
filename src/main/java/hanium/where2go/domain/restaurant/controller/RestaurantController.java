@@ -84,7 +84,7 @@ public class RestaurantController {
     }
 
     //레스토랑 메뉴 수정
-    @PatchMapping("{restaurantId}/menu/{menuId}")
+    @PatchMapping("/{restaurantId}/menu/{menuId}")
     public ResponseEntity<BaseResponse<RestaurantMenuUpdateResponseDto>> updateMenus(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId, @RequestBody RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
 
        RestaurantMenuUpdateResponseDto restaurantMenuUpdateResponseDto = restaurantService.updateMenus(restaurantId,menuId, restaurantMenuUpdateRequestDto);
@@ -95,7 +95,7 @@ public class RestaurantController {
     }
 
     //레스토랑 메뉴판 수정
-    @PatchMapping("{restaurantId}/menuBoard/{menuBoardId}")
+    @PatchMapping("/{restaurantId}/menuBoard/{menuBoardId}")
     public ResponseEntity<BaseResponse<RestaurantMenuBoardUpdateResponseDto>> updateMenuBoards(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuBoardId") Long menuBoardId, @RequestBody RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto){
 
        RestaurantMenuBoardUpdateResponseDto restaurantMenuBoardUpdateResponseDto = restaurantService.updateMenuBoards(restaurantId,menuBoardId,restaurantMenuBoardUpdateRequestDto);
@@ -106,5 +106,21 @@ public class RestaurantController {
 
     }
 
+    // 하나의 메뉴 상세 정보 가져오기
+    @GetMapping("/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<BaseResponse<MenuDetailResponseDto>> getMenuDetail(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId){
 
+       MenuDetailResponseDto menuDetailResponseDto = restaurantService.getMenuDetail(restaurantId,menuId);
+
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 상세 정보를 가져왔습니다", menuDetailResponseDto));
+    }
+
+    // 메뉴 삭제
+    @DeleteMapping("/restaurants/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<BaseResponse> deleteMenu(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId){
+
+       restaurantService.
+    }
 }

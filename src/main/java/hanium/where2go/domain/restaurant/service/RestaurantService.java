@@ -251,6 +251,7 @@ public class RestaurantService {
     }
 
 
+    // 메뉴 업데이트
     public RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -268,6 +269,8 @@ public class RestaurantService {
                 .build();
     }
 
+
+    // 메뉴판 업데이트
     public RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -284,6 +287,28 @@ public class RestaurantService {
                 .build();
 
     }
+
+    // 하나의 메뉴 상세 조회
+
+    public MenuDetailResponseDto getMenuDetail(Long restaurantId, Long menuId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
+
+        MenuDetailResponseDto menuDetailResponseDto = MenuDetailResponseDto.builder()
+                .menu_id(menu.getId())
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .content(menu.getContent())
+                .imgUrl(menu.getImgUrl())
+                .build();
+
+        return menuDetailResponseDto;
+    }
+
+    // 전체 메뉴 조회
 
 }
 
