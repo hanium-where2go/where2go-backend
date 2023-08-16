@@ -61,7 +61,7 @@ public class RestaurantDto {
     @AllArgsConstructor
     public static class RestaurantUpdateRequestDto {
         private String restaurantName;
-        private String location;
+        private String location; // todo MapDto.Address로 변경
         private List<String> categoryNames;
         private List<String> liquorNames;
         private LocalTime startTime;
