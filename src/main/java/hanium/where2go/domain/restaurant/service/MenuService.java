@@ -157,20 +157,4 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
-//    public List<RestaurantMenuDto.RestaurantMenuResponseDto> searchMenus(Long restaurantId){
-//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-//                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-//
-//        List<RestaurantMenuDto.RestaurantMenuResponseDto> restaurantMenuResponseDtos = restaurant.getMenuList().stream()
-//                .map(menu -> new RestaurantMenuDto.RestaurantMenuResponseDto(
-//                        menu.getId(),
-//                        menu.getName(),
-//                        menu.getPrice(),
-//                        menu.getContent(),
-//                        menu.getImgUrl()
-//                ))
-//                .collect(Collectors.toList());
-//
-//        return restaurantMenuResponseDtos;
-//    }
 }

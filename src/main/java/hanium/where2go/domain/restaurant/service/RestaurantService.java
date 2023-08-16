@@ -39,7 +39,7 @@ public class RestaurantService {
 
         // Restaurant 객체에서 필요한 정보를 가져와서 InformationResponseDto 객체를 생성하고 반환합니다.
         RestaurantDto.InformationResponseDto informationResponseDto = new RestaurantDto.InformationResponseDto(
-                restaurant.getLocation(),
+                restaurant.getLocation(), // todo Address 엔티티로 변경
                 restaurant.getDescription(),
                 restaurant.getTel(),
                 restaurant.getParkingLot()
@@ -111,7 +111,7 @@ public class RestaurantService {
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
-               // .address(restaurantEnrollDto.getLocation()) // Todo address 변경
+//                .address(restaurantEnrollDto.getLocation()) // Todo MapDto.Address로 변경
                 .start_time(restaurantEnrollDto.getStartTime())
                 .end_time(restaurantEnrollDto.getEndTime())
                 .closed_day(restaurantEnrollDto.getClosedDay())
