@@ -32,7 +32,7 @@ public class RestaurantService {
     private final MenuRepository menuRepository;
     private final MenuBoardRepository menuBoardRepository;
 
-     // 레스토랑 정보 얻기
+     // 레스토랑 단일 정보 얻기
     public RestaurantDto.InformationResponseDto getInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
