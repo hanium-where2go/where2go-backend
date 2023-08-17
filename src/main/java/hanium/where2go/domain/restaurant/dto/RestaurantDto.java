@@ -45,6 +45,8 @@ public class RestaurantDto {
         private Integer totalSeat;
         private Integer onetimeSeat;
         private Boolean parkingLot;
+
+
     }
 
     @Getter
@@ -81,4 +83,5 @@ public class RestaurantDto {
         private Long restaurantId;
         private String name;
     }
+
 }

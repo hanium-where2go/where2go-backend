@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.dto;
 
 import hanium.where2go.domain.restaurant.entity.Menu;
+import hanium.where2go.domain.restaurant.entity.MenuBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,16 +85,39 @@ public class RestaurantMenuDto {
     @AllArgsConstructor
     public static class MenuResponseDto {
 
+        private Long menuId;
         private String name;
         private int price;
         private String content;
         private String imgUrl;
-
-        public MenuResponseDto(Menu menu){
+        public MenuResponseDto(Menu menu) {
+            this.menuId = menu.getId();
             this.name = menu.getName();
             this.price = menu.getPrice();
             this.content = menu.getContent();
             this.imgUrl = menu.getImgUrl();
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class MenuDetailResponseDto {
+
+        private Long menu_id;
+        private String name;
+        private Integer price;
+        private String content;
+        private String imgUrl;
+
+    }
+
+   @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class MenuBoardResponseDto{
+        List<String> menuBoards;
+   }
 }

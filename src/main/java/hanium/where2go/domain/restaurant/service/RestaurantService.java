@@ -32,7 +32,7 @@ public class RestaurantService {
     private final MenuRepository menuRepository;
     private final MenuBoardRepository menuBoardRepository;
 
-     // 레스토랑 정보 얻기
+     // 레스토랑 단일 정보 얻기
     public RestaurantDto.InformationResponseDto getInformation(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -198,91 +198,7 @@ public class RestaurantService {
         }
     }
 
-    // 레스토랑 메뉴 등록
-    public RestaurantMenuDto.RestaurantMenuEnrollResponseDto enrollMenus(Long restaurantId, RestaurantMenuDto.RestaurantMenuEnrollRequestDto restaurantMenuEnrollRequestDto){
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow( () -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
 
-        List<RestaurantMenuDto.MenuDetailRequestDto> menuDetailList = restaurantMenuEnrollRequestDto.getMenus();
-        List<String> imageUrls = restaurantMenuEnrollRequestDto.getMenu_boards();
-        List<Menu> menus = new ArrayList<>();
-        List<MenuBoard> menuBoards = new ArrayList<>();
-
-        for(RestaurantMenuDto.MenuDetailRequestDto menuDetail : menuDetailList){
-            Menu menu = Menu.builder()
-                    .restaurant(restaurant)
-                    .name(menuDetail.getName())
-                    .price(menuDetail.getPrice())
-                    .content(menuDetail.getContent())
-                    .imgUrl(menuDetail.getImg_url())
-                    .build();
-
-            menus.add(menu);
-        }
-      List<Menu> savedMenus =  menuRepository.saveAll(menus);
-
-
-        for(String imgUrl : imageUrls)
-        {
-            MenuBoard menuBoard = new MenuBoard();
-            menuBoard.setImageUrl(imgUrl);
-            menuBoard.setRestaurant(restaurant);
-            menuBoards.add(menuBoard);
-        }
-
-        List<MenuBoard> savedMenuBoards = menuBoardRepository.saveAll(menuBoards);
-
-
-        List<Long> menuIds = savedMenus.stream()
-                .map(Menu::getId)
-                .collect(Collectors.toList());
-
-        List<Long> menuBoardIds = savedMenuBoards.stream()
-                .map(MenuBoard::getId)
-                .collect(Collectors.toList());
-
-       return  RestaurantMenuDto.RestaurantMenuEnrollResponseDto.builder()
-                .menu_Ids(menuIds)
-                .menu_board_Ids(menuBoardIds)
-                .build();
-
-    }
-
-
-    public RestaurantMenuDto.RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuDto.RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_NOT_FOUND));
-
-        menu.update(restaurantMenuUpdateRequestDto);
-        menuRepository.save(menu);
-
-
-        return RestaurantMenuDto.RestaurantMenuUpdateResponseDto.builder()
-                .menu_id(menu.getId())
-                .build();
-    }
-
-    public RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuDto.RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
-
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
-
-        MenuBoard menuBoard = menuBoardRepository.findById(menuBoardId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.MENU_BOARD_NOT_FOUND));
-
-        menuBoard.update(restaurantMenuBoardUpdateRequestDto);
-        menuBoardRepository.save(menuBoard);
-
-        return RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto.builder()
-                .menu_board_id(menuBoard.getId())
-                .build();
-
-    }
 }
 
