@@ -99,4 +99,15 @@ public class EventService {
                 .endDate(event.getEndDate().toLocalDate())
                 .build();
     }
+
+    // 이벤트 삭제
+    public void deleteEvent(Long restaurantId, Long eventId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.EVENT_NOT_FOUND));
+
+        eventRepository.delete(event);
+    }
 }

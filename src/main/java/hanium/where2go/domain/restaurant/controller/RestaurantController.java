@@ -184,4 +184,16 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "하나의 이벤트를 조회하였습니다", singleEventSearchResponseDto));
     }
+
+    // 레스토랑 이벤트 삭제
+    @DeleteMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse> deleteEvent(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId){
+
+        eventService.deleteEvent(restaurantId, eventId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 삭제하였습니다", null));
+
+    }
 }
