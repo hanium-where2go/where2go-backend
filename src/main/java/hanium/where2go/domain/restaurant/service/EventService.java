@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,5 +65,20 @@ public class EventService {
                 .build();
 
     }
+    // 전체 이벤트 조회
+    public List<RestaurantEventDto.EventSearchResponseDto> searchEvents(Long restaurantId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
+        List<RestaurantEventDto.EventSearchResponseDto> eventSearchResponseDtos = restaurant.getEvents().stream()
+                .map(event -> new RestaurantEventDto.EventSearchResponseDto(
+                        event.getId(),
+                        event.getTitle(),
+                        event.getContent(),
+                        event.getStartDate().toLocalDate(),
+                        event.getEndDate().toLocalDate()
+                )).collect(Collectors.toList());
+
+        return eventSearchResponseDtos;
+    }
 }

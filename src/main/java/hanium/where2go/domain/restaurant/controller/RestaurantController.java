@@ -160,6 +160,17 @@ public class RestaurantController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트룰 수정하였습니다",eventUpdateResponseDto));
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 수정하였습니다",eventUpdateResponseDto));
+    }
+
+    // 레스토랑 전체 이벤트 조회
+    @GetMapping("{restaurantId}/events")
+    public ResponseEntity<BaseResponse<List<RestaurantEventDto.EventSearchResponseDto>>> searchEvents(@PathVariable("restaurantId") Long restaurantId){
+
+       List<RestaurantEventDto.EventSearchResponseDto> eventSearchResponseDto = eventService.searchEvents(restaurantId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 조회하였습니다",eventSearchResponseDto));
     }
 }
