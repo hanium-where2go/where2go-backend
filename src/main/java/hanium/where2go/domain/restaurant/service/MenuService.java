@@ -11,7 +11,7 @@ import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -105,8 +105,13 @@ public class MenuService {
 
         return RestaurantMenuDto.RestaurantMenuUpdateResponseDto.builder()
                 .menu_id(menu.getId())
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .content(menu.getContent())
+                .img_url(menu.getImgUrl())
                 .build();
     }
+
 
     public RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuDto.RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
 

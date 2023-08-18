@@ -49,6 +49,10 @@ public class RestaurantMenuDto {
     public static class RestaurantMenuUpdateResponseDto {
 
         private Long menu_id;
+        private String name;
+        private Integer price;
+        private String content;
+        private String img_url;
     }
 
     @Getter
