@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.controller;
 
 import hanium.where2go.domain.restaurant.dto.*;
+import hanium.where2go.domain.restaurant.service.EventService;
 import hanium.where2go.domain.restaurant.service.MenuService;
 import hanium.where2go.domain.restaurant.service.RestaurantService;
 import hanium.where2go.global.response.BaseResponse;
@@ -18,6 +19,7 @@ public class RestaurantController {
 
     private final MenuService menuService;
     private final RestaurantService restaurantService;
+    private final EventService eventService;
 
     // 레스토랑 메뉴 조회
     @GetMapping("/{restaurantId}/menu")
@@ -139,4 +141,25 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판을 조회하였습니다", menuBoards));
     }
 
+    // 레스토랑 이벤트 등록
+    @PostMapping("/{restaurantId}/events")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.EventEnrollResponseDto>> enrollEvents(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantEventDto.EventEnrollRequestDto eventEnrollRequestDto){
+
+        RestaurantEventDto.EventEnrollResponseDto eventEnrollResponseDto = eventService.enrollEvents(restaurantId, eventEnrollRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 등록하였습니다", eventEnrollResponseDto));
+    }
+
+    // 레스토랑 이벤트 수정
+    @PatchMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.EventUpdateResponseDto>> updateEvents(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId, @RequestBody RestaurantEventDto.EventtUpdateRequestDto eventtUpdateRequestDto){
+
+        RestaurantEventDto.EventUpdateResponseDto eventUpdateResponseDto = eventService.updateEvent(restaurantId,eventId,eventtUpdateRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트룰 수정하였습니다",eventUpdateResponseDto));
+    }
 }
