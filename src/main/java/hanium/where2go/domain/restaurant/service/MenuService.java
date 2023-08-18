@@ -90,6 +90,7 @@ public class MenuService {
 
     }
 
+    // 레스토랑 메뉴 수정
 
     public RestaurantMenuDto.RestaurantMenuUpdateResponseDto updateMenus(Long restaurantId, Long menuId, RestaurantMenuDto.RestaurantMenuUpdateRequestDto restaurantMenuUpdateRequestDto){
 
@@ -112,7 +113,7 @@ public class MenuService {
                 .build();
     }
 
-
+    // 레스토랑 메뉴판 수정
     public RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto updateMenuBoards(Long restaurantId, Long menuBoardId, RestaurantMenuDto.RestaurantMenuBoardUpdateRequestDto restaurantMenuBoardUpdateRequestDto) {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -126,6 +127,7 @@ public class MenuService {
 
         return RestaurantMenuDto.RestaurantMenuBoardUpdateResponseDto.builder()
                 .menu_board_id(menuBoard.getId())
+                .img_url(menuBoard.getImage_url())
                 .build();
 
     }

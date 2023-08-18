@@ -71,6 +71,7 @@ public class RestaurantMenuDto {
     public static class RestaurantMenuBoardUpdateResponseDto {
 
         private Long menu_board_id;
+        private String img_url;
     }
 
     @Getter
