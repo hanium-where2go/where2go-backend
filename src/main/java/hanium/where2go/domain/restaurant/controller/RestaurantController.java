@@ -173,4 +173,15 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 조회하였습니다",eventSearchResponseDto));
     }
+
+    //레스토랑 단일 이벤트 조회
+    @GetMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.SingleEventSearchResponseDto>> searchSingleEvent(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId){
+
+        RestaurantEventDto.SingleEventSearchResponseDto singleEventSearchResponseDto = eventService.searchSingleEvent(restaurantId,eventId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "하나의 이벤트를 조회하였습니다", singleEventSearchResponseDto));
+    }
 }

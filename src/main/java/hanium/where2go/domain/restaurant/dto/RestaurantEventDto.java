@@ -68,4 +68,16 @@ public class RestaurantEventDto {
         private LocalDate endDate;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SingleEventSearchResponseDto{
+        private Long eventId;
+        private String restaurantName;
+        private String title;
+        private String content;
+        private LocalDate startDate;
+        private LocalDate endDate;
+    }
 }

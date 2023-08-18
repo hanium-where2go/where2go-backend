@@ -81,4 +81,22 @@ public class EventService {
 
         return eventSearchResponseDtos;
     }
+
+    // 하나의 이벤트 조회
+    public RestaurantEventDto.SingleEventSearchResponseDto searchSingleEvent(Long restaurantId, Long eventId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.EVENT_NOT_FOUND));
+
+        return RestaurantEventDto.SingleEventSearchResponseDto.builder()
+                .eventId(event.getId())
+                .restaurantName(restaurant.getRestaurantName())
+                .content(event.getContent())
+                .title(event.getTitle())
+                .startDate(event.getStartDate().toLocalDate())
+                .endDate(event.getEndDate().toLocalDate())
+                .build();
+    }
 }

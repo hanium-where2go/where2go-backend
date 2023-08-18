@@ -125,4 +125,6 @@ public class RestaurantMenuDto {
     public static class MenuBoardResponseDto{
         List<String> menuBoards;
    }
+
+
 }
