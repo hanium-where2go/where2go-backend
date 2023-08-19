@@ -29,4 +29,8 @@ public class FavorCategory extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
 }

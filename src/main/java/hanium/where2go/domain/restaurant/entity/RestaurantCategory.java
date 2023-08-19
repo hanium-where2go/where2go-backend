@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-@Table(name = "reservation_category")
+@Table(name = "restaurant_category")
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantCategory extends BaseEntity {
@@ -28,4 +28,18 @@ public class RestaurantCategory extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+
+    public RestaurantCategory(Restaurant restaurant, Category category) {
+        this.restaurant = restaurant;
+        this.category = category;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
