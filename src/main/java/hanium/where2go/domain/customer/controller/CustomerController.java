@@ -124,4 +124,20 @@ public class CustomerController {
             .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 선호 업종을 삭제했습니다.", null));
     }
 
+    @DeleteMapping("/withdrawal")
+    public ResponseEntity<BaseResponse<String>> withdrawal(@AuthUser Customer customer) {
+        customerService.withdrawal(customer);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다.", null));
+    }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<BaseResponse<String>> resetPassword(@AuthUser Customer customer, @RequestBody CustomerResetPasswordRequestDto customerResetPasswordRequestDto) {
+        customerService.resetPassword(customer, customerResetPasswordRequestDto);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다.", null));
+    }
+
 }
