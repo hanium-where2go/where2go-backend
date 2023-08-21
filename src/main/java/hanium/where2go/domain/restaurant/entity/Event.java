@@ -3,6 +3,7 @@ package hanium.where2go.domain.restaurant.entity;
 import hanium.where2go.domain.BaseEntity;
 import hanium.where2go.domain.restaurant.dto.RestaurantDto;
 import hanium.where2go.domain.restaurant.dto.RestaurantEventDto;
+import hanium.where2go.domain.restaurant.dto.RestaurantMenuDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,11 +36,11 @@ public class Event extends BaseEntity {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public void update(RestaurantEventDto.EventtUpdateRequestDto eventtUpdateRequestDto) {
-       this.title = eventtUpdateRequestDto.getTitle();
-       this.content = eventtUpdateRequestDto.getContent();
-       this.startDate = eventtUpdateRequestDto.getStartDate().atStartOfDay();
-       this.endDate = eventtUpdateRequestDto.getEndDate().atStartOfDay();
+    public void update(RestaurantEventDto.EventUpdateRequestDto eventUpdateRequestDto) {
+       this.title = updateField(this.title,eventUpdateRequestDto.getTitle());
+       this.content = updateField(this.content,eventUpdateRequestDto.getContent());
+       this.startDate = updateField(this.startDate,eventUpdateRequestDto.getStartDate().atStartOfDay());
+       this.endDate = updateField(this.endDate,eventUpdateRequestDto.getEndDate().atStartOfDay());
     }
 
     private <T> T updateField(T currentValue, T newValue) {

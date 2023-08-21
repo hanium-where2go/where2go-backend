@@ -34,7 +34,7 @@ public class RestaurantEventDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class EventtUpdateRequestDto {
+    public static class EventUpdateRequestDto {
 
         private String title;
         private String content;

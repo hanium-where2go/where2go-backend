@@ -154,9 +154,9 @@ public class RestaurantController {
 
     // 레스토랑 이벤트 수정
     @PatchMapping("{restaurantId}/events/{eventId}")
-    public ResponseEntity<BaseResponse<RestaurantEventDto.EventUpdateResponseDto>> updateEvents(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId, @RequestBody RestaurantEventDto.EventtUpdateRequestDto eventtUpdateRequestDto){
+    public ResponseEntity<BaseResponse<RestaurantEventDto.EventUpdateResponseDto>> updateEvents(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId, @RequestBody RestaurantEventDto.EventUpdateRequestDto eventUpdateRequestDto){
 
-        RestaurantEventDto.EventUpdateResponseDto eventUpdateResponseDto = eventService.updateEvent(restaurantId,eventId,eventtUpdateRequestDto);
+        RestaurantEventDto.EventUpdateResponseDto eventUpdateResponseDto = eventService.updateEvent(restaurantId,eventId,eventUpdateRequestDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

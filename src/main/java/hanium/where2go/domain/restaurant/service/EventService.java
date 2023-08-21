@@ -45,7 +45,7 @@ public class EventService {
     }
 
     // 이벤트 수정
-    public RestaurantEventDto.EventUpdateResponseDto updateEvent(Long restaurantId, Long eventId, RestaurantEventDto.EventtUpdateRequestDto eventtUpdateRequestDto){
+    public RestaurantEventDto.EventUpdateResponseDto updateEvent(Long restaurantId, Long eventId, RestaurantEventDto.EventUpdateRequestDto eventUpdateRequestDto){
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
@@ -53,7 +53,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-        event.update(eventtUpdateRequestDto);
+        event.update(eventUpdateRequestDto);
 
         return RestaurantEventDto.EventUpdateResponseDto.builder()
                 .eventId(event.getId())
