@@ -137,7 +137,7 @@ public class CustomerController {
         customerService.resetPassword(customer, customerResetPasswordRequestDto);
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(new BaseResponse<>(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다.", null));
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "비밀번호가 변경되었습니다.", null));
     }
 
 }
