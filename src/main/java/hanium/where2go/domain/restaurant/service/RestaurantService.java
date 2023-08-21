@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -159,10 +160,29 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
+        List<String> categories = savedRestaurant.getRestaurantCategories().stream()
+                .map(RestaurantCategory -> RestaurantCategory.getCategory().getCategoryName())
+                .collect(Collectors.toList());
+
+        List<String> liquors = savedRestaurant.getRestaurantLiquors().stream()
+                .map(RestaurantLiquor -> RestaurantLiquor.getLiquor().getLiquorName())
+                .collect(Collectors.toList());
+
         return RestaurantDto.RestaurantUpdateResponseDto.builder()
                 .restaurantId(savedRestaurant.getRestaurantId())
-                .name(savedRestaurant.getRestaurantName())
+                .restaurantName(savedRestaurant.getRestaurantName())
+                .location(savedRestaurant.getLocation())
+                .startTime(savedRestaurant.getStart_time())
+                .endTime(savedRestaurant.getEnd_time())
+                .closedDay(savedRestaurant.getClosed_day())
+                .tel(savedRestaurant.getTel())
+                .totalSeat(savedRestaurant.getTotal_seat())
+                .onetimeSeat(savedRestaurant.getOnetime_Seat())
+                .parkingLot(savedRestaurant.getParkingLot())
+                .categoryNames(categories)
+                .liquorNames(liquors)
                 .build();
+
     }
 
 

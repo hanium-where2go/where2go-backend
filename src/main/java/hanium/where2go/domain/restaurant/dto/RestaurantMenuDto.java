@@ -49,6 +49,10 @@ public class RestaurantMenuDto {
     public static class RestaurantMenuUpdateResponseDto {
 
         private Long menu_id;
+        private String name;
+        private Integer price;
+        private String content;
+        private String img_url;
     }
 
     @Getter
@@ -67,6 +71,7 @@ public class RestaurantMenuDto {
     public static class RestaurantMenuBoardUpdateResponseDto {
 
         private Long menu_board_id;
+        private String img_url;
     }
 
     @Getter
@@ -120,4 +125,6 @@ public class RestaurantMenuDto {
     public static class MenuBoardResponseDto{
         List<String> menuBoards;
    }
+
+
 }

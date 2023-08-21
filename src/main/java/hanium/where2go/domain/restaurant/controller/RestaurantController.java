@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.controller;
 
 import hanium.where2go.domain.restaurant.dto.*;
+import hanium.where2go.domain.restaurant.service.EventService;
 import hanium.where2go.domain.restaurant.service.MenuService;
 import hanium.where2go.domain.restaurant.service.RestaurantService;
 import hanium.where2go.global.response.BaseResponse;
@@ -18,6 +19,7 @@ public class RestaurantController {
 
     private final MenuService menuService;
     private final RestaurantService restaurantService;
+    private final EventService eventService;
 
     // 레스토랑 메뉴 조회
     @GetMapping("/{restaurantId}/menu")
@@ -139,4 +141,59 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판을 조회하였습니다", menuBoards));
     }
 
+    // 레스토랑 이벤트 등록
+    @PostMapping("/{restaurantId}/events")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.EventEnrollResponseDto>> enrollEvents(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantEventDto.EventEnrollRequestDto eventEnrollRequestDto){
+
+        RestaurantEventDto.EventEnrollResponseDto eventEnrollResponseDto = eventService.enrollEvents(restaurantId, eventEnrollRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 등록하였습니다", eventEnrollResponseDto));
+    }
+
+    // 레스토랑 이벤트 수정
+    @PatchMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.EventUpdateResponseDto>> updateEvents(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId, @RequestBody RestaurantEventDto.EventUpdateRequestDto eventUpdateRequestDto){
+
+        RestaurantEventDto.EventUpdateResponseDto eventUpdateResponseDto = eventService.updateEvent(restaurantId,eventId,eventUpdateRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 수정하였습니다",eventUpdateResponseDto));
+    }
+
+    // 레스토랑 전체 이벤트 조회
+    @GetMapping("{restaurantId}/events")
+    public ResponseEntity<BaseResponse<List<RestaurantEventDto.EventSearchResponseDto>>> searchEvents(@PathVariable("restaurantId") Long restaurantId){
+
+       List<RestaurantEventDto.EventSearchResponseDto> eventSearchResponseDto = eventService.searchEvents(restaurantId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 조회하였습니다",eventSearchResponseDto));
+    }
+
+    //레스토랑 단일 이벤트 조회
+    @GetMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse<RestaurantEventDto.SingleEventSearchResponseDto>> searchSingleEvent(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId){
+
+        RestaurantEventDto.SingleEventSearchResponseDto singleEventSearchResponseDto = eventService.searchSingleEvent(restaurantId,eventId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "하나의 이벤트를 조회하였습니다", singleEventSearchResponseDto));
+    }
+
+    // 레스토랑 이벤트 삭제
+    @DeleteMapping("{restaurantId}/events/{eventId}")
+    public ResponseEntity<BaseResponse> deleteEvent(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId){
+
+        eventService.deleteEvent(restaurantId, eventId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 삭제하였습니다", null));
+
+    }
 }

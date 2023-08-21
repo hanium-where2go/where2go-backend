@@ -80,8 +80,19 @@ public class RestaurantDto {
     @AllArgsConstructor
     @Builder
     public static class RestaurantUpdateResponseDto {
+
         private Long restaurantId;
-        private String name;
+        private String restaurantName;
+        private String location; // todo MapDto.Address로 변경
+        private List<String> categoryNames;
+        private List<String> liquorNames;
+        private LocalTime startTime;
+        private LocalTime endTime;
+        private String closedDay;
+        private String tel;
+        private Integer totalSeat;
+        private Integer onetimeSeat;
+        private Boolean parkingLot;
     }
 
 }
