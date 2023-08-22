@@ -58,6 +58,11 @@ public abstract class User {
         hashPassword(passwordEncoder);
     }
 
+    public void changePassword(String password, PasswordEncoder passwordEncoder) {
+        this.password = password;
+        hashPassword(passwordEncoder);
+    }
+
     public void authorize(Role role) {
         this.role = role;
     }

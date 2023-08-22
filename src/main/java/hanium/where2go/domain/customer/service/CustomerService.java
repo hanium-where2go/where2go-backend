@@ -208,4 +208,14 @@ public class CustomerService {
 
         customer.removeFavorCategory(favorCategory);
     }
+
+    @Transactional
+    public void withdrawal(Customer customer) {
+        customerRepository.delete(customer);
+    }
+
+    @Transactional
+    public void resetPassword(Customer customer, CustomerResetPasswordRequestDto customerResetPasswordRequestDto) {
+        customer.changePassword(customerResetPasswordRequestDto.getPassword(), passwordEncoder);
+    }
 }
