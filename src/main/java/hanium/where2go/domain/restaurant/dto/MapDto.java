@@ -1,8 +1,6 @@
 package hanium.where2go.domain.restaurant.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +9,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserLocationMapResponse {
         private String longitude;
         private String latitude;
@@ -20,6 +20,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeywordMapResponse {
         private String roadAddr;
         private String jibunAddr;
@@ -30,6 +32,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeywordMapResponses {
         private int totalCount;
         private int page;
@@ -40,11 +44,12 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
-    public static class Address {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AddressDto {
         private String roadAddr;
         private String jibunAddr;
         private String longitude;
         private String latitude;
-        private String detailAddr;
     }
 }
