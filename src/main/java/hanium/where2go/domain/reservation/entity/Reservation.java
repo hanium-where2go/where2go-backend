@@ -38,9 +38,12 @@ public class Reservation extends BaseEntity {
     private Review review;
 
     private Integer numberOfPeople;
-    private LocalDateTime reservationTime;
+    private Integer reservationTime;
     private String content;
-    //예약 상태 -> Enum
-    private String status;
+
+    // 예약 상태를 Enum으로 지정
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
+
     private String rejection;
 }
