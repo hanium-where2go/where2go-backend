@@ -66,4 +66,14 @@ public abstract class User {
     public void authorize(Role role) {
         this.role = role;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+
 }

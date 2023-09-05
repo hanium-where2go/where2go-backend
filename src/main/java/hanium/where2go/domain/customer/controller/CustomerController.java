@@ -28,6 +28,12 @@ public class CustomerController {
         return new BaseResponse(200, "회원가입이 완료되었습니다.", null);
     }
 
+    @PostMapping("/oauth2/signup")
+    public BaseResponse<String> oAuth2Signup(@AuthUser Customer customer, @RequestBody CustomerSignupRequestDto customerSignupRequestDto) {
+        customerService.oAuth2Signup(customer, customerSignupRequestDto);
+        return new BaseResponse(200, "회원가입이 완료되었습니다.", null);
+    }
+
     @GetMapping("/signup/email-duplication")
     public BaseResponse<CustomerDuplicateEmailResponseDto> duplicateEmail(@RequestBody CustomerDuplicateEmailRequestDto customerDuplicateEmailRequestDto) {
         boolean isDuplicate = customerService.duplicateEmail(customerDuplicateEmailRequestDto);
