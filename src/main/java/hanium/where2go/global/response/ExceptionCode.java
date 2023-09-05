@@ -23,7 +23,9 @@ public enum ExceptionCode {
 
     MENU_NOT_FOUND (404,"Menu not found"),
 
-    MENU_BOARD_NOT_FOUND(404,"Menu Board not found");
+    MENU_BOARD_NOT_FOUND(404,"Menu Board not found"),
+
+    CUSTOMER_NOT_FOUND(404,"Customer not found");
 
     private int status;
     private String message;

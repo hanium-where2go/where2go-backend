@@ -36,19 +36,6 @@ public class ReservationDto {
 
     }
 
-    public static class ReservationDetailResponseDto{
-         private Long restaurant_id;
-         private String restaurant_name;
-         private LocalDate reservation_date;
-         private Integer numberOfPeople;
-         private LocalTime reservation_time;
-         private LocalTime arriving_time;
-         private String content;
-         private String phoneNumber;
-         private String username;
-         private ReservationStatus status;
-
-    }
 
 
 }
