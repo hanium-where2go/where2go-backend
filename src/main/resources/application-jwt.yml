@@ -1,8 +1,0 @@
-jwt:
-  secretKey: 6ed7a7f13a55aa469e33de23e34925a945e195b129138ad62ad155bfa2280a458a2b2a6eb9b5a4b9fdedfb3c4a0f27cc555534b3924d8ee3d333d81894f5963c
-
-  access:
-    expire-time: 3600000 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
-
-  refresh:
-    expire-time: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
