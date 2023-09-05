@@ -45,18 +45,18 @@ public class ReservationController {
     }
 
     // 고객의 예약 요청
-    @PostMapping("reservation/{cusomterId}/{restaurantId}")
-    public ResponseEntity<BaseResponse<ReservationDto.ReservationResponseDto>> makeReservation(@PathVariable("restaurantId") Long restaurantId,
-                                                                                               @RequestBody ReservationDto.ReservationRequestDto reservationRequestDto,
-                                                                                               @PathVariable("customerId") Long cusomterId){
+    @PostMapping("reservation/{customerId}/{restaurantId}")
+    public ResponseEntity<BaseResponse<ReservationDto.ReservationResponseDto>> makeReservation(
+            @PathVariable("restaurantId") Long restaurantId,
+            @RequestBody ReservationDto.ReservationRequestDto reservationRequestDto,
+            @PathVariable("customerId") Long customerId) {
 
-        ReservationDto.ReservationResponseDto reservationResult = reservationService.makeReservation(restaurantId,cusomterId,reservationRequestDto);
-
+        ReservationDto.ReservationResponseDto reservationResult = reservationService.makeReservation(
+                restaurantId, customerId, reservationRequestDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "예약 내역을 불러왔습니다", reservationResult));
-
     }
 
 

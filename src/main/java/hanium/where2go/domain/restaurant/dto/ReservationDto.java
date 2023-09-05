@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class ReservationDto {
-
+    // ReservationRequestDto 정의
 
     @Getter
     @NoArgsConstructor
@@ -23,19 +23,29 @@ public class ReservationDto {
         private String content;
     }
 
+    // ReservationResponseDto 정의
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     public static class ReservationResponseDto {
+        private int status;
+        private String message;
+        private Data data;
 
-        private ReservationStatus status;
-        private boolean confirm_num;
-        private String rejection;
-        private Integer reservation_id;
+        // 게터 및 세터 메서드
 
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class Data {
+            private String status;
+            private String rejection;
+            private int confirm_num;
+            private int reservation_id;
+
+            // 게터 및 세터 메서드
+        }
     }
-
-
-
 }
