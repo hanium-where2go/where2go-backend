@@ -22,57 +22,34 @@ import java.util.UUID;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final CustomerRepository customerRepository;
 
-    public ReservationDto.ReservationResponseDto makeReservation(Long restaurantId, Long customerId,ReservationDto.ReservationRequestDto reservationRequestDto){
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+    public ReservationDto.ReservationResponseDto approveReservation(Long reservationId) {
+        // 예약 승인 동작 처리
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
 
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new BaseException(ExceptionCode.CUSTOMER_NOT_FOUND));
-
-
-        // 예약 엔티티 생성
-        Reservation reservation = Reservation.builder()
-                .restaurant(restaurant)
-                .customer(customer)
-                .numberOfPeople(reservationRequestDto.getNumberOfPeople())
-                .reservationTime(reservationRequestDto.getReservation_time())
-                .content(reservationRequestDto.getContent())
-                .status(ReservationStatus.PENDING) // 기본 상태는 PENDING으로 설정
-                .build();
+        reservation.setStatus(ReservationStatus.COMPLETED);
+        String confirmationNumber = generateConfirmationNumber(); // 랜덤 번호 생성
+        reservation.setConfirmationNumber(confirmationNumber);
 
         reservationRepository.save(reservation);
 
-        // 예약 응답 DTO 생성
-        ReservationDto.ReservationResponseDto responseDto;
+        // 클라이언트에게 보낼 응답 DTO 생성
+        return ReservationResponseDto.createCompletedData(confirmationNumber, reservationId);
+    }
 
-        // 예약 상태에 따라 응답 DTO 생성
-        if (예약을 승인한 경우) {
-            // COMPLETED 상태와 랜덤 예약 번호 생성
-            String status = "예약 완료";
-            String confirmationNumber = generateConfirmationNumber(); // 랜덤 번호 생성
-            reservation.setStatus(ReservationStatus.COMPLETED); // 예약 상태를 COMPLETED로 변경
-            reservation.setConfirmationNumber(confirmationNumber); // 랜덤 예약 번호 저장
+    public ReservationDto.ReservationResponseDto rejectReservation(Long reservationId, String rejectionReason) {
+        // 예약 거절 동작 처리
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
 
-            // 클라이언트에게 보낼 응답 DTO 생성
-            responseDto = ReservationDto.ReservationResponseDto.createCompletedResponse(confirmationNumber, reservation.getId());
-        } else {
-            // 거절 사유와 REFUSED 상태 저장
-            String status = "예약 불가";
-            String rejectionReason = "거절 사유 입력"; // 사장님이 거절한 이유
-            reservation.setStatus(ReservationStatus.REFUSED); // 예약 상태를 REFUSED로 변경
-            reservation.setRejection(rejectionReason); // 거절 사유 저장
+        reservation.setStatus(ReservationStatus.REFUSED);
+        reservation.setRejection(rejectionReason);
 
-            // 클라이언트에게 보낼 응답 DTO 생성
-            responseDto = ReservationDto.ReservationResponseDto.createRefusedResponse(rejectionReason, reservation.getId());
-        }
-
-        // 엔티티 업데이트
         reservationRepository.save(reservation);
 
-        return responseDto;
+        // 클라이언트에게 보낼 응답 DTO 생성
+        return ReservationResponseDto.createRefusedData(rejectionReason, reservationId);
     }
 
     // 랜덤 예약 번호 생성 로직 구현
@@ -80,10 +57,5 @@ public class ReservationService {
         // 랜덤 번호 생성 로직을 추가하세요.
         // 예를 들어, UUID를 사용하여 고유한 번호를 생성할 수 있습니다.
         return UUID.randomUUID().toString();
-    }
-}
-
-
-
     }
 }

@@ -49,8 +49,9 @@ dependencies {
 	//oauth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	//websocket 구현
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	//레디스
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
 }
 
