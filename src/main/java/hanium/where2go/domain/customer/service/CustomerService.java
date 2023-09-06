@@ -13,8 +13,10 @@ import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
+import hanium.where2go.global.redis.RedisUtil;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +42,7 @@ public class CustomerService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RedisUtil redisUtil;
 
 
     @Transactional
@@ -79,7 +82,7 @@ public class CustomerService {
                     customerLoginRequestDto.getPassword()
                 )
             );
-            return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken());
+            return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken(authentication.getName()));
         } catch (AuthenticationException authenticationException) {
             throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
@@ -217,5 +220,19 @@ public class CustomerService {
     @Transactional
     public void resetPassword(Customer customer, CustomerResetPasswordRequestDto customerResetPasswordRequestDto) {
         customer.changePassword(customerResetPasswordRequestDto.getPassword(), passwordEncoder);
+    }
+
+    @Transactional
+    public CustomerLoginResponseDto reissue(HttpServletRequest request) {
+        String refreshToken = jwtProvider.resolveRefreshToken(request);
+
+        if (refreshToken != null && jwtProvider.validateToken(refreshToken) && jwtProvider.expiredToken(refreshToken)) {
+            String email = jwtProvider.extractEmail(refreshToken);
+            if (((String) redisUtil.get(email)).equals(refreshToken)) {
+                return new CustomerLoginResponseDto(jwtProvider.generateRefreshToken(email), jwtProvider.generateRefreshToken(email));
+            }
+        }
+
+        throw new BaseException(ExceptionCode.TOKEN_REISSUE_FAILED);
     }
 }

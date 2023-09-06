@@ -5,8 +5,10 @@ import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.service.CustomerService;
 import hanium.where2go.domain.user.AuthUser;
 import hanium.where2go.domain.user.dto.UserInfoRequestDto;
+import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseResponse;
 import hanium.where2go.global.smtp.EmailService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -138,6 +140,13 @@ public class CustomerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "비밀번호가 변경되었습니다.", null));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<BaseResponse<CustomerLoginResponseDto>> reissue(HttpServletRequest request) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "토큰이 재발급 되었습니다.", customerService.reissue(request)));
     }
 
 }

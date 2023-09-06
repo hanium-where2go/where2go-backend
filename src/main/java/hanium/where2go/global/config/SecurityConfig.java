@@ -32,7 +32,8 @@ public class SecurityConfig {
         "/customer/login",
         "/customer/find-email",
         "/customer/email-verification/*",
-        "/maps/**"
+        "/maps/**",
+        "/customer/reissue"
     };
 
     @Bean

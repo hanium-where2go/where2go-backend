@@ -23,10 +23,15 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtProvider.resolveAccessToken(request);
         try {
+            //토큰 validation
             if (token != null && jwtProvider.validateToken(token)) {
-                Authentication authentication = jwtProvider.getAuthenticationByAccessToken(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                //uri가 reissue가 아닌 경우에만 설정.
+                if (request.getRequestURI().equals("/customer/reissue")) {
+                    Authentication authentication = jwtProvider.getAuthenticationByAccessToken(token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+
         } catch (BaseException e) {
             SecurityContextHolder.clearContext();
             request.setAttribute("error", e);
