@@ -5,6 +5,9 @@ import hanium.where2go.global.handler.AccessDeniedHandlerImpl;
 import hanium.where2go.global.jwt.JwtAuthenticationEntryPoint;
 import hanium.where2go.global.jwt.JwtFilter;
 import hanium.where2go.global.jwt.JwtProvider;
+import hanium.where2go.global.oauth2.handler.OAuth2LoginFailureHandler;
+import hanium.where2go.global.oauth2.handler.OAuth2LoginSuccessHandler;
+import hanium.where2go.global.oauth2.service.CustomOAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,9 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final AccessDeniedHandlerImpl accessDeniedHandler;
+    private final CustomOAuth2Service customOAuth2Service;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     private final String[] WHITE_LIST = {
         "/customer/signup",
@@ -33,6 +39,8 @@ public class SecurityConfig {
         "/customer/find-email",
         "/customer/email-verification/*",
         "/maps/**",
+        "/",
+        "**.html",
         "/customer/reissue"
     };
 
@@ -50,11 +58,17 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(WHITE_LIST).permitAll())
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().authenticated())
+//            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().permitAll())
 //            Unauthenticated | Unauthorized user exception
             .exceptionHandling(exceptionHandling ->
                 exceptionHandling
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                     .accessDeniedHandler(accessDeniedHandler));
+        http
+            .oauth2Login(configurer ->
+                configurer.successHandler(oAuth2LoginSuccessHandler)
+                    .failureHandler(oAuth2LoginFailureHandler)
+                    .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOAuth2Service)));
 
         //JwtFilter 적용
         http.

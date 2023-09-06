@@ -1,6 +1,7 @@
 package hanium.where2go.domain.customer.entity;
 
 import hanium.where2go.domain.user.entity.User;
+import hanium.where2go.global.oauth2.SocialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "customer")
 public class Customer extends User {
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    private String socialId;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavorLiquor> favorLiquors = new ArrayList<>();

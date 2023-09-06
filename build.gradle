@@ -45,6 +45,9 @@ dependencies {
 	//이메일
 	implementation 'org.springframework.boot:spring-boot-starter-mail' /* 이메일 전송 */
 
+	//oauth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

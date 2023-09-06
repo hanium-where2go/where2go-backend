@@ -66,6 +66,13 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
+    @Transactional
+    public void oAuth2Signup(Customer customer, CustomerSignupRequestDto customerSignupRequestDto) {
+        customer.setName(customerSignupRequestDto.getName());
+        customer.setPhoneNumber(customerSignupRequestDto.getPhoneNumber());
+        customer.authorize(Role.CUSTOMER);
+    }
+
     public boolean duplicateEmail(CustomerDuplicateEmailRequestDto customerDuplicateEmailRequestDto) {
         if (customerRepository.findByEmail(customerDuplicateEmailRequestDto.getEmail()).isPresent()) {
             return true;
