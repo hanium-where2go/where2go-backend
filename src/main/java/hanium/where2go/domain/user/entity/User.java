@@ -1,6 +1,6 @@
 package hanium.where2go.domain.user.entity;
 
-import hanium.where2go.domain.user.dto.UserInfoRequestDto;
+import hanium.where2go.domain.customer.dto.CustomerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,9 +52,9 @@ public abstract class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    public void update(UserInfoRequestDto userInfoRequestDto, PasswordEncoder passwordEncoder) {
-        this.nickname = userInfoRequestDto.getNickname();
-        this.password = userInfoRequestDto.getPassword();
+    public void update(CustomerDto.InfoRequest infoRequestDto, PasswordEncoder passwordEncoder) {
+        this.nickname = infoRequestDto.getNickname();
+        this.password = infoRequestDto.getPassword();
         hashPassword(passwordEncoder);
     }
 
