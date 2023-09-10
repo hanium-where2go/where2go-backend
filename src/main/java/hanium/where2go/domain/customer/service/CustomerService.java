@@ -236,7 +236,7 @@ public class CustomerService {
         if (refreshToken != null && jwtProvider.validateToken(refreshToken) && jwtProvider.expiredToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
             if (((String) redisUtil.get(email)).equals(refreshToken)) {
-                return new CustomerLoginResponseDto(jwtProvider.generateRefreshToken(email), jwtProvider.generateRefreshToken(email));
+                return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(email), jwtProvider.generateRefreshToken(email));
             }
         }
 
