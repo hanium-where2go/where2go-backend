@@ -1,12 +1,10 @@
 package hanium.where2go.global.jwt;
 
 import hanium.where2go.domain.user.service.UserDetailServiceImpl;
+import hanium.where2go.global.redis.RedisUtil;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +26,18 @@ public class JwtProvider {
     private final Long accessTokenExpireTime;
     private final Long refreshTokenExpireTime;
     private final UserDetailServiceImpl userDetailService;
+    private final RedisUtil redisUtil;
 
     public JwtProvider(@Value("${jwt.secretKey}") String secretKey,
                        @Value("${jwt.access.expire-time}") Long accessTokenExpireTime,
                        @Value("${jwt.refresh.expire-time}") Long refreshTokenExpireTime,
-                       UserDetailServiceImpl userDetailService) {
+                       UserDetailServiceImpl userDetailService,
+                       RedisUtil redisUtil) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessTokenExpireTime = accessTokenExpireTime;
         this.refreshTokenExpireTime = refreshTokenExpireTime;
         this.userDetailService = userDetailService;
+        this.redisUtil = redisUtil;
     }
 
     //이메일을 바탕으로 AccessToken 생성
@@ -52,14 +53,18 @@ public class JwtProvider {
     }
 
     //RefreshToken 생성
-    public String generateRefreshToken() {
+    public String generateRefreshToken(String email) {
         Date now = new Date();
 
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
             .setSubject("RefreshToken")
+            .claim("email", email)
             .setExpiration(new Date(now.getTime() + refreshTokenExpireTime))
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact();
+
+        redisUtil.set(email, refreshToken, refreshTokenExpireTime);
+        return refreshToken;
     }
 
     //토큰 검증 메소드
@@ -67,9 +72,21 @@ public class JwtProvider {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
-            // MalformedJwtException | ExpiredJwtException | IllegalArgumentException | UnsupportedJwtException
+
+        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
             throw new BaseException(ExceptionCode.INVALID_TOKEN);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(ExceptionCode.EXPIRED_TOKEN);
+        }
+    }
+
+    //토큰 만료 검증 확인 메서드
+    public boolean expiredToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(ExceptionCode.EXPIRED_TOKEN);
         }
     }
 
@@ -105,6 +122,4 @@ public class JwtProvider {
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
-
 }

@@ -11,6 +11,8 @@ public enum ExceptionCode {
     EMAIL_SERVER_ERROR(500, "Email server error has occurred."),
     INVALID_EMAIL(404, "Email address is invalid."),
     INVALID_TOKEN(401, "Token is invalid."),
+    EXPIRED_TOKEN(401, "Expired Token."),
+    TOKEN_REISSUE_FAILED(400, "Token reissue failed."),
     UNAUTHENTICATED_USER(403, "User does not authenticated."),
     UNAUTHORIZED_USER(401,"User does not authorized."),
     CATEGORY_NOT_FOUND(404, "Category does not found."),

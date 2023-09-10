@@ -32,7 +32,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String accessToken = jwtProvider.generateAccessTokenByEmail(oAuth2User.getEmail());
-        String refreshToken = jwtProvider.generateRefreshToken();
+        String refreshToken = jwtProvider.generateRefreshToken(oAuth2User.getEmail());
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

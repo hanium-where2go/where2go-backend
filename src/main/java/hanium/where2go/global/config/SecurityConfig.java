@@ -40,7 +40,8 @@ public class SecurityConfig {
         "/customer/email-verification/*",
         "/maps/**",
         "/",
-        "**.html"
+        "**.html",
+        "/customer/reissue"
     };
 
     @Bean
