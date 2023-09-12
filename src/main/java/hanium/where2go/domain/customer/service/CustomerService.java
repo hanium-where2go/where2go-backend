@@ -10,7 +10,6 @@ import hanium.where2go.domain.customer.entity.Point;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
-import hanium.where2go.domain.user.dto.UserInfoRequestDto;
 import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.redis.RedisUtil;
@@ -46,7 +45,7 @@ public class CustomerService {
 
 
     @Transactional
-    public void signup(CustomerSignupRequestDto customerSignupRequestDto) {
+    public void signup(CustomerDto.SignupRequest customerSignupRequestDto) {
 
         if (customerRepository.findByEmail(customerSignupRequestDto.getEmail()).isPresent()) {
             throw new BaseException(ExceptionCode.DUPLICATED_USER);
@@ -67,13 +66,13 @@ public class CustomerService {
     }
 
     @Transactional
-    public void oAuth2Signup(Customer customer, CustomerSignupRequestDto customerSignupRequestDto) {
+    public void oAuth2Signup(Customer customer, CustomerDto.SignupRequest customerSignupRequestDto) {
         customer.setName(customerSignupRequestDto.getName());
         customer.setPhoneNumber(customerSignupRequestDto.getPhoneNumber());
         customer.authorize(Role.CUSTOMER);
     }
 
-    public boolean duplicateEmail(CustomerDuplicateEmailRequestDto customerDuplicateEmailRequestDto) {
+    public boolean duplicateEmail(CustomerDto.DuplicateEmailRequest customerDuplicateEmailRequestDto) {
         if (customerRepository.findByEmail(customerDuplicateEmailRequestDto.getEmail()).isPresent()) {
             return true;
         }
@@ -81,46 +80,36 @@ public class CustomerService {
     }
 
     //로그인 후 access token, refresh token 반환
-    public CustomerLoginResponseDto login(CustomerLoginRequestDto customerLoginRequestDto) {
+    public CustomerDto.LoginResponse login(CustomerDto.LoginRequest loginRequestDto) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    customerLoginRequestDto.getEmail(),
-                    customerLoginRequestDto.getPassword()
+                    loginRequestDto.getEmail(),
+                    loginRequestDto.getPassword()
                 )
             );
-            return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken(authentication.getName()));
+            return new CustomerDto.LoginResponse(jwtProvider.generateAccessTokenByEmail(authentication.getName()), jwtProvider.generateRefreshToken(authentication.getName()));
         } catch (AuthenticationException authenticationException) {
             throw new BaseException(ExceptionCode.UNAUTHENTICATED_USER);
         }
     }
 
-    public CustomerFindEmailResponseDto findEmail(CustomerFindEmailRequestDto customerFindEmailRequestDto) {
-        Customer customer = customerRepository.findByNameAndPhoneNumber(customerFindEmailRequestDto.getName(), customerFindEmailRequestDto.getPhoneNumber())
+    public CustomerDto.FindEmailResponse findEmail(CustomerDto.FindEmailRequest findEmailRequestDto) {
+        Customer customer = customerRepository.findByNameAndPhoneNumber(findEmailRequestDto.getName(), findEmailRequestDto.getPhoneNumber())
             .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
-        return new CustomerFindEmailResponseDto(customer.getEmail());
+        return new CustomerDto.FindEmailResponse(customer.getEmail());
     }
 
-    public CustomerInfoResponseDto getInfo(Customer customer) {
-        return CustomerInfoResponseDto.builder()
-            .name(customer.getName())
-            .nickname(customer.getNickname())
-            .email(customer.getEmail())
-            .phoneNumber(customer.getPhoneNumber())
-            .build();
+    public CustomerDto.InfoResponse getInfo(Customer customer) {
+        return new CustomerDto.InfoResponse(customer.getName(), customer.getNickname(), customer.getEmail(), customer.getPhoneNumber());
     }
 
     @Transactional
-    public CustomerInfoResponseDto updateInfo(Customer customer, UserInfoRequestDto userInfoRequestDto) {
-        customer.update(userInfoRequestDto, passwordEncoder);
+    public CustomerDto.InfoResponse updateInfo(Customer customer, CustomerDto.InfoRequest infoRequestDto) {
+        customer.update(infoRequestDto, passwordEncoder);
         customerRepository.save(customer);
 
-        return CustomerInfoResponseDto.builder()
-            .name(customer.getName())
-            .nickname(customer.getNickname())
-            .email(customer.getEmail())
-            .phoneNumber(customer.getPhoneNumber())
-            .build();
+        return new CustomerDto.InfoResponse(customer.getName(), customer.getNickname(), customer.getEmail(), customer.getPhoneNumber());
     }
 
     @Transactional
@@ -142,10 +131,8 @@ public class CustomerService {
         customer.earn(10000, "회원가입");
     }
 
-    public CustomerPointResponseDto getPoint(Customer customer) {
-        return CustomerPointResponseDto.builder()
-            .point(customer.getPoint().getAmount())
-            .build();
+    public CustomerDto.PointResponse getPoint(Customer customer) {
+        return new CustomerDto.PointResponse(customer.getPoint().getAmount());
     }
 
     @Transactional
@@ -168,8 +155,8 @@ public class CustomerService {
         customer.addFavorLiquor(favorLiquor);
     }
 
-    public CustomerFavorLiquorResponseDto getFavorLiquors(Customer customer) {
-        return new CustomerFavorLiquorResponseDto(customer.getFavorLiquors().stream()
+    public CustomerDto.FavorLiquorResponse getFavorLiquors(Customer customer) {
+        return new CustomerDto.FavorLiquorResponse(customer.getFavorLiquors().stream()
             .map(favorLiquor -> favorLiquor.getLiquor().getId())
             .collect(Collectors.toList()));
     }
@@ -203,8 +190,8 @@ public class CustomerService {
         customer.addFavorCategory(favorCategory);
     }
 
-    public CustomerFavorLiquorResponseDto getFavorCategories(Customer customer) {
-        return new CustomerFavorLiquorResponseDto(customer.getFavorCategories().stream()
+    public CustomerDto.FavorCategoryResponse getFavorCategories(Customer customer) {
+        return new CustomerDto.FavorCategoryResponse(customer.getFavorCategories().stream()
             .map(favorCategory -> favorCategory.getCategory().getId())
             .collect(Collectors.toList()));
     }
@@ -225,18 +212,18 @@ public class CustomerService {
     }
 
     @Transactional
-    public void resetPassword(Customer customer, CustomerResetPasswordRequestDto customerResetPasswordRequestDto) {
-        customer.changePassword(customerResetPasswordRequestDto.getPassword(), passwordEncoder);
+    public void resetPassword(Customer customer, CustomerDto.ResetPasswordRequest resetPasswordRequestDto) {
+        customer.changePassword(resetPasswordRequestDto.getPassword(), passwordEncoder);
     }
 
     @Transactional
-    public CustomerLoginResponseDto reissue(HttpServletRequest request) {
+    public CustomerDto.LoginResponse reissue(HttpServletRequest request) {
         String refreshToken = jwtProvider.resolveRefreshToken(request);
 
         if (refreshToken != null && jwtProvider.validateToken(refreshToken) && jwtProvider.expiredToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
             if (((String) redisUtil.get(email)).equals(refreshToken)) {
-                return new CustomerLoginResponseDto(jwtProvider.generateAccessTokenByEmail(email), jwtProvider.generateRefreshToken(email));
+                return new CustomerDto.LoginResponse(jwtProvider.generateAccessTokenByEmail(email), jwtProvider.generateRefreshToken(email));
             }
         }
 

@@ -1,8 +1,7 @@
 package hanium.where2go.global.oauth2.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hanium.where2go.domain.customer.dto.CustomerLoginResponseDto;
-import hanium.where2go.domain.customer.repository.CustomerRepository;
+import hanium.where2go.domain.customer.dto.CustomerDto;
 import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.oauth2.CustomOAuth2User;
@@ -39,10 +38,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (oAuth2User.getRole() == Role.GUEST) {
             //추가 정보 입력페이지로 redirect 필요
             response.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
-            objectMapper.writeValue(response.getWriter(), new BaseResponse<CustomerLoginResponseDto>(HttpStatus.TEMPORARY_REDIRECT.value(), "oauth2 회원가입 페이지로 이동합니다.", new CustomerLoginResponseDto(accessToken, refreshToken)));
+            objectMapper.writeValue(response.getWriter(), new BaseResponse<CustomerDto.LoginResponse>(HttpStatus.TEMPORARY_REDIRECT.value(), "oauth2 회원가입 페이지로 이동합니다.", new CustomerDto.LoginResponse(accessToken, refreshToken)));
         } else {
             response.setStatus(HttpStatus.OK.value());
-            objectMapper.writeValue(response.getWriter(), new BaseResponse<CustomerLoginResponseDto>(HttpStatus.TEMPORARY_REDIRECT.value(), "로그인에 성공하였습니다.", new CustomerLoginResponseDto(accessToken, refreshToken)));
+            objectMapper.writeValue(response.getWriter(), new BaseResponse<CustomerDto.LoginResponse>(HttpStatus.TEMPORARY_REDIRECT.value(), "로그인에 성공하였습니다.", new CustomerDto.LoginResponse(accessToken, refreshToken)));
         }
     }
 }

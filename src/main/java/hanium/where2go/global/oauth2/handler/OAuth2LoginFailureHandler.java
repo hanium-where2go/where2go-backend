@@ -1,7 +1,6 @@
 package hanium.where2go.global.oauth2.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hanium.where2go.domain.customer.dto.CustomerLoginResponseDto;
 import hanium.where2go.global.response.BaseResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
