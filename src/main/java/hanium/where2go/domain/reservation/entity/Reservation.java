@@ -47,10 +47,19 @@ public class Reservation extends BaseEntity {
 
     private String rejection;
 
-//    @Builder
-//    public Reservation(Integer numberOfPepole, Integer reservationTime , String content) {
-//        this.numberOfPeople = numberOfPepole;
-//        this.reservationTime = reservationTime;
-//        this.content = content;
-//    }
+    private String reservationNumber;
+
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    // setRejection 메서드 추가
+    public void setRejection(String rejection) {
+        this.rejection = rejection;
+    }
+
+    public void setReservationNumber(String reservationNumber){
+        this.reservationNumber = reservationNumber;
+    }
 }

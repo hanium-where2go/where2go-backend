@@ -48,4 +48,5 @@ public class ReservationDto {
             // 게터 및 세터 메서드
         }
     }
+
 }
