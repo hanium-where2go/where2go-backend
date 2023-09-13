@@ -57,8 +57,8 @@ public class SecurityConfig {
         //WHITE LIST 만 허용, 나머지는 로그인 필요
         http
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(WHITE_LIST).permitAll())
-            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().authenticated())
-//            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().permitAll())
+//            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().authenticated())
+            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.anyRequest().permitAll())
 //            Unauthenticated | Unauthorized user exception
             .exceptionHandling(exceptionHandling ->
                 exceptionHandling
