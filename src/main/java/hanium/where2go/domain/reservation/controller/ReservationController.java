@@ -46,17 +46,38 @@ public class ReservationController {
     }
 
     //고객의 예약 요청
-    @PostMapping("/restaurants/{restaurantId}/reservation")
+    @PostMapping("/restaurants/{restaurantId}/{customerId}/reservation")
     public ResponseEntity<BaseResponse> makeReservation(
             @PathVariable("restaurantId") Long restaurantId,
+            @PathVariable("customerId") Long customerId,
             @RequestBody ReservationDto.ReservationRequestDto reservationRequestDto) {
 
         // 예약 요청을 서비스 레이어로 전달하여 처리
-        reservationService.processReservation(restaurantId, reservationRequestDto);
+     ReservationDto.ReservationResponseDto reservationResponseDto =    reservationService.processReservation(restaurantId,customerId, reservationRequestDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new BaseResponse<>(HttpStatus.OK.value(), "예약 요청이 접수중입니다", null));
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "예약 요청이 접수중입니다", reservationResponseDto));
     }
 
+    // 사장님의 예약 승인/거절
+    @PatchMapping("/reservations/{reservationId}")
+    public ResponseEntity<BaseResponse> setReservationStatus(@PathVariable("reservationId") Long reservationId,
+                                                             @RequestBody ReservationDto.updateReservationStatus updateReservationStatus){
+        reservationService.updateReservationStatus(reservationId,updateReservationStatus);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse(HttpStatus.OK.value(),"예약 결과가 업데이트 되었습니다", null));
+    }
+
+    // 예약 내용 조회
+    @GetMapping("/reservations/{reservationId}")
+    public ResponseEntity<BaseResponse<ReservationDto.ReservationInformationResponseDto>> searchReservation(@PathVariable("reservationId") Long reservationId){
+
+        ReservationDto.ReservationInformationResponseDto reservationInformationResponseDto = reservationService.searchReservation(reservationId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "예약 상세 내역입니다", reservationInformationResponseDto));
+    }
 }

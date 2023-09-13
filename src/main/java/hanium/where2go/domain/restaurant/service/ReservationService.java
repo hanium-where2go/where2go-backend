@@ -1,6 +1,8 @@
 package hanium.where2go.domain.restaurant.service;
 
 import hanium.where2go.domain.category.entity.Category;
+import hanium.where2go.domain.customer.entity.Customer;
+import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.reservation.entity.Reservation;
 import hanium.where2go.domain.reservation.entity.ReservationStatus;
@@ -15,11 +17,12 @@ import hanium.where2go.domain.restaurant.repository.ReviewRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final RestaurantRepository restaurantRepository;
+    private final CustomerRepository customerRepository;
 
     private static final String NUMBERS = "0123456789";
     private static final Random random = new Random();
@@ -49,10 +53,13 @@ public class ReservationService {
     }
 
     // 예약 생성
-    public void processReservation(Long restaurantId, ReservationDto.ReservationRequestDto reservationRequestDto) {
+    public ReservationDto.ReservationResponseDto processReservation(Long restaurantId,Long customerId, ReservationDto.ReservationRequestDto reservationRequestDto) {
         // 먼저 사용자의 예약 요청 내용을 엔티티에 저장합니다.
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
         Reservation reservation = Reservation.builder()
                 .restaurant(restaurant)
@@ -68,27 +75,74 @@ public class ReservationService {
         // topic 을 구독한 사장님에게 전송
         String message = "새로운 예약 요청이 도착했습니다!";
         messagingTemplate.convertAndSend("/topic/reservation", message);
+
+        return ReservationDto.ReservationResponseDto.builder()
+                .reservationId(reservation.getId())
+                .build();
     }
 
-    public void updateReservationStatus(Long reservationId, ReservationStatus status) {
+    public void updateReservationStatus(Long reservationId, ReservationDto.updateReservationStatus updateReservationStatus) {
         // reservationId를 사용하여 예약을 조회합니다.
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
 
         // status 값에 따라 예약 상태를 업데이트합니다.
-        reservation.setStatus(status);
+        reservation.setStatus(updateReservationStatus.getReservationStatus());
+
+        // rejection 값이 null이 아닌 경우 Reservation 엔티티에 저장합니다.
+        if (updateReservationStatus.getRejection() != null) {
+            reservation.setRejection(updateReservationStatus.getRejection());
+        }
 
         // 예약 정보를 업데이트합니다.
         reservationRepository.save(reservation);
 
         // 예약이 완료된 경우 랜덤 예약 번호를 클라이언트에게 전송
-        if (status == ReservationStatus.COMPLETED) {
+        if (reservation.getStatus() == ReservationStatus.COMPLETED) {
             String reservationNumber = generateRandomNumber(2);
             reservation.setReservationNumber(reservationNumber);
 
             String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber;
             messagingTemplate.convertAndSend("/topic/reservation", successMessage);
         }
+    }
+
+    // 예약 상세 내역 조회
+
+//    @Getter
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    @Builder
+//    public static class ReservationInformationResponseDto{
+//        private Long restaurantId;
+//        private String restaurantName;
+//        private LocalDate reservationDate;
+//        private Integer numberOfPeople;
+//        private LocalTime reservationTime;
+//        private LocalTime arrivingTime;
+//        private String content;
+//        private String phoneNumber;
+//        private String username;
+//        private ReservationStatus reservationStatus;
+//    }
+//
+    public ReservationDto.ReservationInformationResponseDto searchReservation(Long reservationId){
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
+
+        return ReservationDto.ReservationInformationResponseDto.builder()
+                .restaurantId(reservation.getRestaurant().getRestaurantId())
+                .restaurantName(reservation.getRestaurant().getRestaurantName())
+                .reservationDate(LocalDate.from(reservation.getCreatedAt()))
+                .numberOfPeople(reservation.getNumberOfPeople())
+                .reservationTime(LocalTime.ofSecondOfDay(reservation.getReservationTime()))
+                .arrivingTime(LocalTime.ofSecondOfDay(reservation.getReservationTime()))
+                .content(reservation.getContent())
+                .phoneNumber(reservation.getCustomer().getPhoneNumber())
+                .username(reservation.getCustomer().getNickname())
+                .reservationStatus(reservation.getStatus())
+                .build();
     }
 }
 

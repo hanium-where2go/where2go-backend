@@ -1,5 +1,6 @@
 package hanium.where2go.domain.restaurant.dto;
 
+import hanium.where2go.domain.reservation.entity.Reservation;
 import hanium.where2go.domain.reservation.entity.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,24 +30,33 @@ public class ReservationDto {
     @AllArgsConstructor
     @Builder
     public static class ReservationResponseDto {
-        private int status;
-        private String message;
-        private Data data;
+       private Long reservationId;
+    }
 
-        // 게터 및 세터 메서드
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class updateReservationStatus{
+        private ReservationStatus reservationStatus;
+        private String rejection;
+    }
 
-        @Getter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @Builder
-        public static class Data {
-            private String status;
-            private String rejection;
-            private int confirm_num;
-            private int reservation_id;
-
-            // 게터 및 세터 메서드
-        }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ReservationInformationResponseDto{
+        private Long restaurantId;
+        private String restaurantName;
+        private LocalDate reservationDate;
+        private Integer numberOfPeople;
+        private LocalTime reservationTime;
+        private LocalTime arrivingTime;
+        private String content;
+        private String phoneNumber;
+        private String username;
+        private ReservationStatus reservationStatus;
     }
 
 }
