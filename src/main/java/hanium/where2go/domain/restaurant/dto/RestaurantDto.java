@@ -46,7 +46,6 @@ public class RestaurantDto {
         private Integer onetimeSeat;
         private Boolean parkingLot;
 
-
     }
 
     @Getter

@@ -112,7 +112,7 @@ public class RestaurantService {
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
-//                .address(restaurantEnrollDto.getLocation()) // Todo MapDto.Address로 변경
+              //  .location(String.valueOf(restaurantEnrollDto.getAddress())) // Todo MapDto.Address로 변경
                 .start_time(restaurantEnrollDto.getStartTime())
                 .end_time(restaurantEnrollDto.getEndTime())
                 .closed_day(restaurantEnrollDto.getClosedDay())
