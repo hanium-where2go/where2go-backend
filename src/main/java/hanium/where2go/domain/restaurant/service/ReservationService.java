@@ -63,6 +63,7 @@ public class ReservationService {
 
         Reservation reservation = Reservation.builder()
                 .restaurant(restaurant)
+                .customer(customer)
                 .numberOfPeople(reservationRequestDto.getNumberOfPeople())
                 .reservationTime(reservationRequestDto.getReservation_time())
                 .content(reservationRequestDto.getContent())
@@ -107,25 +108,6 @@ public class ReservationService {
         }
     }
 
-    // 예약 상세 내역 조회
-
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Builder
-//    public static class ReservationInformationResponseDto{
-//        private Long restaurantId;
-//        private String restaurantName;
-//        private LocalDate reservationDate;
-//        private Integer numberOfPeople;
-//        private LocalTime reservationTime;
-//        private LocalTime arrivingTime;
-//        private String content;
-//        private String phoneNumber;
-//        private String username;
-//        private ReservationStatus reservationStatus;
-//    }
-//
     public ReservationDto.ReservationInformationResponseDto searchReservation(Long reservationId){
 
         Reservation reservation = reservationRepository.findById(reservationId)
