@@ -60,9 +60,11 @@ public class CustomerController {
         ))
     })
     @PostMapping("/oauth2/signup")
-    public BaseResponse<String> oAuth2Signup(@AuthUser Customer customer, @RequestBody CustomerDto.SignupRequest signupRequestDto) {
+    public ResponseEntity<BaseResponse<String>> oAuth2Signup(@AuthUser Customer customer, @RequestBody CustomerDto.SignupRequest signupRequestDto) {
         customerService.oAuth2Signup(customer, signupRequestDto);
-        return new BaseResponse(200, "회원가입이 완료되었습니다.", null);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "회원가입이 완료되었습니다.", null));
     }
 
     @Operation(summary = "이메일 중복 확인", description = "이메일 중복 확인 API.")
@@ -75,12 +77,16 @@ public class CustomerController {
         ))
     })
     @GetMapping("/signup/email-duplication")
-    public BaseResponse<CustomerDto.DuplicateEmailResponse> duplicateEmail(@RequestBody CustomerDto.DuplicateEmailRequest duplicateEmailRequestDto) {
+    public ResponseEntity<BaseResponse<CustomerDto.DuplicateEmailResponse>> duplicateEmail(@RequestBody CustomerDto.DuplicateEmailRequest duplicateEmailRequestDto) {
         boolean isDuplicate = customerService.duplicateEmail(duplicateEmailRequestDto);
         if (isDuplicate) {
-            return new BaseResponse<>(200, "이미 가입된 이메일입니다.", new CustomerDto.DuplicateEmailResponse(isDuplicate));
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "사용중인 이메일입니다.", new CustomerDto.DuplicateEmailResponse(isDuplicate)));
         }
-        return new BaseResponse<>(200, "사용가능한 이메일입니다.", new CustomerDto.DuplicateEmailResponse(isDuplicate));
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용가능한 이메일입니다.", new CustomerDto.DuplicateEmailResponse(isDuplicate)));
     }
 
     @Operation(summary = "로그인", description = "로그인 API.")
@@ -94,8 +100,10 @@ public class CustomerController {
         @ApiResponse(responseCode = "404", description = "로그인 실패", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
     })
     @PostMapping("/login")
-    public BaseResponse<CustomerDto.LoginResponse> login(@RequestBody CustomerDto.LoginRequest loginRequestDto) {
-        return new BaseResponse<>(200, "로그인이 완료되었습니다.", customerService.login(loginRequestDto));
+    public ResponseEntity<BaseResponse<CustomerDto.LoginResponse>> login(@RequestBody CustomerDto.LoginRequest loginRequestDto) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "로그인이 완료되었습니다.", customerService.login(loginRequestDto)));
     }
 
     @Operation(summary = "이메일 찾기", description = "이메일 찾기 API.")
@@ -109,8 +117,10 @@ public class CustomerController {
         @ApiResponse(responseCode = "404", description = "이메일 없음", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
     })
     @GetMapping("/find-email")
-    public BaseResponse<CustomerDto.FindEmailResponse> findEmail(@RequestBody CustomerDto.FindEmailRequest findEmailRequestDto) {
-        return new BaseResponse<>(200, "사용자 아이디를 가져왔습니다.", customerService.findEmail(findEmailRequestDto));
+    public ResponseEntity<BaseResponse<CustomerDto.FindEmailResponse>> findEmail(@RequestBody CustomerDto.FindEmailRequest findEmailRequestDto) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "사용자 아이디를 가져왔습니다.", customerService.findEmail(findEmailRequestDto)));
     }
 
     @Operation(summary = "사용자 정보 가져오기", description = "사용자 정보 가져오기 API.")
