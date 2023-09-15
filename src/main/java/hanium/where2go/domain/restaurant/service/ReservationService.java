@@ -78,7 +78,7 @@ public class ReservationService {
         reservationRepository.save(reservation);
 
         // 예약 정보를 클라이언트에게 전송 (WebSocket을 사용)
-        // topic 을 구독한 사장님에게 전송
+        // /sub/reservation 구독하면 사장님. 고객 둘다에게 전달 가능
         String message = "새로운 예약 요청이 도착했습니다!";
         messagingTemplate.convertAndSend("/sub/reservation", message);
 
@@ -125,7 +125,7 @@ public class ReservationService {
     private int getSeatCountFromRedis() {
         Object seatCount = redisTemplate.opsForValue().get("totalSeatCount");
         if (seatCount == null) {
-            return 0; // 기본값을 0으로 설정하거나 다른 값을 선택하세요.
+            return 0;
         }
         return Integer.parseInt(seatCount.toString());
     }
