@@ -93,4 +93,7 @@ public class Restaurant extends BaseEntity {
     }
 
 
+    public Long getId() {
+        return restaurantId;
+    }
 }

@@ -75,7 +75,7 @@ public class ReservationService {
         // 예약 정보를 클라이언트에게 전송 (WebSocket을 사용)
         // topic 을 구독한 사장님에게 전송
         String message = "새로운 예약 요청이 도착했습니다!";
-        messagingTemplate.convertAndSend("/topic/reservation", message);
+        messagingTemplate.convertAndSend("/sub/reservation", message);
 
         return ReservationDto.ReservationResponseDto.builder()
                 .reservationId(reservation.getId())
@@ -87,24 +87,28 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
 
+        ReservationStatus newStatus = updateReservationStatus.getReservationStatus();
         // status 값에 따라 예약 상태를 업데이트합니다.
-        reservation.setStatus(updateReservationStatus.getReservationStatus());
+        reservation.setStatus(newStatus);
 
-        // rejection 값이 null이 아닌 경우 Reservation 엔티티에 저장합니다.
-        if (updateReservationStatus.getRejection() != null) {
+        // rejection 값이 null이 아닌 경우 Reservation 엔티티에 저장
+        if (updateReservationStatus.getRejection() == null) {
             reservation.setRejection(updateReservationStatus.getRejection());
         }
-
         // 예약 정보를 업데이트합니다.
         reservationRepository.save(reservation);
 
         // 예약이 완료된 경우 랜덤 예약 번호를 클라이언트에게 전송
-        if (reservation.getStatus() == ReservationStatus.COMPLETED) {
+        if (newStatus == ReservationStatus.COMPLETED) {
             String reservationNumber = generateRandomNumber(2);
             reservation.setReservationNumber(reservationNumber);
 
             String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber;
-            messagingTemplate.convertAndSend("/topic/reservation", successMessage);
+            messagingTemplate.convertAndSend("/sub/reservation", successMessage);
+        }
+        else {
+            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection();
+            messagingTemplate.convertAndSend("/sub/reservation", failMessage);
         }
     }
 
