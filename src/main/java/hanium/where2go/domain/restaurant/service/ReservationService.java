@@ -18,6 +18,8 @@ import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import jakarta.transaction.Transactional;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,9 @@ public class ReservationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final String NUMBERS = "0123456789";
     private static final Random random = new Random();
@@ -103,15 +108,30 @@ public class ReservationService {
             String reservationNumber = generateRandomNumber(2);
             reservation.setReservationNumber(reservationNumber);
 
-            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber;
-            messagingTemplate.convertAndSend("/sub/reservation", successMessage);
+            // Redis에서 좌석 수를 업데이트합니다.
+            int currentSeatCount = getSeatCountFromRedis();
+            int updatedSeatCount = currentSeatCount - reservation.getNumberOfPeople();
+            saveSeatCountToRedis(updatedSeatCount);
+
+            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber + "실시간 좌석 수: " + getSeatCountFromRedis();
+            messagingTemplate.convertAndSend("/sub/reservation", successMessage );
         }
         else {
-            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection();
+            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection() + "실시간 좌석 수 " + getSeatCountFromRedis();
             messagingTemplate.convertAndSend("/sub/reservation", failMessage);
         }
     }
 
+    private int getSeatCountFromRedis() {
+        Object seatCount = redisTemplate.opsForValue().get("totalSeatCount");
+        if (seatCount == null) {
+            return 0; // 기본값을 0으로 설정하거나 다른 값을 선택하세요.
+        }
+        return Integer.parseInt(seatCount.toString());
+    }
+    private void saveSeatCountToRedis(int seatCount) {
+        redisTemplate.opsForValue().set("totalSeatCount", Integer.toString(seatCount)); // int를 문자열로 변환하여 저장
+    }
     public ReservationDto.ReservationInformationResponseDto searchReservation(Long reservationId){
 
         Reservation reservation = reservationRepository.findById(reservationId)
