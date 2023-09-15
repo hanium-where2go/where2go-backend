@@ -113,11 +113,11 @@ public class ReservationService {
             int updatedSeatCount = currentSeatCount - reservation.getNumberOfPeople();
             saveSeatCountToRedis(updatedSeatCount);
 
-            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber + "실시간 좌석 수: " + getSeatCountFromRedis();
+            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber +" "+ "실시간 좌석 수: " + getSeatCountFromRedis();
             messagingTemplate.convertAndSend("/sub/reservation", successMessage );
         }
         else {
-            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection() + "실시간 좌석 수 " + getSeatCountFromRedis();
+            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection() +" " + "실시간 좌석 수 " + getSeatCountFromRedis();
             messagingTemplate.convertAndSend("/sub/reservation", failMessage);
         }
     }

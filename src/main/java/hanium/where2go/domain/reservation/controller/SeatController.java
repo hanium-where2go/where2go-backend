@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 
 @RequiredArgsConstructor
 @Controller
-public class ChatController {
+public class SeatController {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @Autowired // ObjectMapper를 주입
