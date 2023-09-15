@@ -11,9 +11,7 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
-
     private final SimpMessageSendingOperations messagingTemplate;
-
 
     @Autowired // ObjectMapper를 주입
     private ObjectMapper objectMapper;
