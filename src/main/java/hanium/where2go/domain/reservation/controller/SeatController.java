@@ -30,7 +30,7 @@ public class SeatController {
             saveSeatCountToRedis(seats.getSeat());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // 공통 에러 처리 해라
             // 예외 처리
         }
     }

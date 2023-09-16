@@ -103,7 +103,12 @@ public class ReservationService {
         // 예약 정보를 업데이트합니다.
         reservationRepository.save(reservation);
 
+        // 잔송 자체를 메서드로 따로 구현
         // 예약이 완료된 경우 랜덤 예약 번호를 클라이언트에게 전송
+        sendReservationMessage(updateReservationStatus, reservation, newStatus);
+    }
+
+    private void sendReservationMessage(ReservationDto.updateReservationStatus updateReservationStatus, Reservation reservation, ReservationStatus newStatus) {
         if (newStatus == ReservationStatus.COMPLETED) {
             String reservationNumber = generateRandomNumber(2);
             reservation.setReservationNumber(reservationNumber);
