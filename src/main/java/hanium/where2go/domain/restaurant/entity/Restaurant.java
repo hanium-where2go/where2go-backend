@@ -1,6 +1,7 @@
 package hanium.where2go.domain.restaurant.entity;
 
 import hanium.where2go.domain.BaseEntity;
+import hanium.where2go.domain.owner.entity.Owner;
 import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.restaurant.dto.RestaurantDto;
 import jakarta.persistence.*;
