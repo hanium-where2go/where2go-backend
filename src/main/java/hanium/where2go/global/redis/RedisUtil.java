@@ -45,7 +45,6 @@ public class RedisUtil {
     }
 
     public void updateSeatCount(int seatCount) {
-        redisTemplate.opsForValue().set("totalSeatCount", seatCount);
+        redisTemplate.opsForValue().set("totalSeatCount", Integer.toString(seatCount));
     }
-
 }
