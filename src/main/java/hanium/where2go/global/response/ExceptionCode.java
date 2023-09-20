@@ -27,7 +27,9 @@ public enum ExceptionCode {
 
     MENU_BOARD_NOT_FOUND(404,"Menu Board not found"),
 
-    CUSTOMER_NOT_FOUND(404,"Customer not found");
+    CUSTOMER_NOT_FOUND(404,"Customer not found"),
+
+    STORE_CLOSED(400,"Store is closed. Not able to make Reservation");
 
     private int status;
     private String message;

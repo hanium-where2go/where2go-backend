@@ -28,4 +28,24 @@ public class RedisUtil {
     public boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
     }
+
+    // 가게 상태를 초기화하고 Redis에 저장
+    public void initializeStoreStatus() {
+        redisTemplate.opsForValue().set("storeStatus", "CLOSED");
+    }
+
+    // 가게 상태를 업데이트하여 Redis에 저장
+    public void updateStoreStatus(String newStatus) {
+        redisTemplate.opsForValue().set("storeStatus", newStatus);
+    }
+
+    // 가게 상태를 가져오는 메서드
+    public String getStoreStatus() {
+        return (String) redisTemplate.opsForValue().get("storeStatus");
+    }
+
+    public void updateSeatCount(int seatCount) {
+        redisTemplate.opsForValue().set("totalSeatCount", seatCount);
+    }
+
 }
