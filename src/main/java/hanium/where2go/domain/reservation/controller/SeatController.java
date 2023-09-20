@@ -96,4 +96,5 @@ public class SeatController {
             return "ERROR"; // 예외 발생 시 에러 메시지 반환
         }
     }
+    //테스트
 }
