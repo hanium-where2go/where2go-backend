@@ -1,7 +1,6 @@
 package hanium.where2go.domain.reservation.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import hanium.where2go.domain.reservation.entity.RefuseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

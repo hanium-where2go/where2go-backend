@@ -95,7 +95,7 @@ public class ReservationService {
         reservation.setStatus(newStatus);
 
         // rejection 값이 null이 아닌 경우 Reservation 엔티티에 저장
-        if (updateReservationStatus.getRejection() == null) {
+        if (updateReservationStatus.getRejection() != null) {
             reservation.setRejection(updateReservationStatus.getRejection());
         }
         // 예약 정보를 업데이트합니다.

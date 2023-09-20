@@ -1,6 +1,6 @@
 package hanium.where2go.domain.reservation.entity;
 
-public enum RefuseStatus {
+public enum Rejection {
 
     FULL_SEATS,
     CLOSED,

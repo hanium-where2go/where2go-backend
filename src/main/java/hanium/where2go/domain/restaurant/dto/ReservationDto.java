@@ -1,5 +1,6 @@
 package hanium.where2go.domain.restaurant.dto;
 
+import hanium.where2go.domain.reservation.entity.Rejection;
 import hanium.where2go.domain.reservation.entity.Reservation;
 import hanium.where2go.domain.reservation.entity.ReservationStatus;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,7 @@ public class ReservationDto {
     @Builder
     public static class updateReservationStatus{
         private ReservationStatus reservationStatus;
-        private String rejection;
+        private Rejection rejection;
     }
 
     @Getter

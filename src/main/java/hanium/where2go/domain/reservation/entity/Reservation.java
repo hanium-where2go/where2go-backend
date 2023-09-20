@@ -45,7 +45,7 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
-    private String rejection;
+    private Rejection rejection;
 
     private String reservationNumber;
 
@@ -55,7 +55,7 @@ public class Reservation extends BaseEntity {
     }
 
     // setRejection 메서드 추가
-    public void setRejection(String rejection) {
+    public void setRejection(Rejection rejection) {
         this.rejection = rejection;
     }
 
