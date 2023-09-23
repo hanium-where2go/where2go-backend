@@ -6,7 +6,7 @@ import hanium.where2go.domain.owner.entity.Owner;
 public interface OwnerService {
     OwnerDto.CreateResponse createOwner(OwnerDto.CreateRequest createOwnerDto);
     boolean validateEmail(String token);
-    boolean duplicateEmail(OwnerDto.DuplicateEmailRequest duplicateEmailRequest);
+    boolean duplicateEmail(String email);
     boolean validateBusinessNum(String businessNum);
     void patchOwner(Long ownerId, OwnerDto.PatchRequest patchOwnerDto);
     void deleteOwner(Long ownerId);

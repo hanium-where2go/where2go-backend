@@ -1,5 +1,6 @@
 package hanium.where2go.domain.owner.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -11,12 +12,17 @@ public class OwnerDto {
     @NoArgsConstructor
     public static class CreateRequest {
         @NotBlank
+        @Email
+        private String email;
+        @NotBlank
         private String name;
         @NotBlank
         private String password;
         @NotBlank
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phoneNum;
+        @NotBlank
+        private String nickname;
     }
 
     @Getter
@@ -44,6 +50,7 @@ public class OwnerDto {
     }
 
     @Getter
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateResponse {
@@ -55,9 +62,9 @@ public class OwnerDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PatchRequest {
+        @NotBlank
         private String name;
-        @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i")
-        private String email;
+        @NotBlank
         @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$")
         private String phoneNum;
     }
