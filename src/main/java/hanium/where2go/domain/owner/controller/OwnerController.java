@@ -54,7 +54,7 @@ public class OwnerController {
     // 사업자 등록번호 인증
     @GetMapping("/business-verification")
     public ResponseEntity validateBusinessNum(@RequestParam String businessNum){
-
+        Boolean isValid = ownerService.validateBusinessNum(businessNum);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "사업자등록번호 조회가 완료되었습니다.", null));

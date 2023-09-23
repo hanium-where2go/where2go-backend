@@ -1,17 +1,20 @@
 package hanium.where2go.domain.owner.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hanium.where2go.domain.owner.dto.OwnerDto;
 import hanium.where2go.domain.owner.dto.OwnerMapper;
 import hanium.where2go.domain.owner.entity.Owner;
 import hanium.where2go.domain.owner.repository.OwnerRepository;
 import hanium.where2go.domain.user.entity.Role;
-import hanium.where2go.domain.user.entity.User;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
+import hanium.where2go.global.utils.BusinessNumUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class OwnerServiceImpl implements OwnerService{
     private final OwnerMapper ownerMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final BusinessNumUtils businessNumUtils;
 
     @Override
     public OwnerDto.CreateResponse createOwner(OwnerDto.CreateRequest createOwnerDto) {
@@ -59,10 +63,13 @@ public class OwnerServiceImpl implements OwnerService{
 
     @Override
     public boolean validateBusinessNum(String businessNum) {
-        return false;
+        if(!businessNumUtils.validateBusinessNum(businessNum)) {
+            throw new BaseException(ExceptionCode.INVALID_BUSINESS_KEY);
+        }
+        return true;
     }
 
-    @Override
+   @Override
     public void patchOwner(Long ownerId, OwnerDto.PatchRequest patchOwnerDto) {
         Owner owner = ownerRepository.findById(ownerId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));

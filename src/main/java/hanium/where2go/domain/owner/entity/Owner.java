@@ -28,4 +28,8 @@ public class Owner extends User {
         if (ownerDto.getName() != null) super.setName(ownerDto.getName());
         if (ownerDto.getPhoneNum() != null) super.setPhoneNumber(ownerDto.getPhoneNum());
     }
+
+    public void changeBusinessRegistration(String businessNum) {
+        this.businessRegistration = businessNum;
+    }
 }
