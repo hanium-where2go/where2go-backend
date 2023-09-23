@@ -3,6 +3,7 @@ package hanium.where2go.domain.customer.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -124,5 +125,12 @@ public class CustomerDto {
         private String name;
         private String phoneNumber;
         private String nickname;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TransactionResponse {
+        private Page<TransactionDto> transactions;
     }
 }

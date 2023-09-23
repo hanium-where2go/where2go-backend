@@ -2,6 +2,7 @@ package hanium.where2go.domain.customer.controller;
 
 import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
+import hanium.where2go.domain.customer.entity.TransactionType;
 import hanium.where2go.domain.customer.service.CustomerService;
 import hanium.where2go.domain.user.AuthUser;
 import hanium.where2go.global.response.BaseErrorResponse;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -351,6 +354,23 @@ public class CustomerController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "토큰이 재발급 되었습니다.", customerService.reissue(request)));
+    }
+
+    @Operation(summary = "사용자 토큰 재발급", description = "사용자 토큰 재발급 API.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "사용자 토큰 재발급 성공", content = @Content(
+            schemaProperties = {
+                @SchemaProperty(name = "status", schema = @Schema(implementation = Integer.class)),
+                @SchemaProperty(name = "message", schema = @Schema(implementation = String.class)),
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CustomerDto.LoginResponse.class))}
+        )),
+        @ApiResponse(responseCode = "403", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
+    })
+    @GetMapping("/transactions")
+    public ResponseEntity<BaseResponse<CustomerDto.TransactionResponse>> getTransactions(@AuthUser Customer customer, @RequestParam(required = false, defaultValue = "0") int month, @RequestParam(required = false) TransactionType type, @PageableDefault(sort = "createdAt") Pageable pageable) {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "거래내역을 가져왔습니다.", customerService.getTransactions(customer, month, type, pageable)));
     }
 
 }

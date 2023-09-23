@@ -34,7 +34,6 @@ public abstract class User {
     private String password;
     private String phoneNumber;
     private String nickname;
-    private boolean isVerified;
 
     //기본 유저 생성시 GUEST로 초기화
     @Builder.Default

@@ -3,11 +3,9 @@ package hanium.where2go.domain.customer.service;
 import hanium.where2go.domain.category.entity.Category;
 import hanium.where2go.domain.category.repository.CategoryRepository;
 import hanium.where2go.domain.customer.dto.*;
-import hanium.where2go.domain.customer.entity.Customer;
-import hanium.where2go.domain.customer.entity.FavorCategory;
-import hanium.where2go.domain.customer.entity.FavorLiquor;
-import hanium.where2go.domain.customer.entity.Point;
+import hanium.where2go.domain.customer.entity.*;
 import hanium.where2go.domain.customer.repository.CustomerRepository;
+import hanium.where2go.domain.customer.repository.TransactionRepository;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
 import hanium.where2go.domain.user.entity.Role;
@@ -18,6 +16,8 @@ import hanium.where2go.global.response.ExceptionCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 
@@ -38,6 +40,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final LiquorRepository liquorRepository;
     private final CategoryRepository categoryRepository;
+    private final TransactionRepository transactionRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -57,7 +60,6 @@ public class CustomerService {
             .name(customerSignupRequestDto.getName())
             .phoneNumber(customerSignupRequestDto.getPhoneNumber())
             .nickname(customerSignupRequestDto.getNickname())
-            .isVerified(false)
             .build();
 
         customer.hashPassword(passwordEncoder);
@@ -228,5 +230,25 @@ public class CustomerService {
         }
 
         throw new BaseException(ExceptionCode.TOKEN_REISSUE_FAILED);
+    }
+
+    public CustomerDto.TransactionResponse getTransactions(Customer customer, int months, TransactionType type, Pageable pageable) {
+        System.out.println("months = " + months);
+        System.out.println("type = " + type);
+        LocalDate now = LocalDate.now();
+        Page<Transaction> page = null;
+        if (months != 0 && type != null) {
+            LocalDateTime date =  now.minusMonths(months).atStartOfDay();
+            page = transactionRepository.findTransactionByTypeAndDate(customer, type, date, pageable);
+        } else if (months != 0 && type == null) {
+            LocalDateTime date =  now.minusMonths(months).atStartOfDay();
+            page = transactionRepository.findTransactionByDate(customer, date, pageable);
+        } else if (months == 0 && type != null) {
+            page = transactionRepository.findTransactionByType(customer, type, pageable);
+        } else {
+            page = transactionRepository.findTransaction(customer, pageable);
+        }
+        return new CustomerDto.TransactionResponse(page.map(TransactionDto::new));
+
     }
 }
