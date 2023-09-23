@@ -45,6 +45,7 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
+    @Enumerated(EnumType.STRING)
     private Rejection rejection;
 
     private String reservationNumber;

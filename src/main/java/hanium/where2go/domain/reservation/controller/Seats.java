@@ -17,4 +17,8 @@ public class Seats {
 
     @JsonProperty("status")
     private String status;
+
+    @JsonProperty("restaurant")
+    private Long restaurant; // 문자열로 변경
+
 }

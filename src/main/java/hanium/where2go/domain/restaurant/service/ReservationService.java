@@ -32,6 +32,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
+
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -44,6 +46,7 @@ public class ReservationService {
     private final RedisUtil redisUtil;
 
 
+
     private String generateRandomUUID() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
@@ -51,8 +54,8 @@ public class ReservationService {
     // 예약 생성
     public ReservationDto.ReservationResponseDto processReservation(Long restaurantId,Long customerId, ReservationDto.ReservationRequestDto reservationRequestDto) {
 
-
-        if (redisUtil.getStoreStatus().equals("CLOSED")) {
+        String storeStatus = (String) redisUtil.get("storeStatus");
+        if (!("OPEN".equals(storeStatus))) {
             throw new BaseException(ExceptionCode.STORE_CLOSED);
         }
 
@@ -85,21 +88,25 @@ public class ReservationService {
         }
 
 
-    public void updateReservationStatus(Long reservationId, ReservationDto.updateReservationStatus updateReservationStatus) {
+    public void updateReservationStatus(Long restaurantId,Long reservationId, ReservationDto.updateReservationStatus updateReservationStatus) {
         // reservationId를 사용하여 예약을 조회합니다.
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESERVATION_NOT_FOUND));
 
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+
         ReservationStatus newStatus = updateReservationStatus.getReservationStatus();
         // status 값에 따라 예약 상태를 업데이트합니다.
         reservation.setStatus(newStatus);
-
-        // rejection 값이 null이 아닌 경우 Reservation 엔티티에 저장
-        if (updateReservationStatus.getRejection() != null) {
             reservation.setRejection(updateReservationStatus.getRejection());
-        }
+
+
         // 예약 정보를 업데이트합니다.
         reservationRepository.save(reservation);
+
+        String restaurantKey = "restaurantId: " + restaurantId;
+
 
         // 잔송 자체를 메서드로 따로 구현
         // 예약이 완료된 경우 랜덤 예약 번호를 클라이언트에게 전송
@@ -107,22 +114,19 @@ public class ReservationService {
             String reservationNumber = generateRandomUUID();
             reservation.setReservationNumber(reservationNumber);
 
-
-            // Redis에서 좌석 수를 업데이트합니다.
-            String seatCountStr = (String) redisUtil.get("totalSeatCount");
+            String seatCountStr = (String) redisUtil.get(restaurantKey);
             int currentSeatCount = Integer.parseInt(seatCountStr);
             int updatedSeatCount = currentSeatCount - reservation.getNumberOfPeople();
-            redisUtil.updateSeatCount(Integer.parseInt(Integer.toString(updatedSeatCount)));
+            redisUtil.set(restaurantKey, Integer.toString(updatedSeatCount),2*60*60*1000);
 
-            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber +" "+ "실시간 좌석 수: " + redisUtil.get("totalSeatCount");
+            String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber +" "+ "실시간 좌석 수: " + redisUtil.get(restaurantKey);
             messagingTemplate.convertAndSend("/sub/reservation", successMessage );
         }
         else {
-            String failMessage = "예약이 거절되었습니다" + updateReservationStatus.getRejection() +" " + "실시간 좌석 수 " + redisUtil.get("totalSeatCount");
+            String failMessage = "예약이 거절되었습니다. " + updateReservationStatus.getRejection().getDescription() + " " + "실시간 좌석 수 " + redisUtil.get(restaurantKey);
             messagingTemplate.convertAndSend("/sub/reservation", failMessage);
         }
-    }
-
+        }
 
     public ReservationDto.ReservationInformationResponseDto searchReservation(Long reservationId){
 

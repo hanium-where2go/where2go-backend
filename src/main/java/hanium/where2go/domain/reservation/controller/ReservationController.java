@@ -61,10 +61,11 @@ public class ReservationController {
     }
 
     // 사장님의 예약 승인/거절
-    @PatchMapping("/reservations/{reservationId}")
-    public ResponseEntity<BaseResponse> setReservationStatus(@PathVariable("reservationId") Long reservationId,
+    @PatchMapping("/reservations/{restaurantId}/{reservationId}")
+    public ResponseEntity<BaseResponse> setReservationStatus(@PathVariable("restaurantId") Long restaurantId,
+                                                             @PathVariable("reservationId") Long reservationId,
                                                              @RequestBody ReservationDto.updateReservationStatus updateReservationStatus){
-        reservationService.updateReservationStatus(reservationId,updateReservationStatus);
+        reservationService.updateReservationStatus(restaurantId,reservationId,updateReservationStatus);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new BaseResponse(HttpStatus.OK.value(),"예약 결과가 업데이트 되었습니다", null));
