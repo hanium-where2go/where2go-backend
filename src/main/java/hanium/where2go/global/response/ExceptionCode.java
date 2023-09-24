@@ -29,7 +29,11 @@ public enum ExceptionCode {
 
     CUSTOMER_NOT_FOUND(404,"Customer not found"),
 
-    STORE_CLOSED(400,"Store is closed. Not able to make Reservation");
+    STORE_CLOSED(400,"Store is closed. Not able to make Reservation"),
+
+    ALREADY_RESTAURANT_KEY_EXISTS(400,"RestaurantId is already exists"),
+
+    CANNOT_FIND_RESTAURANT_KEY(400,"cannot find restaurant key");
 
     private int status;
     private String message;

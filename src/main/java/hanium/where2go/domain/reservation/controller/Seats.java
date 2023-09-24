@@ -12,13 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seats {
-    @JsonProperty("seats") // JSON의 필드명과 일치시킵니다.
+
     private Integer seat;
-
-    @JsonProperty("status")
-    private String status;
-
-    @JsonProperty("restaurant")
-    private Long restaurant; // 문자열로 변경
+    private String restaurantId; // 문자열로 변경
 
 }

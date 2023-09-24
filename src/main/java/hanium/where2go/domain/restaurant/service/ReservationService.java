@@ -54,7 +54,12 @@ public class ReservationService {
     // 예약 생성
     public ReservationDto.ReservationResponseDto processReservation(Long restaurantId,Long customerId, ReservationDto.ReservationRequestDto reservationRequestDto) {
 
-        String storeStatus = (String) redisUtil.get("storeStatus");
+        String restaurantKey = String.valueOf(restaurantId);
+        if (!(redisUtil.hasKey(restaurantKey))) {
+            throw new BaseException(ExceptionCode.CANNOT_FIND_RESTAURANT_KEY);
+        }
+
+        String storeStatus = (String) redisUtil.get(restaurantKey+":storeStatus");
         if (!("OPEN".equals(storeStatus))) {
             throw new BaseException(ExceptionCode.STORE_CLOSED);
         }
@@ -105,7 +110,10 @@ public class ReservationService {
         // 예약 정보를 업데이트합니다.
         reservationRepository.save(reservation);
 
-        String restaurantKey = "restaurantId: " + restaurantId;
+        String restaurantKey = String.valueOf(restaurantId);
+        if (!(redisUtil.hasKey(restaurantKey))) {
+            throw new BaseException(ExceptionCode.CANNOT_FIND_RESTAURANT_KEY);
+        }
 
 
         // 잔송 자체를 메서드로 따로 구현
