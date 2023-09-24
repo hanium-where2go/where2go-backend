@@ -356,18 +356,18 @@ public class CustomerController {
             .body(new BaseResponse<>(HttpStatus.OK.value(), "토큰이 재발급 되었습니다.", customerService.reissue(request)));
     }
 
-    @Operation(summary = "사용자 토큰 재발급", description = "사용자 토큰 재발급 API.")
+    @Operation(summary = "사용자 포인트 거래내역", description = "사용자 포인트 거래내역 API.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "사용자 토큰 재발급 성공", content = @Content(
+        @ApiResponse(responseCode = "200", description = "사용자 사용자 포인트 거래내역 성공", content = @Content(
             schemaProperties = {
                 @SchemaProperty(name = "status", schema = @Schema(implementation = Integer.class)),
                 @SchemaProperty(name = "message", schema = @Schema(implementation = String.class)),
-                @SchemaProperty(name = "data", schema = @Schema(implementation = CustomerDto.LoginResponse.class))}
+                @SchemaProperty(name = "data", schema = @Schema(implementation = CustomerDto.TransactionResponse.class))}
         )),
         @ApiResponse(responseCode = "403", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
     })
     @GetMapping("/transactions")
-    public ResponseEntity<BaseResponse<CustomerDto.TransactionResponse>> getTransactions(@AuthUser Customer customer, @RequestParam(required = false, defaultValue = "0") int month, @RequestParam(required = false) TransactionType type, @PageableDefault(sort = "createdAt") Pageable pageable) {
+    public ResponseEntity<BaseResponse<CustomerDto.TransactionResponse>> getTransactions(@AuthUser Customer customer, @Parameter(name = "month", description = "개월 수") @RequestParam(required = false, defaultValue = "0") int month, @Parameter(name = "type", description = "거래 타입")@RequestParam(required = false) TransactionType type, @PageableDefault(sort = "createdAt") Pageable pageable) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "거래내역을 가져왔습니다.", customerService.getTransactions(customer, month, type, pageable)));

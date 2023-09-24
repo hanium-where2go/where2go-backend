@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    @Query("select r from Reservation r where r.customer = :customer and r.status = :status")
+    @Query("select r from Reservation r join fetch r.restaurant rs where r.customer = :customer and r.status = :status")
     Page<Reservation> findReservation(@Param("customer") Customer customer, @Param("status") String status, Pageable pageable);
 
     @Query("select r from Reservation r join fetch r.restaurant rs where r.customer = :customer and r.createdAt >= :date and r.status = :status")
