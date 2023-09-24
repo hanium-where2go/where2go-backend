@@ -26,7 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
             //토큰 validation
             if (token != null && jwtProvider.validateToken(token)) {
                 //uri가 reissue가 아닌 경우에만 설정.
-                if (request.getRequestURI().equals("/customer/reissue")) {
+                if (!request.getRequestURI().equals("/customer/reissue")) {
                     Authentication authentication = jwtProvider.getAuthenticationByAccessToken(token);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
