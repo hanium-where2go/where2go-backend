@@ -38,11 +38,10 @@ public class SeatController {
 
             // 이미 key가 존재하는지 확인
             if (redisUtil.hasKey(restaurantKey)) {
-                redisUtil.delete(restaurantKey);
-                //throw a BaseException(ExceptionCode.ALREADY_RESTAURANT_KEY_EXISTS);
+                throw new BaseException(ExceptionCode.ALREADY_RESTAURANT_KEY_EXISTS);
             }
 
-            redisUtil.set(restaurantKey + ":storeStatus", "OPEN", 2*60*60*1000); // 영업 상태
+            redisUtil.set(restaurantKey + ":storeStatus", "OPEN", 2*60*60*1000); // 영업 상태 restaurantId 로 구분해서 저장
             redisUtil.set(restaurantKey, String.valueOf(seats), 2*60*60*1000); // 2시간(120분) 동안 유효
 
             // 잘 들어왔나 확인용
@@ -102,7 +101,7 @@ public class SeatController {
 
         // 가게 상태를 CLOSED로 업데이트
         redisUtil.set(restaurantKey + ":storeStatus", "CLOSED", 2 * 60 * 60 * 1000);
-        redisUtil.delete(restaurantKey);
+        redisUtil.delete(restaurantKey); // 가게 닫았으니까 키 삭제해주기
     }
 
     // 가게의 운영 상태를 볼 수 있다
@@ -114,7 +113,7 @@ public class SeatController {
             Integer receivedRestaurantId = (Integer) messagePayload.get("restaurantId");
             String restaurantKey = String.valueOf(receivedRestaurantId);
 
-            if (!(redisUtil.hasKey(restaurantKey))) {
+            if (!(redisUtil.hasKey(restaurantKey))) { // 키를 갖고 있지 않다면 이미 문을 닫은것으로 판단
                 return "STORE CLOSED";
             }
 
