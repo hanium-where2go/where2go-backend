@@ -41,6 +41,7 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 정보를 불러왔습니다", information));
     }
 
+
     // 레스토랑 공통 정보 조회
     @GetMapping("/{restaurantId}")
     public ResponseEntity<BaseResponse<RestaurantDto.CommonInformationResponseDto>> commonInformation(@PathVariable("restaurantId") Long restaurantId) {
@@ -62,6 +63,7 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 공통 정보를 불러왔습니다", restaurantEnrollResponseDto));
     }
 
+
     // 레스토랑 정보 수정
     @PatchMapping("/{restaurantId}")
     public ResponseEntity<BaseResponse<RestaurantDto.RestaurantUpdateResponseDto>> updateRestaurantInfo(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
@@ -72,6 +74,7 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 정보를 수정하였습니다", restaurantUpdateResponseDto));
     }
+
 
     // 레스토랑 메뉴 등록
 
@@ -119,6 +122,7 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴 상세 정보를 가져왔습니다", menuDetailResponseDto));
     }
 
+
     // 메뉴 삭제하기
     @DeleteMapping("/{restaurantId}/menu/{menuId}")
     public ResponseEntity<BaseResponse> deleteMenu(@PathVariable("restaurantId") Long restaurantId, @PathVariable("menuId") Long menuId) {
@@ -129,6 +133,7 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse(HttpStatus.OK.value(), "메뉴를 삭제하였습니다", null));
     }
+
 
     // 레스토랑 메뉴판 조회
     @GetMapping("/{restaurantId}/menuboards")
@@ -141,6 +146,7 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "메뉴판을 조회하였습니다", menuBoards));
     }
 
+
     // 레스토랑 이벤트 등록
     @PostMapping("/{restaurantId}/events")
     public ResponseEntity<BaseResponse<RestaurantEventDto.EventEnrollResponseDto>> enrollEvents(@PathVariable("restaurantId") Long restaurantId, @RequestBody RestaurantEventDto.EventEnrollRequestDto eventEnrollRequestDto){
@@ -152,6 +158,7 @@ public class RestaurantController {
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 등록하였습니다", eventEnrollResponseDto));
     }
 
+
     // 레스토랑 이벤트 수정
     @PatchMapping("{restaurantId}/events/{eventId}")
     public ResponseEntity<BaseResponse<RestaurantEventDto.EventUpdateResponseDto>> updateEvents(@PathVariable("restaurantId") Long restaurantId, @PathVariable("eventId") Long eventId, @RequestBody RestaurantEventDto.EventUpdateRequestDto eventUpdateRequestDto){
@@ -162,6 +169,7 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 수정하였습니다",eventUpdateResponseDto));
     }
+
 
     // 레스토랑 전체 이벤트 조회
     @GetMapping("{restaurantId}/events")
