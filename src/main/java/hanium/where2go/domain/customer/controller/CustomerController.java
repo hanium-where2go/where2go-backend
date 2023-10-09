@@ -4,6 +4,7 @@ import hanium.where2go.domain.customer.dto.*;
 import hanium.where2go.domain.customer.entity.Customer;
 import hanium.where2go.domain.customer.entity.TransactionType;
 import hanium.where2go.domain.customer.service.CustomerService;
+import hanium.where2go.domain.reservation.entity.Review;
 import hanium.where2go.domain.user.AuthUser;
 import hanium.where2go.global.response.BaseErrorResponse;
 import hanium.where2go.global.response.BaseResponse;
@@ -17,12 +18,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -296,7 +300,7 @@ public class CustomerController {
         @ApiResponse(responseCode = "403", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
     })
     @DeleteMapping("/favor-categories/{categoryId}")
-    public ResponseEntity<BaseResponse<String>> deleteFavorCategory(@AuthUser Customer customer,@Parameter(name = "categoryId", description = "업종 ID") @PathVariable Long categoryId) {
+    public ResponseEntity<BaseResponse<String>> deleteFavorCategory(@AuthUser Customer customer, @Parameter(name = "categoryId", description = "업종 ID") @PathVariable Long categoryId) {
         customerService.deleteFavorCategory(customer, categoryId);
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -367,10 +371,26 @@ public class CustomerController {
         @ApiResponse(responseCode = "403", description = "인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = BaseErrorResponse.class)))
     })
     @GetMapping("/transactions")
-    public ResponseEntity<BaseResponse<CustomerDto.TransactionResponse>> getTransactions(@AuthUser Customer customer, @Parameter(name = "month", description = "개월 수") @RequestParam(required = false, defaultValue = "0") int month, @Parameter(name = "type", description = "거래 타입")@RequestParam(required = false) TransactionType type, @PageableDefault(sort = "createdAt") Pageable pageable) {
+    public ResponseEntity<BaseResponse<CustomerDto.TransactionResponse>> getTransactions(@AuthUser Customer customer, @Parameter(name = "month", description = "개월 수") @RequestParam(required = false, defaultValue = "0") int month, @Parameter(name = "type", description = "거래 타입") @RequestParam(required = false) TransactionType type, @PageableDefault(sort = "createdAt") Pageable pageable) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(new BaseResponse<>(HttpStatus.OK.value(), "거래내역을 가져왔습니다.", customerService.getTransactions(customer, month, type, pageable)));
+    }
+
+    @PostMapping("/reviews")
+    public ResponseEntity<BaseResponse<String>> createReview(@RequestBody CustomerDto.ReviewRequest reviewDto) {
+        customerService.createReview(reviewDto);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "리뷰 등록이 완료되었습니다.", null));
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<BaseResponse<String>> deleteReview(@PathVariable Long reviewId) {
+        customerService.deleteReview(reviewId);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(new BaseResponse<>(HttpStatus.OK.value(), "리뷰가 삭제되었습니다.", null));
     }
 
 }

@@ -8,6 +8,12 @@ import hanium.where2go.domain.customer.repository.CustomerRepository;
 import hanium.where2go.domain.customer.repository.TransactionRepository;
 import hanium.where2go.domain.liquor.entity.Liquor;
 import hanium.where2go.domain.liquor.repository.LiquorRepository;
+import hanium.where2go.domain.reservation.entity.Reservation;
+import hanium.where2go.domain.reservation.entity.Review;
+import hanium.where2go.domain.reservation.entity.ReviewHashtag;
+import hanium.where2go.domain.reservation.repository.HashtagRepository;
+import hanium.where2go.domain.reservation.repository.ReservationRepository;
+import hanium.where2go.domain.reservation.repository.ReviewRepository;
 import hanium.where2go.domain.user.entity.Role;
 import hanium.where2go.global.jwt.JwtProvider;
 import hanium.where2go.global.redis.RedisUtil;
@@ -28,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -41,6 +48,9 @@ public class CustomerService {
     private final LiquorRepository liquorRepository;
     private final CategoryRepository categoryRepository;
     private final TransactionRepository transactionRepository;
+    private final ReviewRepository reviewRepository;
+    private final HashtagRepository hashtagRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -233,8 +243,6 @@ public class CustomerService {
     }
 
     public CustomerDto.TransactionResponse getTransactions(Customer customer, int months, TransactionType type, Pageable pageable) {
-        System.out.println("months = " + months);
-        System.out.println("type = " + type);
         LocalDate now = LocalDate.now();
         Page<Transaction> page = null;
         if (months != 0 && type != null) {
@@ -250,5 +258,18 @@ public class CustomerService {
         }
         return new CustomerDto.TransactionResponse(page.map(TransactionDto::new));
 
+    }
+
+    @Transactional
+    public void createReview(CustomerDto.ReviewRequest reviewDto) {
+        Reservation reservation = reservationRepository.findById(reviewDto.getReservationId()).orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
+        List<ReviewHashtag> reviewHashtags = hashtagRepository.findByIds(reviewDto.getHashtagIds()).stream().map(ReviewHashtag::createReviewHashtag).collect(Collectors.toList());
+        Review review = Review.createReview(reservation, reviewHashtags, reviewDto.getRate(), reviewDto.getContent());
+        reviewRepository.save(review);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewRepository.findById(reviewId).ifPresent(reviewRepository::delete);
     }
 }

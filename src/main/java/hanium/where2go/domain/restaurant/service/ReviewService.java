@@ -3,10 +3,9 @@ package hanium.where2go.domain.restaurant.service;
 
 import hanium.where2go.domain.reservation.dto.HashtagResponseDto;
 import hanium.where2go.domain.reservation.dto.ReviewResponseDto;
-import hanium.where2go.domain.reservation.entity.Hashtag;
 import hanium.where2go.domain.restaurant.entity.Restaurant;
 import hanium.where2go.domain.restaurant.repository.RestaurantRepository;
-import hanium.where2go.domain.restaurant.repository.ReviewRepository;
+import hanium.where2go.domain.reservation.repository.ReviewRepository;
 import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import lombok.RequiredArgsConstructor;

@@ -133,4 +133,14 @@ public class CustomerDto {
     public static class TransactionResponse {
         private Page<TransactionDto> transactions;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReviewRequest {
+        private Double rate;
+        private String content;
+        private List<Long> hashtagIds;
+        private Long reservationId;
+    }
 }

@@ -27,4 +27,15 @@ public class ReviewHashtag extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag;
+
+    //생성 메서드
+    public static ReviewHashtag createReviewHashtag(Hashtag hashtag) {
+        return ReviewHashtag.builder()
+            .hashtag(hashtag)
+            .build();
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
 }
