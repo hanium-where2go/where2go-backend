@@ -12,8 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seats {
-
-    private Integer seat;
-    private String restaurantId; // 문자열로 변경
-
+    private Integer seats;
+    private String restaurantId;
 }

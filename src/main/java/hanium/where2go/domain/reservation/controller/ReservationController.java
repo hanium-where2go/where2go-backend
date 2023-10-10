@@ -30,7 +30,6 @@ public class ReservationController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "가게 리뷰를 불러왔습니다", reviews));
-
     }
 
     @GetMapping("/restaurants/{restaurantId}/hash-tag")
