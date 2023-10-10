@@ -13,5 +13,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Seats {
     private Integer seats;
-    private String restaurantId;
+    private Long restaurantId; // restaurantId의 타입을 Long으로 변경
+
+    // @JsonProperty를 사용하여 JSON 필드와 객체 필드의 이름을 매핑
+    @JsonProperty("restaurantId")
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
 }

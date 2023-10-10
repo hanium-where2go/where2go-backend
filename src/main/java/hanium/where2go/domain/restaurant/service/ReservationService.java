@@ -67,7 +67,7 @@ public class ReservationService {
         // 예약 정보를 클라이언트에게 전송 (WebSocket을 사용)
         // /sub/reservation 구독하면 사장님. 고객 둘다에게 전달 가능
             String message = "새로운 예약 요청이 도착했습니다";
-           // messagingTemplate.convertAndSend("/sub/reservation", message);
+
         messagingTemplate.convertAndSend("/sub/reservation/" + restaurantId, message);
 
             return ReservationDto.ReservationResponseDto.builder()
@@ -107,7 +107,7 @@ public class ReservationService {
             int currentSeatCount = Integer.parseInt(seatCountStr);
             int updatedSeatCount = currentSeatCount - reservation.getNumberOfPeople();
             redisUtil.set(restaurantKey, Integer.toString(updatedSeatCount), 2 * 60 * 60 * 1000);
-
+             // /sub/reservation/restaurantId 를 구독하면 해당 음식점의 실시간 예약 현황, 예약 번호, 좌석 수를 확인할 수 있음.
             String successMessage = "예약이 완료되었습니다. 예약 번호: " + reservationNumber + " " + "실시간 좌석 수: " + redisUtil.get(restaurantKey);
             messagingTemplate.convertAndSend("/sub/reservation/" + restaurantId, successMessage);
         } else {
