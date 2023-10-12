@@ -16,57 +16,67 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@Table(name = "restaurant")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "restaurant_id")
-    public Long restaurantId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long restaurantId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     public Owner owner;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<Menu> menuList = new ArrayList<>();
+    private List<Menu> menuList = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<RestaurantLiquor> restaurantLiquors = new ArrayList<>();
+    private List<RestaurantLiquor> restaurantLiquors = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<RestaurantCategory> restaurantCategories = new ArrayList<>();
+    private List<RestaurantCategory> restaurantCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<Event> events = new ArrayList<>();
+    private List<Event> events = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<Review> review = new ArrayList<>();
+    private List<Review> review = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<MenuBoard> menuBoards = new ArrayList<>();
+    private List<MenuBoard> menuBoards = new ArrayList<>();
 
-//    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Address address;
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
 
-    public String restaurantName;
-    public String description;
-    public String tel;
-    public String businessRegistration;
-    public int seat; // 남은 자리수
-
-    public String location; // todo MapDto.Address 추가 이후 삭제 예정
-    public Boolean parkingLot;
-    public String restaurantImage;
+    @Column
+    private String restaurantName;
+    @Column
+    private String description;
+    @Column
+    private String tel;
+    @Column
+    private String businessRegistration;
+    @Column
+    private int seat; // 남은 자리수
+    @Column
+    private Boolean parkingLot;
+    @Column
+    private String restaurantImage;
+    @Column
     private double responseAvg;
+    @Column
     private double rateAvg;
-    public LocalTime start_time;
-    public LocalTime end_time;
-    public String closed_day;
-    public Integer total_seat; // 가게의 총 좌석수
-    public Integer onetime_Seat; // 단일로 예약 가능한 최대 좌석수
+    @Column
+    private LocalTime start_time;
+    @Column
+    private LocalTime end_time;
+    @Column
+    private String closed_day;
+    @Column
+    private Integer total_seat; // 가게의 총 좌석수
+    @Column
+    private Integer onetime_Seat; // 단일로 예약 가능한 최대 좌석수
 
     public void setRestaurantCategories(List<RestaurantCategory> restaurantCategories) {
         this.restaurantCategories = restaurantCategories;
@@ -78,7 +88,6 @@ public class Restaurant extends BaseEntity {
 
     public void update(RestaurantDto.RestaurantUpdateRequestDto restaurantUpdateRequestDto) {
         this.restaurantName = updateField(this.restaurantName, restaurantUpdateRequestDto.getRestaurantName());
-        this.location = updateField(this.location, restaurantUpdateRequestDto.getLocation()); // todo MapDto.Address로 변경
         this.start_time = updateField(this.start_time, restaurantUpdateRequestDto.getStartTime());
         this.end_time = updateField(this.end_time, restaurantUpdateRequestDto.getEndTime());
         this.closed_day = updateField(this.closed_day, restaurantUpdateRequestDto.getClosedDay());
@@ -92,5 +101,8 @@ public class Restaurant extends BaseEntity {
         return newValue != null ? newValue : currentValue;
     }
 
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
 
 }
