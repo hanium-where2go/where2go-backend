@@ -65,6 +65,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
 
+	//redis 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis 의존성 추가
 	//webSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.webjars:webjars-locator-core'

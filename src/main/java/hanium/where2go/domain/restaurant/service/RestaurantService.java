@@ -108,6 +108,13 @@ public class RestaurantService {
     @Transactional
     public RestaurantDto.RestaurantEnrollResponseDto enrollRestaurant(RestaurantDto.RestaurantEnrollRequestDto restaurantEnrollDto){
 
+        Address address = Address.builder()
+                .roadAddr(restaurantEnrollDto.getAddressDto().getRoadAddr())
+                .jibunAddr(restaurantEnrollDto.getAddressDto().getJibunAddr())
+                .latitude(restaurantEnrollDto.getAddressDto().getLatitude())
+                .longitude(restaurantEnrollDto.getAddressDto().getLongitude())
+                .build();
+
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
                 .start_time(restaurantEnrollDto.getStartTime())
@@ -117,6 +124,7 @@ public class RestaurantService {
                 .total_seat(restaurantEnrollDto.getTotalSeat())
                 .onetime_Seat(restaurantEnrollDto.getOnetimeSeat())
                 .parkingLot(restaurantEnrollDto.getParkingLot())
+                .address(address)
                 .build();
 
         // 요청된 레스토랑의 카테고리를 추출한다
@@ -133,10 +141,6 @@ public class RestaurantService {
 
         // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-        Address address = addressMapper.addressDtoToAddress(restaurantEnrollDto.getAddressDto());
-        address.updateRestaurant(savedRestaurant);
-
-        addressRepository.save(address);
 
         return new RestaurantDto.RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
