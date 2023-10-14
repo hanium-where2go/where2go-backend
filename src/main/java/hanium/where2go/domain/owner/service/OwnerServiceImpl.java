@@ -1,6 +1,5 @@
 package hanium.where2go.domain.owner.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hanium.where2go.domain.owner.dto.OwnerDto;
 import hanium.where2go.domain.owner.dto.OwnerMapper;
 import hanium.where2go.domain.owner.entity.Owner;
@@ -11,10 +10,8 @@ import hanium.where2go.global.response.BaseException;
 import hanium.where2go.global.response.ExceptionCode;
 import hanium.where2go.global.utils.BusinessNumUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -38,13 +35,18 @@ public class OwnerServiceImpl implements OwnerService{
                 .name(createOwnerDto.getName())
                 .phoneNumber(createOwnerDto.getPhoneNum())
                 .nickname(createOwnerDto.getNickname())
-                .isVerified(false)
+//                .isVerified(false)
                 .build();
 
         owner.hashPassword(passwordEncoder);
         ownerRepository.save(owner);
 
         return ownerMapper.ownerToCreateResponse(owner);
+    }
+
+    @Override
+    public boolean duplicateEmail(String email) {
+        return ownerRepository.findByEmail(email).isPresent() ? true : false;
     }
 
     @Override
@@ -57,15 +59,15 @@ public class OwnerServiceImpl implements OwnerService{
     }
 
     @Override
-    public boolean duplicateEmail(String email) {
-        return ownerRepository.findByEmail(email).isPresent() ? true : false;
-    }
-
-    @Override
-    public boolean validateBusinessNum(String businessNum) {
-        if(!businessNumUtils.validateBusinessNum(businessNum)) {
+    public boolean validateBusinessNum(OwnerDto.BusinessNumStatus businessNum) {
+        if(!businessNumUtils.validateBusinessNum(businessNum.getBusinessNum())) {
             throw new BaseException(ExceptionCode.INVALID_BUSINESS_KEY);
         }
+
+        Owner owner = ownerRepository.findByEmail(businessNum.getEmail())
+                .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
+        owner.changeBusinessRegistration(businessNum.getBusinessNum());
+
         return true;
     }
 

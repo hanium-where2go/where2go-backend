@@ -53,8 +53,8 @@ public class OwnerController {
 
     // 사업자 등록번호 인증
     @GetMapping("/business-verification")
-    public ResponseEntity validateBusinessNum(@RequestParam String businessNum){
-        Boolean isValid = ownerService.validateBusinessNum(businessNum);
+    public ResponseEntity validateBusinessNum(@RequestBody OwnerDto.BusinessNumStatus businessNum){
+        ownerService.validateBusinessNum(businessNum);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "사업자등록번호 조회가 완료되었습니다.", null));
@@ -80,7 +80,7 @@ public class OwnerController {
 
     // 사장님 회원 탈퇴
     @DeleteMapping("/{owner-id}")
-    public ResponseEntity deleteOwners(@PathVariable("owner-id") @Min(1) Long ownerId){
+    public ResponseEntity deleteOwner(@PathVariable("owner-id") @Min(1) Long ownerId){
         ownerService.deleteOwner(ownerId);
         return ResponseEntity
                 .status(HttpStatus.OK)

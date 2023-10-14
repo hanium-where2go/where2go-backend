@@ -7,7 +7,7 @@ public interface OwnerService {
     OwnerDto.CreateResponse createOwner(OwnerDto.CreateRequest createOwnerDto);
     boolean validateEmail(String token);
     boolean duplicateEmail(String email);
-    boolean validateBusinessNum(String businessNum);
+    boolean validateBusinessNum(OwnerDto.BusinessNumStatus businessNum);
     void patchOwner(Long ownerId, OwnerDto.PatchRequest patchOwnerDto);
     void deleteOwner(Long ownerId);
 

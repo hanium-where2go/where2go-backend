@@ -31,6 +31,9 @@ public class OwnerDto {
     public static class BusinessNumStatus {
         @NotBlank
         private String businessNum;
+        @NotBlank
+        @Email
+        private String email;
     }
 
     @Getter

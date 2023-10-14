@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Component
 public class BusinessNumUtils {
@@ -19,9 +21,14 @@ public class BusinessNumUtils {
 
     @PostConstruct
     public void init() {
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+        factory.uriString("http://api.odcloud.kr");
+
         this.webClient = WebClient.builder()
-                .baseUrl("https://api.odcloud.kr/api/nts-businessman/v1/status")
-                .defaultHeader("Authorization", apiKey) // Todo key 신청
+                .uriBuilderFactory(factory)
+//                .baseUrl("http://api.odcloud.kr")
                 .build();
     }
 
@@ -31,8 +38,17 @@ public class BusinessNumUtils {
 
     private JsonNode sendAndReadJson(String businessNum) {
 
-        String response = webClient.get()
-                .uri("?serviceKey=" + businessNum)
+        String[] b_no = {businessNum}; // requestBody
+
+        String response = webClient
+                .method(HttpMethod.POST)
+                .uri(uriBuilder -> uriBuilder
+                                .path("/api/nts-businessman/v1/status")
+                                .queryParam("serviceKey",apiKey)
+                                .queryParam("returnType","JSON")
+                                .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(b_no)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
