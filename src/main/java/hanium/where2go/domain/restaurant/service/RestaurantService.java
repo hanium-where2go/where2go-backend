@@ -28,10 +28,8 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final CategoryRepository categoryRepository;
     private final LiquorRepository liquorRepository;
-    private final RestaurantCategoryRepository restaurantCategoryRepository;
-    private final RestaurantLiquorRepository restaurantLiquorRepository;
-    private final MenuRepository menuRepository;
-    private final MenuBoardRepository menuBoardRepository;
+    private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
 
      // 레스토랑 단일 정보 얻기
     public RestaurantDto.InformationResponseDto getInformation(Long restaurantId) {
@@ -40,7 +38,7 @@ public class RestaurantService {
 
         // Restaurant 객체에서 필요한 정보를 가져와서 InformationResponseDto 객체를 생성하고 반환합니다.
         RestaurantDto.InformationResponseDto informationResponseDto = new RestaurantDto.InformationResponseDto(
-                restaurant.getLocation(), // todo Address 엔티티로 변경
+                restaurant.getAddress().getRoadAddr(),
                 restaurant.getDescription(),
                 restaurant.getTel(),
                 restaurant.getParkingLot()
@@ -112,7 +110,6 @@ public class RestaurantService {
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantName(restaurantEnrollDto.getRestaurantName())
-              //  .location(String.valueOf(restaurantEnrollDto.getAddress())) // Todo MapDto.Address로 변경
                 .start_time(restaurantEnrollDto.getStartTime())
                 .end_time(restaurantEnrollDto.getEndTime())
                 .closed_day(restaurantEnrollDto.getClosedDay())
@@ -121,7 +118,6 @@ public class RestaurantService {
                 .onetime_Seat(restaurantEnrollDto.getOnetimeSeat())
                 .parkingLot(restaurantEnrollDto.getParkingLot())
                 .build();
-
 
         // 요청된 레스토랑의 카테고리를 추출한다
         List<Category> categories = categoryRepository.findByCategoryNameIn(restaurantEnrollDto.getCategoryNames());
@@ -137,6 +133,10 @@ public class RestaurantService {
 
         // 레스토랑 저장해주기
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+        Address address = addressMapper.addressDtoToAddress(restaurantEnrollDto.getAddressDto());
+        address.updateRestaurant(savedRestaurant);
+
+        addressRepository.save(address);
 
         return new RestaurantDto.RestaurantEnrollResponseDto(savedRestaurant.getRestaurantId(), savedRestaurant.getRestaurantName());
 
@@ -148,9 +148,9 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new BaseException(ExceptionCode.RESTAURANT_NOT_FOUND));
 
-       restaurant.update(restaurantUpdateRequestDto);
 
 
+        restaurant.update(restaurantUpdateRequestDto);
 
         List<Category> updatedCategories = categoryRepository.findByCategoryNameIn(restaurantUpdateRequestDto.getCategoryNames());
         updateCategories(restaurant, updatedCategories);
@@ -171,7 +171,7 @@ public class RestaurantService {
         return RestaurantDto.RestaurantUpdateResponseDto.builder()
                 .restaurantId(savedRestaurant.getRestaurantId())
                 .restaurantName(savedRestaurant.getRestaurantName())
-                .location(savedRestaurant.getLocation())
+                .addressDto(addressMapper.addressToAddressDto(savedRestaurant.getAddress()))
                 .startTime(savedRestaurant.getStart_time())
                 .endTime(savedRestaurant.getEnd_time())
                 .closedDay(savedRestaurant.getClosed_day())

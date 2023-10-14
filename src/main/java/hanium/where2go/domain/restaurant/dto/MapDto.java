@@ -9,6 +9,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserLocationMapResponse {
         private String longitude;
         private String latitude;
@@ -18,6 +20,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeywordMapResponse {
         private String roadAddr;
         private String jibunAddr;
@@ -28,6 +32,8 @@ public class MapDto {
     @Builder
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeywordMapResponses {
         private int totalCount;
         private int page;
@@ -40,7 +46,7 @@ public class MapDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Address {
+    public static class AddressDto {
         private String roadAddr;
         private String jibunAddr;
         private String longitude;

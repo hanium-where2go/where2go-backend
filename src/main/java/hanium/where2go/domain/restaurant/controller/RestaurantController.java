@@ -3,6 +3,7 @@ package hanium.where2go.domain.restaurant.controller;
 import hanium.where2go.domain.restaurant.dto.*;
 import hanium.where2go.domain.restaurant.service.EventService;
 import hanium.where2go.domain.restaurant.service.MenuService;
+import hanium.where2go.domain.restaurant.service.RestaurantAddressService;
 import hanium.where2go.domain.restaurant.service.RestaurantService;
 import hanium.where2go.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class RestaurantController {
 
     private final MenuService menuService;
     private final RestaurantService restaurantService;
+    private final RestaurantAddressService restaurantAddressService;
     private final EventService eventService;
 
     // 레스토랑 메뉴 조회
@@ -203,5 +205,13 @@ public class RestaurantController {
                 .status(HttpStatus.OK)
                 .body(new BaseResponse<>(HttpStatus.OK.value(), "이벤트를 삭제하였습니다", null));
 
+    }
+
+    @GetMapping
+    public ResponseEntity<BaseResponse> getRestaurantByKeyword(@RequestParam String keyword) {
+        List<RestaurantDto.CommonInformationResponseDto> response = restaurantAddressService.findRestaurantsByKeyword(keyword);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(HttpStatus.OK.value(), "주소 기반 가게 검색 정보를 불러왔습니다.", response));
     }
 }

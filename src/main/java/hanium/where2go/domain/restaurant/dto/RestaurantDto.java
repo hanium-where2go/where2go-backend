@@ -7,6 +7,7 @@ import java.util.List;
 
 public class RestaurantDto {
     @Getter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CommonInformationResponseDto {
@@ -35,7 +36,7 @@ public class RestaurantDto {
     @Builder
     public static class RestaurantEnrollRequestDto {
         private String restaurantName;
-        private MapDto.Address address;
+        private MapDto.AddressDto addressDto;
         private List<String> categoryNames;
         private List<String> liquorNames;
         private LocalTime startTime;
@@ -45,7 +46,6 @@ public class RestaurantDto {
         private Integer totalSeat;
         private Integer onetimeSeat;
         private Boolean parkingLot;
-
     }
 
     @Getter
@@ -62,7 +62,7 @@ public class RestaurantDto {
     @AllArgsConstructor
     public static class RestaurantUpdateRequestDto {
         private String restaurantName;
-        private String location; // todo MapDto.Address로 변경
+        private MapDto.AddressDto addressDto;
         private List<String> categoryNames;
         private List<String> liquorNames;
         private LocalTime startTime;
@@ -82,7 +82,7 @@ public class RestaurantDto {
 
         private Long restaurantId;
         private String restaurantName;
-        private String location; // todo MapDto.Address로 변경
+        private MapDto.AddressDto addressDto;
         private List<String> categoryNames;
         private List<String> liquorNames;
         private LocalTime startTime;
