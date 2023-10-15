@@ -51,6 +51,5 @@ public class MapDto {
         private String jibunAddr;
         private String longitude;
         private String latitude;
-        private String detailAddr;
     }
 }
