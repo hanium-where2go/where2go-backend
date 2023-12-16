@@ -1,6 +1,6 @@
 ## 🙌 실시간 주점 예약 서비스 (어디가게) 
 
-![20231217_001137](https://github.com/hanium-where2go/where2go-backend/assets/66732343/b6be046d-6140-409c-bc20-5c34e0443fac)    ![20231217_001508](https://github.com/hanium-where2go/where2go-backend/assets/66732343/3f353472-b772-4a94-9f0f-a0ff0726f203)
+![20231217_001137](https://github.com/hanium-where2go/where2go-backend/assets/66732343/b6be046d-6140-409c-bc20-5c34e0443fac)    
 
 
   
