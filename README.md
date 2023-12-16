@@ -28,6 +28,10 @@
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
 <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white"/>
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
+* Redis(실시간 좌석 수 업데이트 기능) <br>
+* Stomp 소켓 (실시간 예약 거절. 허락 기능) <br>
+* 지도 api (사용자 반경 1km 이내의 음식점 추천) <br>
+* JWT 토큰 사용 
 
 
 <br>
