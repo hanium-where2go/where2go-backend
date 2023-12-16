@@ -1,129 +1,56 @@
-# Convention
+## 🙌 실시간 주점 예약 서비스 (어디가게) 
 
-## 브랜치 전략
+![20231217_001137](https://github.com/hanium-where2go/where2go-backend/assets/66732343/b6be046d-6140-409c-bc20-5c34e0443fac)    ![20231217_001508](https://github.com/hanium-where2go/where2go-backend/assets/66732343/3f353472-b772-4a94-9f0f-a0ff0726f203)
 
-- 기능 브랜치
-    - feature/#2_view_user
-- hotfix 브랜치
-    - hotfix/#2_view_user
-- release 브랜치
-    - release/v1.0.0
-- master 브랜치
-    - master
-- develop 브랜치
-    - develop
 
-## 깃 메시지
+  
 
-```java
-################
-# <타입>: <제목> 의 형식으로 제목을 아래 공백줄에 작성
-# 제목은 50자 이내 / 변경사항이 "무엇"인지 명확히 작성 / 끝에 마침표 금지
-# 예) [Feat] #1 로그인 기능 추가
+## ❓ 어디가게는 어떠한 서비스인가요?   
+- 어디가게는 실시간으로 주점을 예약할 수 있는 서비스입니다.
+- 회식 후 2차를 갈 때에 실시간으로 사용자가 인원수, 원하는 주종, 주점 종류 등을 입력하면 반경 1km 이내에 있는 음식점을 추천해줍니다.
+- 따라서 2차를 갈 때에 기다리지 않고 원하는 주점을 예약할 수 있어요 ! 
+- 사용자용 앱과 사장님용 앱으로 구분되어 제공되는 서비스입니다. 
 
-# 바로 아래 공백은 제목과 본문의 분리를 위함
+## 🙋‍♀️ 이런 사람에게 추천해요   
+1. 회식을 즐기는 사람 ! 
+2. 웨이팅 시간을 줄이고 싶은 사람 !
+3. 원하는 주종, 주점 종류, 지역에 따라 음식점을 추천받고 싶은 사람 !
 
-################
-# 본문(구체적인 내용)을 아랫줄에 작성
-# 여러 줄의 메시지를 작성할 땐 "-"로 구분 (한 줄은 72자 이내)
 
-# 바로 아래 공백은 본문과 꼬릿말의 분리를 위함
+## 🛠 사용 기술. 스택   
+🛠 프론트 :   <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+🛠 벡엔드 :   <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
 
-################
-# 꼬릿말(footer)을 아랫줄에 작성 (현재 커밋과 관련된 이슈 번호 추가 등)
-# 예) Close #7
+<br>
+🛠  : <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white"/>
+<img src="https://img.shields.io/badge/Apache Tomcat-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black"/>
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
+<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
 
-################
-#Feat
-#새로운 기능 추가
-#
-#Fix
-#버그 수정
-#
-#Design
-#CSS 등 사용자 UI 디자인 변경
-#
-#!BREAKING CHANGE
-#커다란 API 변경의 경우
-#
-#!HOTFIX
-#급하게 치명적인 버그를 고쳐야하는 경우
-#
-#Style
-#코드 포맷 변경, 세미 콜론 누락, 코드 수정이 없는 경우
-#
-#Refactor
-#프로덕션 코드 리팩토링
-#
-#Comment
-#필요한 주석 추가 및 변경
-#
-#Docs
-#문서 수정
-#
-#Test
-#테스트 추가, 테스트 리팩토링(프로덕션 코드 변경 X)
-#
-#Chore
-#빌드 테스트 업데이트, 패키지 매니저를 설정하는 경우(프로덕션 코드 변경 X)
-#
-#Rename
-#파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우
-#
-#Remove
-#파일을 삭제하는 작업만 수행한 경우
-################
-```
 
-## 코드 컨벤션
+<br>
 
-### 1. 변수명
+## Link
+### 프로젝트 관련 문서들 
 
-- 카멜케이스 사용
-- 한국어 발음 대로의 표기 금지
-- 클래스명 - 명사형 (ex. Controller Service)
-- 메서드명 - 동사형 (ex. `changeName()`)
-- 상수(static final 키워드)명 - 상수 이름은 대문자로 작성하며, 복합어는 언더스코어 `_`
-를 사용
+- [🙋‍♂️ 어디가게 노션 페이지](https://www.notion.so/12b42c5e2bb34bd384d06dc693c82065?pvs=4)
+- [🙋‍♂️ 어디가게 시현 영상](https://youtu.be/DBzS63ATZPU)
+<br>
 
-### 2. 주석
+## UI 
+### 사용자 페이지 
 
-- 적당히 설명이 필요할 것 같은 메서드에 대해 주석을 작성한다.
-    - 이 메서드가 어떤 클래스의 무슨 메서드로부터 호출 되었는지.
-    - 이 메서드의 호출 흐름이 어떻게 되는지 등등.
+![20231217_003238](https://github.com/hanium-where2go/where2go-backend/assets/66732343/dc7aed20-c271-4747-8970-4298b2866948)
+<br>
+<br>
+![image](https://github.com/hanium-where2go/where2go-backend/assets/66732343/5f49e210-7650-49a0-9811-22422c7fdb3c)
 
-### 3. 줄바꿈
 
-- 파라미터가 줄바꿈이 필요할 만큼 여러개 존재 시, 컴마 뒤에서 줄을 바꾼다.
-- `.` 을 앞에 둔다.
-- 중괄호
-    
-    앞 구문의 끝 중괄호 `}` 다음에 작성한다.
-    
-    ```java
-    try {
-        writeLog();
-    } catch (IOException ioe) {
-        reportFailure(ioe);
-    } finally {
-        writeFooter();
-    }
-    ```
-    
-- 메서드 사이 빈 줄 삽입
+![20231217_003637](https://github.com/hanium-where2go/where2go-backend/assets/66732343/8b0d2c56-caaa-4a3a-b1db-2c11923975f7)
 
-### 4. Gradle 빌드 파일
+### 사장님 페이지
+![20231217_003917](https://github.com/hanium-where2go/where2go-backend/assets/66732343/17cab7cb-5d4c-478f-892b-0be1f3675454) 
 
-- 의존 라이브러리에 대한 설명 주석 추가
-    
-    ```java
-    // 이메일 전송 관련
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    
-    // thymeleaf
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    ```
-    
-- `application.yml` or `application.properties`
-    
-    설명 `#` 주석 추가하기
+![20231217_004117](https://github.com/hanium-where2go/where2go-backend/assets/66732343/8f1516b7-773a-400c-88a9-2efe0ee1466d)
