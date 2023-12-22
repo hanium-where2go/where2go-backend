@@ -40,7 +40,7 @@
 ### 프로젝트 관련 문서들 
 
 - [🙋‍♂️ 어디가게 노션 페이지](https://www.notion.so/12b42c5e2bb34bd384d06dc693c82065?pvs=4)
-- [🙋‍♂️ 어디가게 시현 영상](https://youtu.be/DBzS63ATZPU)
+- [🙋‍♂️ 어디가게 시연 영상](https://youtu.be/DBzS63ATZPU)
 <br>
 
 ## UI 
