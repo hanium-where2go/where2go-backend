@@ -12,9 +12,9 @@
 - 사용자용 앱과 사장님용 앱으로 구분되어 제공되는 서비스입니다. 
 
 ## 🙋‍♀️ 이런 사람에게 추천해요   
-1. 회식을 즐기는 사람 ! 
-2. 웨이팅 시간을 줄이고 싶은 사람 !
-3. 원하는 주종, 주점 종류, 지역에 따라 음식점을 추천받고 싶은 사람 !
+1. 회식을 즐기는 사람 !  🍻
+2. 웨이팅 시간을 줄이고 싶은 사람 ! ⏰
+3. 원하는 주종, 주점 종류, 지역에 따라 음식점을 추천받고 싶은 사람 ! 🍾 🍹🥂
 
 
 ## 🛠 사용 기술. 스택   
@@ -27,11 +27,11 @@
 <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/>
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
 <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=Postman&logoColor=white"/>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
-* Redis(실시간 좌석 수 업데이트 기능) <br>
-* Stomp 소켓 (실시간 예약 거절. 허락 기능) <br>
-* 지도 api (사용자 반경 1km 이내의 음식점 추천) <br>
-* JWT 토큰 사용 
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <br>
+📍 Redis(실시간 좌석 수 업데이트 기능) <br>
+📍 Stomp 소켓 (실시간 예약 거절. 허락 기능) <br>
+📍 지도 api (사용자 반경 1km 이내의 음식점 추천) <br>
+📍 JWT 토큰 사용 
 
 
 <br>
@@ -39,22 +39,30 @@
 ## Link
 ### 프로젝트 관련 문서들 
 
-- [🙋‍♂️ 어디가게 노션 페이지](https://www.notion.so/12b42c5e2bb34bd384d06dc693c82065?pvs=4)
-- [🙋‍♂️ 어디가게 시연 영상](https://youtu.be/DBzS63ATZPU)
+📌 [🙋‍♂️ 어디가게 노션 페이지](https://www.notion.so/12b42c5e2bb34bd384d06dc693c82065?pvs=4) <br>
+📌 [🙋‍♂️ 어디가게 시연 영상](https://youtu.be/DBzS63ATZPU)
 <br>
 
 ## UI (서비스 페이지)
-### 사용자 페이지 
+### 사용자 페이지 <br>
+✏ 사용자 로그인. 이메일 인증. 포인트 적립. 조건 필터링. 즐겨찾기 등록하기
 
 ![20231217_003238](https://github.com/hanium-where2go/where2go-backend/assets/66732343/dc7aed20-c271-4747-8970-4298b2866948)
 <br>
 <br>
+
 ![image](https://github.com/hanium-where2go/where2go-backend/assets/66732343/5f49e210-7650-49a0-9811-22422c7fdb3c)
 
+<br>
+✏ 사용자의 실시간 예약 요청 
 
 ![20231217_003637](https://github.com/hanium-where2go/where2go-backend/assets/66732343/8b0d2c56-caaa-4a3a-b1db-2c11923975f7)
 
-### 사장님 페이지
+### 사장님 페이지 <br>
+✏ 사장님의 가게 등록 페이지
 ![20231217_003917](https://github.com/hanium-where2go/where2go-backend/assets/66732343/17cab7cb-5d4c-478f-892b-0be1f3675454) 
+<br>
+<br>
+✏ 사장님의 실시간 예약 요청 확인.승낙.거절
 
 ![20231217_004117](https://github.com/hanium-where2go/where2go-backend/assets/66732343/8f1516b7-773a-400c-88a9-2efe0ee1466d)
