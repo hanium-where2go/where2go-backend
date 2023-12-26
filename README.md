@@ -60,6 +60,7 @@
 
 ### 사장님 페이지 <br>
 ✏ 사장님의 가게 등록 페이지
+
 ![20231217_003917](https://github.com/hanium-where2go/where2go-backend/assets/66732343/17cab7cb-5d4c-478f-892b-0be1f3675454) 
 <br>
 <br>
