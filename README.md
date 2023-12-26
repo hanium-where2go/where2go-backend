@@ -43,7 +43,7 @@
 - [🙋‍♂️ 어디가게 시연 영상](https://youtu.be/DBzS63ATZPU)
 <br>
 
-## UI 
+## UI (서비스 페이지)
 ### 사용자 페이지 
 
 ![20231217_003238](https://github.com/hanium-where2go/where2go-backend/assets/66732343/dc7aed20-c271-4747-8970-4298b2866948)
